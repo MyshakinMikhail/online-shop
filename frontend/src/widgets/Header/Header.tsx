@@ -1,5 +1,5 @@
 import { Flex } from "antd";
-import { Menu, Navbar } from "../../entities/user";
+import { Menu, Navbar } from "./ui";
 
 export default function Header() {
 	return (
