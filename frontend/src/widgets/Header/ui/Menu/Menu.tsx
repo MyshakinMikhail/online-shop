@@ -1,7 +1,7 @@
 import { Flex } from "antd";
 import { Heart, Search, ShoppingCart, UserRound } from "lucide-react";
-import { MenuIcon } from "../../../../shared/ui";
 import classes from "./Menu.module.css";
+import MenuIcon from "../MenuIcon/MenuIcon";
 
 export default function Menu() {
 	return (
