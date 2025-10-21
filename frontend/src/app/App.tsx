@@ -7,8 +7,8 @@ export default function App() {
 		<BrowserRouter>
 			<Routes>
 				<Route element={<MainLayout />}>
-					<Route path="/" element={<ProductsPage />} />
 					<Route path="/:category" element={<ProductsPage />} />
+					<Route path="*" element={<ProductsPage />} />
 				</Route>
 			</Routes>
 		</BrowserRouter>
