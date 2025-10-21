@@ -1,4 +1,3 @@
-// App.tsx
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ProductsPage } from "../pages";
 import { MainLayout } from "./layouts/MainLayout";
