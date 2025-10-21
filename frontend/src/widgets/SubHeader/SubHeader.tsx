@@ -1,5 +1,5 @@
 import { Flex, Typography } from "antd";
-import getHeadersByCategory from "../../shared/lib/getHeaderByCategory";
+import { getHeadersByCategory } from "../../shared/lib";
 import classes from "./SubHeader.module.css";
 
 const { Text } = Typography;

@@ -1,4 +1,3 @@
-// src/shared/lib/hooks/useCategoryFromPath.ts
 import { useParams } from "react-router-dom";
 import { categories } from "../consts";
 import type { Category } from "../types";
