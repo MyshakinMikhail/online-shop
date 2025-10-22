@@ -1,18 +1,19 @@
 import { Flex, Typography } from "antd";
-import { getHeadersByCategory } from "../../shared/lib";
+import getCategoryRuByCategory from "../../shared/lib/getHeaderByCategory";
+import type { Category } from "../../shared/types";
 import classes from "./SubHeader.module.css";
 
 const { Text } = Typography;
 
 type Props = {
-	category: string;
+	category: Category;
 };
 
 export default function SubHeader({ category }: Props) {
 	return (
 		<Flex className={classes.subheader} justify="center" align="center">
 			<Text className={classes.subheaderText}>
-				{getHeadersByCategory(category) || "Категория не выбрана"}
+				{getCategoryRuByCategory(category) || "Категория не выбрана"}
 			</Text>
 		</Flex>
 	);

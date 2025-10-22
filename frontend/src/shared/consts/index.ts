@@ -1,3 +1,4 @@
 import { categories } from "./categories";
+import { categoryRuMap } from "./categoryRuMap";
 
-export { categories };
+export { categories, categoryRuMap };

@@ -4,3 +4,6 @@ export type Category =
 	| "hoodies"
 	| "longSleeves"
 	| "trousers";
+
+
+	
