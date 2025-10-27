@@ -1,15 +1,17 @@
+import type { Product, ProductCardType } from "@/shared/types";
 import { Button, Col, Flex, Image, Row, Typography } from "antd";
 import { CircleX } from "lucide-react";
 import { useState } from "react";
-import type { Product } from "../../model/types";
+import { QuantityControl } from "../QuantityControl/QuantityControl";
 
 const { Text } = Typography;
 
 type Props = {
 	product: Product;
+	type: ProductCardType;
 };
 
-export default function ProductCartCard({ product }: Props) {
+export default function BaseMiniProductCard({ product, type }: Props) {
 	const [count, setCount] = useState<number>(product.stock || 1);
 
 	const decrement = () => {
@@ -37,31 +39,15 @@ export default function ProductCartCard({ product }: Props) {
 						{product.article}
 					</Flex>
 				</Col>
-				<Col span={4}>
-					<Flex gap={5} align="center">
-						<img
-							src="https://static.tildacdn.com/lib/linea/c8eecd27-9482-6c4f-7896-3eb09f6a1091/arrows_circle_minus.svg"
-							style={{
-								width: "12px",
-								height: "12px",
-								border: 0,
-								color: "#5B5B5B",
-							}}
-							onClick={decrement}
+				{type === "cart" && (
+					<Col span={4}>
+						<QuantityControl
+							count={count}
+							increment={increment}
+							decrement={decrement}
 						/>
-						{count}
-						<img
-							src="https://static.tildacdn.com/lib/linea/c47d1e0c-6880-dc39-ae34-521197f7fba7/arrows_circle_plus.svg"
-							style={{
-								width: "12px",
-								height: "12px",
-								border: 0,
-								color: "#5B5B5B",
-							}}
-							onClick={increment}
-						/>
-					</Flex>
-				</Col>
+					</Col>
+				)}
 				<Col span={4}>
 					<Text>{product.price} руб.</Text>
 				</Col>
