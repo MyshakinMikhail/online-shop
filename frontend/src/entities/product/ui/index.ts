@@ -1,3 +1,4 @@
-import ProductCard from "./ProductCard/ProductCard";
+import ProductCartCard from "./ProductCartCard/ProductCartCard";
+import ProductsCartList from "./ProductsCartList/ProductsCartList";
 
-export { ProductCard };
+export { ProductCartCard, ProductsCartList };

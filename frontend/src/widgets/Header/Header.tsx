@@ -1,5 +1,6 @@
 import { Flex } from "antd";
-import { Menu, Navbar } from "./ui";
+import Menu from "./Menu/Menu";
+import Navbar from "./Navbar/Navbar";
 
 export default function Header() {
 	return (

@@ -1,7 +1,7 @@
+import ProductsCartList from "@/entities/product/ui/ProductsCartList/ProductsCartList";
 import { BuyButton, MenuIcon } from "@/shared/ui";
 import { Drawer, type DrawerProps } from "antd";
 import { useState, type ComponentType } from "react";
-import { ProductsList } from "../ProductsList";
 
 type Props = {
 	Icon: ComponentType<{ size: number; color: string }>;
@@ -24,7 +24,7 @@ export default function ProductsDrawer({ Icon, ...props }: Props) {
 				onClose={toggleDrawer}
 				{...props}
 			>
-				<ProductsList />
+				<ProductsCartList />
 				<BuyButton />
 			</Drawer>
 		</>

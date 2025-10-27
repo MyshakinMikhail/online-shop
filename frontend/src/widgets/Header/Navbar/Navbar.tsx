@@ -2,8 +2,8 @@ import { Drawer, Flex, Typography } from "antd";
 import { TextAlignJustify } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavbarItem from "./ui/NavbarItem/NavbarItem";
 import classes from "./Navbar.module.css";
+import NavbarItem from "./components/NavbarItem";
 
 const { Title } = Typography;
 
@@ -46,19 +46,39 @@ export default function Navbar() {
 				open={open}
 			>
 				<Flex className={classes.navbarItems}>
-					<NavbarItem isUnderline={true} path="/all" setOpen={setOpen}>
+					<NavbarItem
+						isUnderline={true}
+						path="/all"
+						setOpen={setOpen}
+					>
 						Все товары
 					</NavbarItem>
-					<NavbarItem isUnderline={false} path="/tShirts" setOpen={setOpen}>
+					<NavbarItem
+						isUnderline={false}
+						path="/tShirts"
+						setOpen={setOpen}
+					>
 						Футболки
 					</NavbarItem>
-					<NavbarItem isUnderline={false} path="/hoodies" setOpen={setOpen}>
+					<NavbarItem
+						isUnderline={false}
+						path="/hoodies"
+						setOpen={setOpen}
+					>
 						Худи
 					</NavbarItem>
-					<NavbarItem isUnderline={false} path="/longSleeves" setOpen={setOpen}>
+					<NavbarItem
+						isUnderline={false}
+						path="/longSleeves"
+						setOpen={setOpen}
+					>
 						Лонгсливы
 					</NavbarItem>
-					<NavbarItem isUnderline={false} path="/trousers" setOpen={setOpen}>
+					<NavbarItem
+						isUnderline={false}
+						path="/trousers"
+						setOpen={setOpen}
+					>
 						Штаны
 					</NavbarItem>
 				</Flex>

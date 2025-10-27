@@ -1,7 +1,7 @@
 import { Button, Col, Flex, Image, Row, Typography } from "antd";
 import { CircleX } from "lucide-react";
 import { useState } from "react";
-import type { Product } from "./types/Product";
+import type { Product } from "../../model/types";
 
 const { Text } = Typography;
 
@@ -9,7 +9,7 @@ type Props = {
 	product: Product;
 };
 
-export default function ProductCard({ product }: Props) {
+export default function ProductCartCard({ product }: Props) {
 	const [count, setCount] = useState<number>(product.stock || 1);
 
 	const decrement = () => {

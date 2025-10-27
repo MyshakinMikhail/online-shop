@@ -2,7 +2,9 @@ import { Flex } from "antd";
 import { Heart, ShoppingCart, UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import classes from "./Menu.module.css";
-import { MenuIcon, ProductsDrawer, SearchDrawer } from "./ui";
+import { MenuIcon } from "@/shared/ui";
+import SearchDrawer from "./components/SearchDrawer";
+import ProductsDrawer from "./components/ProductsDrawer";
 
 export default function Menu() {
 	const navigate = useNavigate();
