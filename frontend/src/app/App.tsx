@@ -1,6 +1,6 @@
+import { ProductsPage, ProfilePage } from "@/pages";
 import { ConfigProvider, theme } from "antd";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import { ProductsPage, ProfilePage } from "../pages";
 import { MainLayout } from "./layouts";
 
 export default function App() {

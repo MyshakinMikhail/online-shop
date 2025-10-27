@@ -1,10 +1,8 @@
 import { Flex } from "antd";
 import { Heart, ShoppingCart, UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import MenuIcon from "../MenuIcon/MenuIcon";
-import ProductsDrawer from "../ProductsDrawer/ProductsDrawer";
-import SearchDrawer from "../SearchDrawer/SearchDrawer";
 import classes from "./Menu.module.css";
+import { MenuIcon, ProductsDrawer, SearchDrawer } from "./ui";
 
 export default function Menu() {
 	const navigate = useNavigate();
@@ -18,8 +16,8 @@ export default function Menu() {
 					navigate("/profile");
 				}}
 			/>
-			<ProductsDrawer Icon={Heart} title="Избранное"/>
-			<ProductsDrawer Icon={ShoppingCart} title="Корзина"/>
+			<ProductsDrawer Icon={Heart} title="Избранное" />
+			<ProductsDrawer Icon={ShoppingCart} title="Корзина" />
 		</Flex>
 	);
 }

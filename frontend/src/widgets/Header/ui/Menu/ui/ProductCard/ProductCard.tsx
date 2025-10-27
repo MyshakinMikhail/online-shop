@@ -1,7 +1,7 @@
 import { Button, Col, Flex, Image, Row, Typography } from "antd";
 import { CircleX } from "lucide-react";
 import { useState } from "react";
-import type { Product } from "../../types/Product";
+import type { Product } from "./types/Product";
 
 const { Text } = Typography;
 
@@ -21,7 +21,7 @@ export default function ProductCard({ product }: Props) {
 
 	return (
 		<>
-			<Row justify="space-around">
+			<Row align="middle" justify="space-evenly">
 				<Col span={4}>
 					<Image
 						src="https://static.tildacdn.com/stor3435-3861-4835-b432-323134376130/56150826.jpg"
@@ -30,7 +30,13 @@ export default function ProductCard({ product }: Props) {
 						style={{ borderRadius: "10px" }}
 					/>
 				</Col>
-				<Col span={10}>{product.description}</Col>
+				<Col span={10}>
+					<Flex>
+						{product.description}
+						{product.size}
+						{product.article}
+					</Flex>
+				</Col>
 				<Col span={4}>
 					<Flex gap={5} align="center">
 						<img
@@ -57,7 +63,7 @@ export default function ProductCard({ product }: Props) {
 					</Flex>
 				</Col>
 				<Col span={4}>
-					<Text>{product.price}</Text>
+					<Text>{product.price} руб.</Text>
 				</Col>
 				<Col span={2}>
 					<Button type="link">

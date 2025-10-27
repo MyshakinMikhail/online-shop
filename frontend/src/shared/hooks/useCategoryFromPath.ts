@@ -1,6 +1,6 @@
+import { categories } from "@/shared/consts";
+import type { Category } from "@/shared/types";
 import { useParams } from "react-router-dom";
-import { categories } from "../consts";
-import type { Category } from "../types";
 
 function isValidCategory(value: string | undefined): value is Category {
 	return categories.includes(value as Category);

@@ -1,17 +1,13 @@
-import { Drawer, Flex, type DrawerProps } from "antd";
+import { BuyButton, MenuIcon } from "@/shared/ui";
+import { Drawer, type DrawerProps } from "antd";
 import { useState, type ComponentType } from "react";
-import { mockProducts } from "../../mocks";
-import { type Product } from "../../types/";
-import MenuIcon from "../MenuIcon/MenuIcon";
-import ProductCard from "../ProductCard/ProductCard";
-import classes from "./ProductsDrawer.module.css";
+import { ProductsList } from "../ProductsList";
 
 type Props = {
 	Icon: ComponentType<{ size: number; color: string }>;
 } & DrawerProps;
 
 export default function ProductsDrawer({ Icon, ...props }: Props) {
-	const products = mockProducts;
 	const [open, setOpen] = useState<boolean>(false);
 
 	const toggleDrawer = () => {
@@ -28,11 +24,8 @@ export default function ProductsDrawer({ Icon, ...props }: Props) {
 				onClose={toggleDrawer}
 				{...props}
 			>
-				<Flex className={classes.products}>
-					{products.map((product: Product) => (
-						<ProductCard product={product} />
-					))}
-				</Flex>
+				<ProductsList />
+				<BuyButton />
 			</Drawer>
 		</>
 	);

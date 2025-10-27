@@ -1,7 +1,7 @@
+import { MenuIcon } from "@/shared/ui";
 import { Drawer, Input } from "antd";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import MenuIcon from "../MenuIcon/MenuIcon";
 
 export default function SearchDrawer() {
 	const [open, setOpen] = useState<boolean>(false);

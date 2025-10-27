@@ -2,7 +2,7 @@ import { Drawer, Flex, Typography } from "antd";
 import { TextAlignJustify } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import NavbarItem from "../NavbarItem/NavbarItem";
+import NavbarItem from "./ui/NavbarItem/NavbarItem";
 import classes from "./Navbar.module.css";
 
 const { Title } = Typography;

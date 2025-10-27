@@ -1,6 +1,6 @@
+import getCategoryRuByCategory from "@/shared/lib/getHeaderByCategory";
+import type { Category } from "@/shared/types";
 import { Flex, Typography } from "antd";
-import getCategoryRuByCategory from "../../shared/lib/getHeaderByCategory";
-import type { Category } from "../../shared/types";
 import classes from "./SubHeader.module.css";
 
 const { Text } = Typography;
