@@ -30,7 +30,7 @@
 | Сущность     | Поля                                                                         | Описание             |
 | ------------ | ---------------------------------------------------------------------------- | -------------------- |
 | **User**     | id, name, email, passwordHash, role                                          | Пользователь         |
-| **Product**  | id, name, description, price, category, stock (общ кол-во), images[], rating | Товар                |
+| **Product**  | id, name, description, price, category, stock (общ кол-во), images[]		  | Товар                |
 | **Category** | id, name                                                                     | Категория            |
 | **Cart**     | id, userId, items[]                                                          | Корзина пользователя |
 | **CartItem** | productId, quantity, price                                                   | Элемент корзины      |
