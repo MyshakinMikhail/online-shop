@@ -1,3 +1,4 @@
-import MiniProductsList from "./lists/MiniProductsList/MiniProductsList";
+import { BaseMiniProductCard } from "./cards";
+import { MiniProductsList } from "./lists";
 
-export { MiniProductsList };
+export { BaseMiniProductCard, MiniProductsList };
