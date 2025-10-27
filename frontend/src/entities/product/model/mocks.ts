@@ -1,6 +1,6 @@
 import type { Product } from "@/shared/types";
 
-export const mockProducts: Product[] = [
+export const mockMiniProducts: Product[] = [
 	{
 		id: "1",
 		name: "Базовая футболка",

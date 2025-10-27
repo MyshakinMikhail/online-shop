@@ -1,3 +1,3 @@
-import MiniProductsList from "./MiniProductsList/MiniProductsList";
+import MiniProductsList from "./lists/MiniProductsList/MiniProductsList";
 
 export { MiniProductsList };

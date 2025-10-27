@@ -1,8 +1,8 @@
 import type { Product, ProductCardType } from "@/shared/types";
+import { QuantityControl } from "@/shared/ui";
 import { Button, Col, Flex, Image, Row, Typography } from "antd";
 import { CircleX } from "lucide-react";
 import { useState } from "react";
-import { QuantityControl } from "../QuantityControl/QuantityControl";
 
 const { Text } = Typography;
 

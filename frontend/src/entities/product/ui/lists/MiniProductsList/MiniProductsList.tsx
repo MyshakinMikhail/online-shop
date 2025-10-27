@@ -1,7 +1,7 @@
 import type { Product, ProductCardType } from "@/shared/types";
-import { BaseMiniProductCard } from "@/shared/ui";
 import { Flex } from "antd";
-import { mockProducts } from "../../model/mocks";
+import { mockMiniProducts } from "../../../model/mocks";
+import BaseMiniProductCard from "../../cards/BaseMiniProductCard/BaseMiniProductCard";
 import classes from "./MiniProductsList.module.css";
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export default function MiniProductsList({ type }: Props) {
-	const products = mockProducts;
+	const products = mockMiniProducts;
 
 	return (
 		<Flex className={classes.products}>
