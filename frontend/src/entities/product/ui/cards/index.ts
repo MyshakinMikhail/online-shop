@@ -1,3 +1,3 @@
-import BaseMiniProductCard from "./BaseMiniProductCard/BaseMiniProductCard";
+import MiniProductCard from "./MiniProductCard/MiniProductCard";
 
-export { BaseMiniProductCard };
+export { MiniProductCard };

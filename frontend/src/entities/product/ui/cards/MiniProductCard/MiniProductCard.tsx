@@ -9,9 +9,14 @@ const { Text } = Typography;
 type Props = {
 	product: Product;
 	type: ProductCardType;
+	handleDelete: (id: string) => void;
 };
 
-export default function BaseMiniProductCard({ product, type }: Props) {
+export default function MiniProductCard({
+	product,
+	type,
+	handleDelete,
+}: Props) {
 	const [count, setCount] = useState<number>(product.stock || 1);
 
 	const decrement = () => {
@@ -52,7 +57,10 @@ export default function BaseMiniProductCard({ product, type }: Props) {
 					<Text>{product.price} руб.</Text>
 				</Col>
 				<Col span={2}>
-					<Button type="link">
+					<Button
+						type="link"
+						onClick={() => handleDelete(product.id)}
+					>
 						<CircleX style={{ border: 0, color: "#5B5B5B" }} />
 					</Button>
 				</Col>
