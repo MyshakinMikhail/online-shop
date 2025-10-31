@@ -1,6 +1,6 @@
 import { MiniProductsList } from "@/entities/product/ui";
 import type { ProductCardType } from "@/shared/types";
-import { BuyButton, MenuIcon } from "@/shared/ui";
+import { MenuIcon, MyButton } from "@/shared/ui";
 import { Drawer } from "antd";
 import { useState } from "react";
 
@@ -12,6 +12,10 @@ type Props = {
 
 export default function BaseDrawer({ Icon, title, type }: Props) {
 	const [open, setOpen] = useState<boolean>(false);
+
+	const handleClick = () => {
+		console.log("Купили чо-та)");
+	};
 
 	const toggleDrawer = () => {
 		setOpen((open) => !open);
@@ -28,7 +32,7 @@ export default function BaseDrawer({ Icon, title, type }: Props) {
 				onClose={toggleDrawer}
 			>
 				<MiniProductsList type={type} />
-				{type === "cart" && <BuyButton />}
+				{type === "cart" && <MyButton onClick={handleClick} />}
 			</Drawer>
 		</>
 	);

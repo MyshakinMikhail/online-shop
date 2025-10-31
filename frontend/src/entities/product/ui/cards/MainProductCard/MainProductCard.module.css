@@ -1,0 +1,20 @@
+.card {
+	flex: 0 0 calc(25% - 12px); /* 4 карточки в ряд */
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+
+	cursor: pointer;
+}
+
+.image {
+	width: 100%;
+	height: auto;
+}
+
+.text {
+	margin: 0;
+	font-size: 16px;
+	line-height: 24px;
+	color: #333333;
+}

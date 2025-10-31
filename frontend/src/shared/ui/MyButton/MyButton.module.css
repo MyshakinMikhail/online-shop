@@ -5,3 +5,10 @@
 
 	border-radius: 30px;
 }
+
+.btn {
+	color: white;
+	font-weight: 600;
+	background-color: black;
+	border-radius: 30px;
+}

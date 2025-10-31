@@ -1,4 +1,4 @@
-import { BaseMiniProductCard } from "./cards";
+import { MiniProductCard } from "./cards";
 import { MiniProductsList } from "./lists";
 
-export { BaseMiniProductCard, MiniProductsList };
+export { MiniProductCard, MiniProductsList };

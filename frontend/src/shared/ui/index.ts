@@ -1,6 +1,6 @@
 import BaseDrawer from "./BaseDrawer/BaseDrawer";
-import BuyButton from "./BuyButton/BuyButton";
 import MenuIcon from "./MenuIcon/MenuIcon";
+import MyButton from "./MyButton/MyButton";
 import { QuantityControl } from "./QuantityControl/QuantityControl";
 
-export { BaseDrawer, BuyButton, MenuIcon, QuantityControl };
+export { BaseDrawer, MenuIcon, MyButton, QuantityControl };
