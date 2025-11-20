@@ -31,7 +31,7 @@ export default function BaseDrawer({ Icon, title, type }: Props) {
 				open={open}
 				onClose={toggleDrawer}
 			>
-				<MiniProductsList type={type} />
+				<MiniProductsList type={type} toggleDrawer={toggleDrawer} />
 				{type === "cart" && <MyButton onClick={handleClick} />}
 			</Drawer>
 		</>

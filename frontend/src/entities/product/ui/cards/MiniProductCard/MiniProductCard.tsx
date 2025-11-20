@@ -3,6 +3,7 @@ import { QuantityControl } from "@/shared/ui";
 import { Button, Col, Flex, Image, Row, Typography } from "antd";
 import { CircleX } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 
@@ -10,14 +11,17 @@ type Props = {
 	product: Product;
 	type: ProductCardType;
 	handleDelete: (id: string) => void;
+	toggleDrawer: () => void;
 };
 
 export default function MiniProductCard({
 	product,
 	type,
 	handleDelete,
+	toggleDrawer,
 }: Props) {
 	const [count, setCount] = useState<number>(product.stock || 1);
+	const navigate = useNavigate();
 
 	const decrement = () => {
 		setCount((prev) => prev - 1);
@@ -27,7 +31,12 @@ export default function MiniProductCard({
 	};
 
 	return (
-		<>
+		<div
+			onClick={() => {
+				navigate(`/products/${product.id}`);
+				toggleDrawer();
+			}}
+		>
 			<Row align="middle" justify="space-evenly">
 				<Col span={4}>
 					<Image
@@ -59,12 +68,15 @@ export default function MiniProductCard({
 				<Col span={2}>
 					<Button
 						type="link"
-						onClick={() => handleDelete(product.id)}
+						onClick={(e) => {
+							e.stopPropagation();
+							handleDelete(product.id);
+						}}
 					>
 						<CircleX style={{ border: 0, color: "#5B5B5B" }} />
 					</Button>
 				</Col>
 			</Row>
-		</>
+		</div>
 	);
 }

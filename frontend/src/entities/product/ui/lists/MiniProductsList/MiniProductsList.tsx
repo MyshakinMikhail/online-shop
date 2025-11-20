@@ -9,9 +9,10 @@ const { Paragraph } = Typography;
 
 type Props = {
 	type: ProductCardType;
+	toggleDrawer: () => void;
 };
 
-export default function MiniProductsList({ type }: Props) {
+export default function MiniProductsList({ type, toggleDrawer }: Props) {
 	const [products, setProducts] = useState<Product[]>(mockMiniProducts);
 
 	const handleDelete = (id: string) => {
@@ -28,9 +29,11 @@ export default function MiniProductsList({ type }: Props) {
 			<Flex className={classes.products}>
 				{products.map((product: Product) => (
 					<MiniProductCard
+						key={product.id}
 						product={product}
 						type={type}
 						handleDelete={handleDelete}
+						toggleDrawer={toggleDrawer}
 					/>
 				))}
 			</Flex>
