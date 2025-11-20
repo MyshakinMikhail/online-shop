@@ -10,7 +10,7 @@ type Props = {
 	type: ProductCardType;
 };
 
-export default function BaseDrawer({ Icon, title, type }: Props) {
+export default function BaseProductsDrawer({ Icon, title, type }: Props) {
 	const [open, setOpen] = useState<boolean>(false);
 
 	const handleClick = () => {

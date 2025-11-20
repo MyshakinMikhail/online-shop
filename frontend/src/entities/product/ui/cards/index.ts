@@ -1,3 +1,5 @@
+import MainProductCard from "./MainProductCard/MainProductCard";
 import MiniProductCard from "./MiniProductCard/MiniProductCard";
+import SearchProductCard from "./SearchProductCard/SearchProductCard";
 
-export { MiniProductCard };
+export { MainProductCard, MiniProductCard, SearchProductCard };

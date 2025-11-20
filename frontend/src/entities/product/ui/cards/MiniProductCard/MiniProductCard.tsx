@@ -44,6 +44,7 @@ export default function MiniProductCard({
 						width={60}
 						height="auto"
 						style={{ borderRadius: "10px" }}
+						onClick={(e) => e.stopPropagation()}
 					/>
 				</Col>
 				<Col span={10}>

@@ -4,7 +4,7 @@ import { UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import FavouritesDrawer from "./components/FavouritesDrawer";
 import ProductsDrawer from "./components/ProductsDrawer";
-import SearchDrawer from "./components/SearchDrawer";
+import SearchDrawer from "./components/SearchDrawer/SearchDrawer";
 import classes from "./Menu.module.css";
 
 export default function Menu() {
