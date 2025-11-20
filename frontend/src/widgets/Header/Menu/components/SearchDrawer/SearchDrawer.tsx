@@ -16,7 +16,7 @@ export default function SearchDrawer() {
 		setOpen((open) => !open);
 	};
 
-	const drawerHeight = sortedProducts.length > 0 ? "100dvh" : 150;
+	const drawerHeight = sortedProducts.length > 0 ? "100dvh" : 175;
 
 	return (
 		<>
