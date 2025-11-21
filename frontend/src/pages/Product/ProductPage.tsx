@@ -1,10 +1,9 @@
 import { mockMiniProducts } from "@/entities/product/model/mocks";
 import type { Product } from "@/shared/types";
 
-import { MyButton } from "@/shared/ui";
+import { HeartIcon, MyButton } from "@/shared/ui";
 import { Header } from "@/widgets/Header";
-import { Avatar, Flex, Typography } from "antd";
-import { Heart } from "lucide-react";
+import { Flex, Typography } from "antd";
 import { useParams } from "react-router-dom";
 import classes from "./ProductPage.module.css";
 
@@ -36,12 +35,8 @@ export default function ProductPage() {
 					<Text>Описание: {product?.description}</Text>
 					<Text>В наличии: {product?.stock} штук</Text>
 					<Flex align="center" justify="center" gap={15}>
-						<MyButton onClick={handleClick} />{" "}
-						{/* добавить в корзину и открыть ее */}
-						<Avatar
-							icon={<Heart className={classes.icon} />}
-							className={classes.avatar}
-						/>
+						<MyButton onClick={handleClick} />
+						<HeartIcon />
 					</Flex>
 				</Flex>
 			</Flex>

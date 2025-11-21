@@ -5,16 +5,3 @@
 .description {
 	max-width: 270px;
 }
-
-.icon {
-	color: black;
-}
-
-.avatar {
-	background-color: white;
-	cursor: pointer;
-}
-
-.icon:hover {
-	fill: grey;
-}

@@ -1,0 +1,12 @@
+.icon {
+	color: black;
+}
+
+.icon:hover {
+	fill: grey;
+}
+
+.avatar {
+	background-color: white;
+	cursor: pointer;
+}
