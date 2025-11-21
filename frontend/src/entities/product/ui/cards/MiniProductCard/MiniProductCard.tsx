@@ -1,9 +1,10 @@
 import type { Product, ProductCardType } from "@/shared/types";
 import { QuantityControl } from "@/shared/ui";
-import { Button, Col, Flex, Image, Row, Typography } from "antd";
+import { Button, Col, Image, Row, Typography } from "antd";
 import { CircleX } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import classes from "./MiniProductCard.module.css";
 
 const { Text } = Typography;
 
@@ -31,12 +32,7 @@ export default function MiniProductCard({
 	};
 
 	return (
-		<div
-			onClick={() => {
-				navigate(`/products/${product.id}`);
-				toggleDrawer();
-			}}
-		>
+		<div>
 			<Row align="middle" justify="space-evenly">
 				<Col span={4}>
 					<Image
@@ -44,15 +40,18 @@ export default function MiniProductCard({
 						width={60}
 						height="auto"
 						style={{ borderRadius: "10px" }}
-						onClick={(e) => e.stopPropagation()}
 					/>
 				</Col>
 				<Col span={10}>
-					<Flex>
+					<Text
+						className={classes.description}
+						onClick={() => {
+							navigate(`/products/${product.id}`);
+							toggleDrawer();
+						}}
+					>
 						{product.description}
-						{product.size}
-						{product.article}
-					</Flex>
+					</Text>
 				</Col>
 				{type === "cart" && (
 					<Col span={4}>
@@ -69,8 +68,7 @@ export default function MiniProductCard({
 				<Col span={2}>
 					<Button
 						type="link"
-						onClick={(e) => {
-							e.stopPropagation();
+						onClick={() => {
 							handleDelete(product.id);
 						}}
 					>

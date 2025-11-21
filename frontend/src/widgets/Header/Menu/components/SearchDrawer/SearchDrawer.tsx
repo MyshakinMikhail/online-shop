@@ -46,6 +46,7 @@ export default function SearchDrawer() {
 								<SearchProductCard
 									product={product}
 									key={product.id}
+									toggleDrawer={toggleDrawer}
 								/>
 							))
 						) : (

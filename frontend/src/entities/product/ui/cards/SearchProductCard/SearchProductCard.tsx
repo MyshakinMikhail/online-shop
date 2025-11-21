@@ -1,14 +1,23 @@
 import type { Product } from "@/shared/types";
 import { Flex, Image, Typography } from "antd";
+import { useNavigate } from "react-router-dom";
 import classes from "./SearchProductCard.module.css";
 
 const { Text } = Typography;
 
 type Props = {
 	product: Product;
+	toggleDrawer: () => void;
 };
 
-export default function SearchProductCard({ product }: Props) {
+export default function SearchProductCard({ product, toggleDrawer }: Props) {
+	const navigate = useNavigate();
+
+	const handleClick = () => {
+		navigate(`/products/${product.id}`);
+		toggleDrawer();
+	};
+
 	return (
 		<Flex gap={7}>
 			<Image
@@ -18,7 +27,9 @@ export default function SearchProductCard({ product }: Props) {
 				className={classes.image}
 			/>
 			<Flex vertical>
-				<Text>{product.name}</Text>
+				<Text onClick={handleClick} className={classes.name}>
+					{product.name}
+				</Text>
 				<Text>{product.price}</Text>
 				<Text>артикул: {product.article}</Text>
 			</Flex>

@@ -19,7 +19,10 @@ export function QuantityControl({
 					border: 0,
 					color: "#5B5B5B",
 				}}
-				onClick={decrement}
+				onClick={(e) => {
+					e.stopPropagation();
+					decrement();
+				}}
 			/>
 			{count}
 			<img
@@ -30,7 +33,10 @@ export function QuantityControl({
 					border: 0,
 					color: "#5B5B5B",
 				}}
-				onClick={increment}
+				onClick={(e) => {
+					e.stopPropagation();
+					increment();
+				}}
 			/>
 		</Flex>
 	);
