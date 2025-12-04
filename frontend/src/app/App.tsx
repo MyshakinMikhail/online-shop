@@ -1,4 +1,4 @@
-import { ProductPage, ProductsPage, ProfilePage } from "@/pages";
+import { AuthPage, ProductPage, ProductsPage, ProfilePage } from "@/pages";
 import { ConfigProvider, theme } from "antd";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { MainLayout } from "./layouts";
@@ -11,6 +11,8 @@ export default function App() {
 			<SearchProvider>
 				<BrowserRouter>
 					<Routes>
+						<Route path="/auth" element={<AuthPage />} />
+						<Route path="/auth/callback" element={<AuthPage />} />
 						<Route path="/profile" element={<ProfilePage />} />
 						<Route path="/products/:id" element={<ProductPage />} />
 						<Route element={<MainLayout />}>
