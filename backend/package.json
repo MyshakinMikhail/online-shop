@@ -3,18 +3,26 @@
   "version": "1.0.0",
   "description": "Backend for online clothes shop",
   "main": "index.ts",
+  "type": "module",
   "scripts": {
     "start": "ts-node index.ts",
-    "dev": "ts-node index.ts",
+    "dev": "nodemon --exec ts-node index.ts",
     "build": "tsc",
     "start:prod": "node dist/index.js"
   },
   "dependencies": {
-    "express": "^5.2.1"
+    "@prisma/adapter-pg": "^7.1.0",
+    "@prisma/client": "^7.1.0",
+    "express": "^5.2.1",
+    "pg": "^8.16.3"
   },
   "devDependencies": {
     "@types/express": "^5.0.6",
     "@types/node": "^24.10.1",
+    "@types/pg": "^8.15.6",
+    "dotenv": "^17.2.3",
+    "nodemon": "^3.1.11",
+    "prisma": "^7.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
   }
