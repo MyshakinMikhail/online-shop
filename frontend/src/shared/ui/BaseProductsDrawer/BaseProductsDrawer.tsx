@@ -1,10 +1,11 @@
 import { MiniProductsList } from "@/entities/product/ui";
-import type { ProductCardType } from "@/shared/types";
+import type { Product, ProductCardType } from "@/shared/types";
 import { MenuIcon, MyButton } from "@/shared/ui";
 import { Drawer } from "antd";
 import { useState } from "react";
 
 type Props = {
+	products: Product[];
 	Icon: React.ComponentType<{ size: number; color: string }>;
 	title: string;
 	type: ProductCardType;
