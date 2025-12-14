@@ -1,3 +1,4 @@
+import { useSearch } from "@/shared/hooks";
 import type { Product } from "@/shared/types";
 import { Flex, Image, Typography } from "antd";
 import { useNavigate } from "react-router-dom";
@@ -12,14 +13,16 @@ type Props = {
 
 export default function SearchProductCard({ product, toggleDrawer }: Props) {
 	const navigate = useNavigate();
-
+	const {setContent} = useSearch();
+	
 	const handleClick = () => {
-		navigate(`/products/${product.id}`);
+		setContent("");
 		toggleDrawer();
+		navigate(`/products/${product.id}`);
 	};
 
 	return (
-		<Flex gap={7}>
+		<Flex gap={7} justify="center" align="center" onClick={handleClick}>
 			<Image
 				src="https://static.tildacdn.com/stor3034-3833-4231-b739-386661316332/71199357.jpg"
 				width="auto"
