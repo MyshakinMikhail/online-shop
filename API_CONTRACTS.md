@@ -13,15 +13,6 @@
 1) user:
   * id: number ( уникальный идентификатор в БД )
   * psuid: string ( уникальный id сгенерированный яндексом )
-  * access_token?: string ( JWT токен доступа )
-  * refresh_token?: string ( токен для обновления access_token )
-  * first_name?: string
-  * last_name?: string
-  * sex?: string ( пол: "male" | "female" | "other" )
-  * default_email?: string
-  * is_buying_smth?: boolean ( флаг процесса покупки )
-  * created_at: string ( ISO 8601 дата создания )
-  * updated_at: string ( ISO 8601 дата обновления )
 
 2) product:
   * id: number ( уникальный идентификатор )
@@ -35,25 +26,20 @@
   * image_url?: string ( URL главного изображения товара )
   * images?: string[] ( массив URL дополнительных изображений )
   * is_active: boolean ( активен ли товар для продажи )
-  * is_favourite?: boolean ( находится ли товар в избранном пользователя, только если пользователь авторизован )
-  * created_at: string ( ISO 8601 дата создания )
-  * updated_at: string ( ISO 8601 дата обновления )
 
-3) cart_item:
-  * id: number ( уникальный идентификатор записи в корзине )
-  * user_id: number ( ID пользователя )
-  * product_id: number ( ID товара )
-  * product: Product ( полная информация о товаре )
-  * quantity: number ( количество товара в корзине, минимум 1 )
-  * created_at: string ( ISO 8601 дата добавления )
-  * updated_at: string ( ISO 8601 дата обновления )
-
-4) favourite_item:
+3) favourite_item:
   * id: number ( уникальный идентификатор записи в избранном )
   * user_id: number ( ID пользователя )
   * product_id: number ( ID товара )
-  * product: Product ( полная информация о товаре )
   * created_at: string ( ISO 8601 дата добавления )
+
+
+4) cart_item:
+  * id: number ( уникальный идентификатор записи в корзине )
+  * user_id: number ( ID пользователя )
+  * product_id: number ( ID товара )
+  * quantity: number ( количество товара в корзине, минимум 1 )
+
 
 5) order:
   * id: number ( уникальный идентификатор заказа )
@@ -61,8 +47,7 @@
   * items: order_item[] ( массив товаров в заказе )
   * total_price: number ( общая стоимость заказа )
   * status: "pending" | "processing" | "completed" | "cancelled" ( статус заказа )
-  * created_at: string ( ISO 8601 дата создания )
-  * updated_at: string ( ISO 8601 дата обновления )
+
 
 6) order_item:
   * id: number ( уникальный идентификатор )
