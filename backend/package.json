@@ -20,6 +20,7 @@
 		"zod-validation-error": "^5.0.0"
 	},
 	"devDependencies": {
+		"@types/cors": "^2.8.19",
 		"@types/express": "^5.0.6",
 		"@types/node": "^24.10.1",
 		"@types/pg": "^8.15.6",

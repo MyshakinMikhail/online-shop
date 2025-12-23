@@ -1,3 +1,4 @@
+import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
 import { fromZodError } from "zod-validation-error";
@@ -12,6 +13,14 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.json());
+
+app.use(
+	cors({
+		origin: "http://localhost:5173",
+		methods: ["GET", "POST", "PUT", "DELETE"],
+		allowedHeaders: ["Content-Type", "Authorization"],
+	})
+);
 
 app.post("/api/auth/yandex/", async (req, res) => {
 	try {
@@ -39,7 +48,7 @@ app.get("/api/products", async (req, res) => {
 				error: fromZodError(result.error).toString(),
 			});
 		}
-		
+
 		let whereClause =
 			result.data.category === "all" ? undefined : result.data;
 
@@ -208,6 +217,30 @@ app.delete("/api/favourites/:id", async (req, res) => {
 		});
 	} catch (e) {
 		res.status(500).json({ message: "Ошибка удаления избранного" });
+	}
+});
+
+// admin routes
+app.post("/api/admin/login", async (req, res) => {
+	try {
+		const { login, password } = req.body;
+		if (!login || !password) {
+			return res
+				.status(400)
+				.json({ message: "Неверные параметры запроса" });
+		}
+		if (
+			login !== process.env.ADMIN_LOGIN ||
+			password !== process.env.ADMIN_PASSWORD
+		) {
+			return res
+				.status(401)
+				.json({ message: "Неверный логин или пароль" });
+		}
+
+		res.status(200).json({ message: "Вход выполнен успешно" });
+	} catch (e) {
+		res.status(500).json({ message: "Ошибка при входе в админ панель" });
 	}
 });
 
