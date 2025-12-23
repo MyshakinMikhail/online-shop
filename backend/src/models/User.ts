@@ -23,13 +23,13 @@ class User
 	extends Model<UserAttributes, UserCreationAttributes>
 	implements UserAttributes
 {
-	public id!: number;
-	public psuid!: string;
-	public first_name!: string;
-	public last_name!: string;
-	public sex!: UserSex;
-	public default_email!: string;
-	public is_buying_smth!: boolean;
+	declare id: number;
+	declare psuid: string;
+	declare first_name: string;
+	declare last_name: string;
+	declare sex: UserSex;
+	declare default_email: string;
+	declare is_buying_smth: boolean;
 }
 
 User.init(

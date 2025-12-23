@@ -65,58 +65,46 @@
 основные контракты API:
 
 1) Авторизация:
-   * POST /api/auth/yandex
-     Request Body: { yandex_token: string, user_data: { psuid: string, first_name?: string, ... } }
-     Response: { user: User, access_token: string, refresh_token: string }
-     Описание: Авторизация через Яндекс OAuth
+    # POST /api/auth/yandex ( + )
+     Request Body: { psuid: string, first_name: string, ... }
+     Response: { code: 200, message: "Пользователь успешно создан" }
+     Описание: Добавление нового пользователя в бд
 
-   * GET /api/auth/me
+   * GET /api/auth/me ( пока не нужно )
      Headers: { Authorization: "Bearer <access_token>" }
      Response: { user: User }
      Описание: Получить информацию о текущем пользователе
 
-   * POST /api/auth/refresh
+   * POST /api/auth/refresh ( пока не нужно )
      Request Body: { refresh_token: string }
      Response: { access_token: string, refresh_token: string }
      Описание: Обновить access_token
 
 2) Товары:
-   * GET /api/products
-     Query Params: { category?: "all" | "tShirts" | "hoodies" | "longSleeves" | "trousers", page?: number, limit?: number }
-     Headers: { Authorization?: "Bearer <access_token>" } ( опционально, если авторизован - добавляется is_favourite в каждый товар )
-     Response: { products: Product[], total: number, page: number, limit: number }
-     Описание: Получить список всех товаров с фильтрацией по категории. Если пользователь авторизован, каждый товар содержит поле is_favourite: boolean
+    # GET /api/products ( + )
+     Query Params: { category?: "all" | "tShirts" | "hoodies" | "longSleeves" | "trousers"}
+     Response: { products: Product[], total: number}
+     Описание: Получить список всех товаров с фильтрацией по категории.
 
-   * GET /api/products/:id
-     Headers: { Authorization?: "Bearer <access_token>" } ( опционально, если авторизован - добавляется is_favourite )
+    # GET /api/products/:id ( + )
+     Params: {id: number};
      Response: { product: Product } ( если авторизован, содержит is_favourite: boolean )
      Описание: Получить информацию о конкретном товаре по ID
 
-   * GET /api/products/search
-     Query Params: { q: string, category?: string, page?: number, limit?: number }
-     Response: { products: Product[], total: number, page: number, limit: number }
-     Описание: Глобальный поиск товаров по названию/описанию
-
-   * GET /api/products/category/:category
-     Params: category = "tShirts" | "hoodies" | "longSleeves" | "trousers"
-     Query Params: { page?: number, limit?: number }
-     Response: { products: Product[], total: number, page: number, limit: number }
-     Описание: Получить товары конкретной категории (альтернатива query параметру)
 
 3) Избранное:
-   * GET /api/favourites
-     Headers: { Authorization: "Bearer <access_token>" }
+     # GET /api/favourites ( + )
+     Request Body: {user_id: User} 
      Response: { favourites: FavouriteItem[] }
      Описание: Получить список избранных товаров пользователя
 
-   * POST /api/favourites
-     Headers: { Authorization: "Bearer <access_token>" }
-     Request Body: { product_id: number }
+     # POST /api/favourites ( + )
+     Request Body: { user_id: number, product_id: number }
      Response: { favourite: FavouriteItem }
      Описание: Добавить товар в избранное
 
-   * DELETE /api/favourites/:product_id
-     Headers: { Authorization: "Bearer <access_token>" }
+     # DELETE /api/favourites/:product_id ( + )
+     Request Body: { psuid: number }
      Response: { success: boolean }
      Описание: Удалить товар из избранного
 

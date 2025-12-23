@@ -32,17 +32,17 @@ class Product
 	extends Model<ProductAttributes, ProductCreationAttributes> // первый параметр - тип атрибутов при чтении из БД, второй - тип атрибутов при создании
 	implements ProductAttributes
 {
-	public id!: number;
-	public name!: string;
-	public description!: string;
-	public sizes!: string[];
-	public article!: string;
-	public price!: number;
-	public category!: ProductCategory;
-	public stock!: number;
-	public image_url!: string | null | undefined;
-	public images!: string[] | null | undefined;
-	public is_active!: boolean;
+	declare id: number;
+	declare name: string;
+	declare description: string;
+	declare sizes: string[];
+	declare article: string;
+	declare price: number;
+	declare category: ProductCategory;
+	declare stock: number;
+	declare image_url: string | null | undefined;
+	declare images: string[] | null | undefined;
+	declare is_active: boolean;
 }
 
 Product.init(

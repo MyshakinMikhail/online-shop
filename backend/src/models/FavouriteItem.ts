@@ -16,9 +16,13 @@ class FavouriteItem
 	extends Model<FavouriteItemAttributes, FavouriteItemCreationAttributes>
 	implements FavouriteItemAttributes
 {
-	public id!: number;
-	public user_id!: number;
-	public product_id!: number;
+	declare id: number;
+	declare user_id: number;
+	declare product_id: number;
+
+	// Ассоциации
+	declare Product?: Product;
+	declare User?: User;
 }
 
 FavouriteItem.init(

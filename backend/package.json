@@ -15,7 +15,9 @@
 		"express": "^5.2.1",
 		"pg": "^8.16.3",
 		"pg-hstore": "^2.3.4",
-		"sequelize": "^6.37.7"
+		"sequelize": "^6.37.7",
+		"zod": "^4.2.1",
+		"zod-validation-error": "^5.0.0"
 	},
 	"devDependencies": {
 		"@types/express": "^5.0.6",
