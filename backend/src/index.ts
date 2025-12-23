@@ -1,6 +1,8 @@
 import dotenv from "dotenv";
 import express from "express";
 import sequelize from "./db.ts";
+import "./models/index.ts";
+import { User } from "./models/index.ts";
 
 dotenv.config();
 
@@ -13,11 +15,23 @@ const start = async () => {
 	try {
 		await sequelize.authenticate();
 		await sequelize.sync();
+
+		await User.update(
+			{
+			  first_name: "ChangeName",
+			},
+			{
+			  where: {
+				psuid: "112345678901",
+			  },
+			}
+		  )
+
 		app.listen(PORT, () => {
-			console.log(`Server is running on port ${PORT}`);
+			console.log(`🚀 Server is running on port ${PORT}`);
 		});
 	} catch (e) {
-		console.log(e);
+		console.error("❌ Error starting server:", e);
 	}
 };
 

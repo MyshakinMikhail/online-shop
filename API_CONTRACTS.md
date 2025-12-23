@@ -11,8 +11,13 @@
 модели:
 
 1) user:
-  * id: number ( уникальный идентификатор в БД )
+  * id?: number ( уникальный идентификатор в БД )
   * psuid: string ( уникальный id сгенерированный яндексом )
+  * first_name?: string
+  * last_name?: string
+  * sex?: string ( пол: "male" | "female" | "other" )
+  * default_email?: string
+  * is_buying_smth?: boolean ( флаг процесса покупки )
 
 2) product:
   * id: number ( уникальный идентификатор )
@@ -31,7 +36,6 @@
   * id: number ( уникальный идентификатор записи в избранном )
   * user_id: number ( ID пользователя )
   * product_id: number ( ID товара )
-  * created_at: string ( ISO 8601 дата добавления )
 
 
 4) cart_item:
