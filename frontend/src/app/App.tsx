@@ -3,6 +3,7 @@ import { ConfigProvider, theme } from "antd";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { MainLayout } from "./layouts";
 import { SearchProvider } from "./providers";
+import { ProtectionRouter } from "./routers";
 import "./styles/index.css";
 
 export default function App() {
@@ -13,14 +14,20 @@ export default function App() {
 					<Routes>
 						<Route path="/auth" element={<AuthPage />} />
 						<Route path="/auth/callback" element={<AuthPage />} />
-						<Route path="/profile" element={<ProfilePage />} />
-						<Route path="/products/:id" element={<ProductPage />} />
-						<Route element={<MainLayout />}>
+
+						<Route element={<ProtectionRouter />}>
+							<Route path="/profile" element={<ProfilePage />} />
 							<Route
-								path="/:category"
-								element={<ProductsPage />}
+								path="/products/:id"
+								element={<ProductPage />}
 							/>
-							<Route path="*" element={<ProductsPage />} />
+							<Route element={<MainLayout />}>
+								<Route
+									path="/:category"
+									element={<ProductsPage />}
+								/>
+								<Route path="*" element={<ProductsPage />} />
+							</Route>
 						</Route>
 					</Routes>
 				</BrowserRouter>
