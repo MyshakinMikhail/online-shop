@@ -252,9 +252,9 @@ const start = async () => {
 		app.listen(PORT, () => {
 			console.log(`🚀 Server is running on port ${PORT}`);
 		});
-	} catch (e) {
-		console.error("❌ Error starting server:", e);
+	} catch (error) {
+		console.error("❌ Error starting server:", error);
 	}
 };
 
-start();
+start().catch(console.error);

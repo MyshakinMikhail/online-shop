@@ -3,9 +3,11 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "../db.ts";
 
 export type UserSex = "male" | "female" | "other";
+export type UserRole = "super_admin" | "admin" | "user";
 
 export interface UserAttributes {
 	id: number;
+	role: UserRole;
 	psuid: string;
 	first_name: string;
 	last_name: string;
@@ -14,16 +16,14 @@ export interface UserAttributes {
 	is_buying_smth: boolean;
 }
 
-type UserCreationAttributes = Optional<
-	UserAttributes,
-	| "id"
->;
+type UserCreationAttributes = Optional<UserAttributes, "id" | "role">;
 
 class User
 	extends Model<UserAttributes, UserCreationAttributes>
 	implements UserAttributes
 {
 	declare id: number;
+	declare role: UserRole;
 	declare psuid: string;
 	declare first_name: string;
 	declare last_name: string;
@@ -38,6 +38,11 @@ User.init(
 			type: DataTypes.INTEGER,
 			autoIncrement: true,
 			primaryKey: true,
+		},
+		role: {
+			type: DataTypes.ENUM("super_admin", "admin", "user"),
+			allowNull: false,
+			defaultValue: "user",
 		},
 		psuid: {
 			type: DataTypes.STRING,
