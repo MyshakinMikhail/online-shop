@@ -1,0 +1,10 @@
+.adminHeader {
+	display: flex;
+	box-sizing: border-box;
+	justify-content: space-between;
+	align-items: center;
+	width: 100%;
+	min-height: 30px;
+	background-color: #f0f0f0;
+	padding: 20px;
+}

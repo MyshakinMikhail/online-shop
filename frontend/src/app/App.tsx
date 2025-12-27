@@ -1,6 +1,7 @@
 import {
 	AuthAdminPage,
 	AuthPage,
+	EditProductPage,
 	ProductPage,
 	ProductsPage,
 	ProfilePage,
@@ -24,6 +25,10 @@ export default function App() {
 
 						<Route path="/admin/auth" element={<AuthAdminPage />} />
 						<Route path="/admin/main" element={<MainAdminPage />} />
+						<Route
+							path="/admin/main/edit/product/:id"
+							element={<EditProductPage />}
+						/>
 
 						<Route element={<ProtectionRouter />}>
 							<Route path="/profile" element={<ProfilePage />} />

@@ -1,0 +1,17 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	height: 100vh;
+}
+
+.header {
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	background-color: white;
+}
+
+.content {
+	flex: 1;
+	overflow: auto;
+}
