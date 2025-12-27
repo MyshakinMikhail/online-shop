@@ -1,4 +1,5 @@
 import { Button, Flex, Tabs, Typography, type TabsProps } from "antd";
+import { useNavigate } from "react-router-dom";
 import classes from "./AdminHeader.module.css";
 
 const { Text } = Typography;
@@ -8,7 +9,11 @@ interface AdminHeaderProps {
 	onTabChange: (key: string) => void;
 }
 
-export default function AdminHeader({ activeTab, onTabChange }: AdminHeaderProps) {
+export default function AdminHeader({
+	activeTab,
+	onTabChange,
+}: AdminHeaderProps) {
+	const navigate = useNavigate();
 	const items: TabsProps["items"] = [
 		{
 			key: "1",
@@ -28,6 +33,10 @@ export default function AdminHeader({ activeTab, onTabChange }: AdminHeaderProps
 		},
 	];
 
+	const handleAuth = () => {
+		navigate("/auth");
+	};
+
 	return (
 		<Flex className={classes.adminHeader}>
 			<Text strong style={{ fontSize: "18px" }}>
@@ -35,7 +44,7 @@ export default function AdminHeader({ activeTab, onTabChange }: AdminHeaderProps
 			</Text>
 			<Tabs activeKey={activeTab} items={items} onChange={onTabChange} />
 			<Flex>
-				<Button>Выйти</Button>
+				<Button onClick={handleAuth}>Войти как пользователь</Button>
 			</Flex>
 		</Flex>
 	);
