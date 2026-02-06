@@ -2,12 +2,7 @@ import type { Optional } from "sequelize";
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../db.ts";
 
-export type ProductCategory =
-	| "all"
-	| "tShirts"
-	| "hoodies"
-	| "longSleeves"
-	| "trousers";
+export type ProductCategory = "all" | "tShirts" | "hoodies" | "longSleeves" | "trousers";
 
 export interface ProductAttributes {
 	id: number;
@@ -23,13 +18,11 @@ export interface ProductAttributes {
 	is_active: boolean;
 }
 
-type ProductCreationAttributes = Optional<
-	ProductAttributes,
-	"id" | "image_url" | "images"
->;
+type ProductCreationAttributes = Optional<ProductAttributes, "id" | "image_url" | "images">;
 
 class Product
-	extends Model<ProductAttributes, ProductCreationAttributes> // первый параметр - тип атрибутов при чтении из БД, второй - тип атрибутов при создании
+	extends Model<ProductAttributes, ProductCreationAttributes>
+	// первый параметр - тип атрибутов при чтении из БД, второй - тип атрибутов при создании
 	implements ProductAttributes
 {
 	declare id: number;
@@ -74,13 +67,7 @@ Product.init(
 			allowNull: false,
 		},
 		category: {
-			type: DataTypes.ENUM(
-				"all",
-				"tShirts",
-				"hoodies",
-				"longSleeves",
-				"trousers"
-			),
+			type: DataTypes.ENUM("all", "tShirts", "hoodies", "longSleeves", "trousers"),
 			allowNull: false,
 		},
 		stock: {

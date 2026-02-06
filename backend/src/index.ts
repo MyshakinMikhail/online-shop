@@ -49,13 +49,12 @@ app.get("/api/products", async (req, res) => {
 			});
 		}
 
-		let whereClause =
-			result.data.category === "all" ? undefined : result.data;
+		const whereClause = result.data.category === "all" ? undefined : result.data;
 
 		const products = await Product.findAll({ where: whereClause });
 		res.status(200).json({ data: { products } });
 	} catch (error) {
-		res.status(500).json({ message: "Ошибка получения продуктов" });
+		res.status(500).json({ message: `Ошибка получения продуктов: ${error}` });
 	}
 });
 
@@ -78,7 +77,7 @@ app.get("/api/products/:id", async (req, res) => {
 		}
 		res.status(200).json({ data: { product } });
 	} catch (e) {
-		res.status(500).json({ message: "Ошибка получения продукта по id" });
+		res.status(500).json({ message: `Ошибка получения продукта по id: ${e}` });
 	}
 });
 
@@ -125,7 +124,7 @@ app.get("/api/favourites", async (req, res) => {
 			attributes: [],
 		});
 
-		const products = favourites.map((fav) => fav.Product);
+		const products = favourites.map(fav => fav.Product);
 
 		res.json({ data: { products } });
 	} catch (error) {
@@ -169,7 +168,7 @@ app.post("/api/favourites", async (req, res) => {
 			message: "Товар добавлен в избранное",
 		});
 	} catch (e) {
-		res.status(500).json("Ошибка при добавлении избранного");
+		res.status(500).json(`Ошибка при добавлении избранного ${e}`);
 	}
 });
 
@@ -216,31 +215,24 @@ app.delete("/api/favourites/:id", async (req, res) => {
 			message: "Избранное удалено",
 		});
 	} catch (e) {
-		res.status(500).json({ message: "Ошибка удаления избранного" });
+		res.status(500).json({ message: `Ошибка удаления избранного: ${e}` });
 	}
 });
 
 // admin routes
-app.post("/api/admin/login", async (req, res) => {
+app.post("/api/admin/login", (req, res) => {
 	try {
 		const { login, password } = req.body;
 		if (!login || !password) {
-			return res
-				.status(400)
-				.json({ message: "Неверные параметры запроса" });
+			return res.status(400).json({ message: "Неверные параметры запроса" });
 		}
-		if (
-			login !== process.env.ADMIN_LOGIN ||
-			password !== process.env.ADMIN_PASSWORD
-		) {
-			return res
-				.status(401)
-				.json({ message: "Неверный логин или пароль" });
+		if (login !== process.env.ADMIN_LOGIN || password !== process.env.ADMIN_PASSWORD) {
+			return res.status(401).json({ message: "Неверный логин или пароль" });
 		}
 
 		res.status(200).json({ message: "Вход выполнен успешно" });
 	} catch (e) {
-		res.status(500).json({ message: "Ошибка при входе в админ панель" });
+		res.status(500).json({ message: `Ошибка при входе в админ панель: ${e}` });
 	}
 });
 
