@@ -15,9 +15,7 @@ export default function SearchProductList({ sortedProducts }: Props) {
 		<div>
 			<Paragraph>Товаров по запросу: {count}</Paragraph>
 			{sortedProducts.length > 0 &&
-				sortedProducts.map((product: Product) => (
-					<SearchProductCard product={product} />
-				))}
+				sortedProducts.map((product: Product) => <SearchProductCard product={product} />)}
 		</div>
 	);
 }

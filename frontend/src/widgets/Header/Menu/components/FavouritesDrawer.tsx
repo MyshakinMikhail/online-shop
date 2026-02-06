@@ -6,11 +6,6 @@ export default function FavouritesDrawer() {
 	const products = mockMiniProducts;
 
 	return (
-		<BaseProductsDrawer
-			products={products}
-			Icon={Heart}
-			title="Избранное"
-			type="favourite"
-		/>
+		<BaseProductsDrawer products={products} Icon={Heart} title="Избранное" type="favourite" />
 	);
 }

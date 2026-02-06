@@ -13,7 +13,7 @@ export default function SearchDrawer() {
 	const { content, setContent, sortedProducts } = useSearch();
 
 	const toggleDrawer = () => {
-		setOpen((open) => !open);
+		setOpen(open => !open);
 	};
 
 	const drawerHeight = sortedProducts.length > 0 ? "100dvh" : 175;
@@ -31,7 +31,7 @@ export default function SearchDrawer() {
 			>
 				<Input
 					value={content}
-					onChange={(e) => setContent(e.target.value)}
+					onChange={e => setContent(e.target.value)}
 					placeholder="Введите название товара"
 					prefix={<Search />}
 					allowClear
@@ -42,7 +42,7 @@ export default function SearchDrawer() {
 				<Flex className={classes.container} gap={15} justify="center">
 					{content.length > 0 ? (
 						sortedProducts.length > 0 ? (
-							sortedProducts.map((product) => (
+							sortedProducts.map(product => (
 								<SearchProductCard
 									product={product}
 									key={product.id}

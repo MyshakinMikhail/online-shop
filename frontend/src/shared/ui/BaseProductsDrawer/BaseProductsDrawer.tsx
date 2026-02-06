@@ -19,19 +19,13 @@ export default function BaseProductsDrawer({ Icon, title, type }: Props) {
 	};
 
 	const toggleDrawer = () => {
-		setOpen((open) => !open);
+		setOpen(open => !open);
 	};
 
 	return (
 		<>
 			<MenuIcon Icon={Icon} onClick={toggleDrawer} />
-			<Drawer
-				title={title}
-				width={450}
-				placement="right"
-				open={open}
-				onClose={toggleDrawer}
-			>
+			<Drawer title={title} width={450} placement="right" open={open} onClose={toggleDrawer}>
 				<MiniProductsList type={type} toggleDrawer={toggleDrawer} />
 				{type === "cart" && <MyButton onClick={handleClick} />}
 			</Drawer>

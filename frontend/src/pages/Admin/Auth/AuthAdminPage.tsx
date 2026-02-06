@@ -39,22 +39,13 @@ export default function AuthAdminPage() {
 	return (
 		<div className={styles.container}>
 			<Card className={styles.card}>
-				<Space
-					direction="vertical"
-					size="large"
-					align="center"
-					style={{ width: "100%" }}
-				>
+				<Space direction="vertical" size="large" align="center" style={{ width: "100%" }}>
 					<LogIn size={48} className={styles.icon} />
 					<Title level={2} style={{ margin: 0, textAlign: "center" }}>
 						Вход в аккаунт администратора
 					</Title>
-					<Text
-						type="secondary"
-						style={{ textAlign: "center", display: "block" }}
-					>
-						Войдите с помощью выданного вам логина и пароля в ваш
-						профиль администратора
+					<Text type="secondary" style={{ textAlign: "center", display: "block" }}>
+						Войдите с помощью выданного вам логина и пароля в ваш профиль администратора
 					</Text>
 
 					{error && (
@@ -79,14 +70,14 @@ export default function AuthAdminPage() {
 					<Input
 						placeholder="Логин"
 						value={login}
-						onChange={(e) => setLogin(e.target.value)}
+						onChange={e => setLogin(e.target.value)}
 						className={styles.input}
 					/>
 
 					<Input.Password
 						placeholder="Пароль"
 						value={password}
-						onChange={(e) => setPassword(e.target.value)}
+						onChange={e => setPassword(e.target.value)}
 						className={styles.input}
 					/>
 

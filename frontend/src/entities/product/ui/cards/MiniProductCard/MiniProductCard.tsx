@@ -15,20 +15,15 @@ type Props = {
 	toggleDrawer: () => void;
 };
 
-export default function MiniProductCard({
-	product,
-	type,
-	handleDelete,
-	toggleDrawer,
-}: Props) {
+export default function MiniProductCard({ product, type, handleDelete, toggleDrawer }: Props) {
 	const [count, setCount] = useState<number>(product.stock || 1);
 	const navigate = useNavigate();
 
 	const decrement = () => {
-		setCount((prev) => prev - 1);
+		setCount(prev => prev - 1);
 	};
 	const increment = () => {
-		setCount((prev) => prev + 1);
+		setCount(prev => prev + 1);
 	};
 
 	return (

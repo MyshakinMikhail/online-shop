@@ -22,10 +22,7 @@ export default function Navbar() {
 	return (
 		<>
 			<Flex className={classes.navbar} gap={17} align="center">
-				<TextAlignJustify
-					onClick={showDrawer}
-					className={classes.icon}
-				/>
+				<TextAlignJustify onClick={showDrawer} className={classes.icon} />
 				<Title
 					level={2}
 					style={{ margin: 0 }}
@@ -46,39 +43,19 @@ export default function Navbar() {
 				open={open}
 			>
 				<Flex className={classes.navbarItems}>
-					<NavbarItem
-						isUnderline={true}
-						path="/all"
-						setOpen={setOpen}
-					>
+					<NavbarItem isUnderline={true} path="/all" setOpen={setOpen}>
 						Все товары
 					</NavbarItem>
-					<NavbarItem
-						isUnderline={false}
-						path="/tShirts"
-						setOpen={setOpen}
-					>
+					<NavbarItem isUnderline={false} path="/tShirts" setOpen={setOpen}>
 						Футболки
 					</NavbarItem>
-					<NavbarItem
-						isUnderline={false}
-						path="/hoodies"
-						setOpen={setOpen}
-					>
+					<NavbarItem isUnderline={false} path="/hoodies" setOpen={setOpen}>
 						Худи
 					</NavbarItem>
-					<NavbarItem
-						isUnderline={false}
-						path="/longSleeves"
-						setOpen={setOpen}
-					>
+					<NavbarItem isUnderline={false} path="/longSleeves" setOpen={setOpen}>
 						Лонгсливы
 					</NavbarItem>
-					<NavbarItem
-						isUnderline={false}
-						path="/trousers"
-						setOpen={setOpen}
-					>
+					<NavbarItem isUnderline={false} path="/trousers" setOpen={setOpen}>
 						Штаны
 					</NavbarItem>
 				</Flex>

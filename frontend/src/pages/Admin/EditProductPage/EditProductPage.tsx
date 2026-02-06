@@ -1,5 +1,5 @@
-export default function EditProductPage(){
+export default function EditProductPage() {
 	// get info about product
-	
-	return <div>EditProductPage</div> 	
+
+	return <div>EditProductPage</div>;
 }

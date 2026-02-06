@@ -6,11 +6,7 @@ type Props = ButtonProps & {
 	label?: string; // текст кнопки по умолчанию
 };
 
-export default function MyButton({
-	label = "Купить",
-	onClick,
-	...props
-}: Props) {
+export default function MyButton({ label = "Купить", onClick, ...props }: Props) {
 	return (
 		<>
 			<Button

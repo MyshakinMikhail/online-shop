@@ -25,22 +25,13 @@ export default function App() {
 
 						<Route path="/admin/auth" element={<AuthAdminPage />} />
 						<Route path="/admin/main" element={<MainAdminPage />} />
-						<Route
-							path="/admin/main/edit/product/:id"
-							element={<EditProductPage />}
-						/>
+						<Route path="/admin/main/edit/product/:id" element={<EditProductPage />} />
 
 						<Route element={<ProtectionRouter />}>
 							<Route path="/profile" element={<ProfilePage />} />
-							<Route
-								path="/products/:id"
-								element={<ProductPage />}
-							/>
+							<Route path="/products/:id" element={<ProductPage />} />
 							<Route element={<MainLayout />}>
-								<Route
-									path="/:category"
-									element={<ProductsPage />}
-								/>
+								<Route path="/:category" element={<ProductsPage />} />
 								<Route path="*" element={<ProductsPage />} />
 							</Route>
 						</Route>

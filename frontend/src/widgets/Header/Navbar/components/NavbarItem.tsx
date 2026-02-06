@@ -11,12 +11,7 @@ type Props = {
 	setOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function NavbarItem({
-	children,
-	isUnderline,
-	path,
-	setOpen,
-}: Props) {
+export default function NavbarItem({ children, isUnderline, path, setOpen }: Props) {
 	const navigate = useNavigate();
 	const handleClick = () => {
 		navigate(path);
@@ -24,11 +19,7 @@ export default function NavbarItem({
 	};
 
 	return (
-		<Text
-			underline={isUnderline}
-			style={{ cursor: "pointer" }}
-			onClick={handleClick}
-		>
+		<Text underline={isUnderline} style={{ cursor: "pointer" }} onClick={handleClick}>
 			{children}
 		</Text>
 	);

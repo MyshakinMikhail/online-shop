@@ -9,10 +9,7 @@ interface AdminHeaderProps {
 	onTabChange: (key: string) => void;
 }
 
-export default function AdminHeader({
-	activeTab,
-	onTabChange,
-}: AdminHeaderProps) {
+export default function AdminHeader({ activeTab, onTabChange }: AdminHeaderProps) {
 	const navigate = useNavigate();
 	const items: TabsProps["items"] = [
 		{

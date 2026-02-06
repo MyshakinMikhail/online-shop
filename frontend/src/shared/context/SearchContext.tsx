@@ -7,6 +7,4 @@ type SearchContextType = {
 	sortedProducts: Product[];
 };
 
-export const SearchContext = createContext<SearchContextType | undefined>(
-	undefined
-);
+export const SearchContext = createContext<SearchContextType | undefined>(undefined);

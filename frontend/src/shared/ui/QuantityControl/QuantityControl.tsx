@@ -19,7 +19,7 @@ export function QuantityControl({
 					border: 0,
 					color: "#5B5B5B",
 				}}
-				onClick={(e) => {
+				onClick={e => {
 					e.stopPropagation();
 					decrement();
 				}}
@@ -33,7 +33,7 @@ export function QuantityControl({
 					border: 0,
 					color: "#5B5B5B",
 				}}
-				onClick={(e) => {
+				onClick={e => {
 					e.stopPropagation();
 					increment();
 				}}

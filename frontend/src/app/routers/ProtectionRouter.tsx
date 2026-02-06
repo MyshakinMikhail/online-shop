@@ -5,5 +5,5 @@ export default function ProtectionRouter() {
 		return <Navigate to="/auth" replace />;
 	}
 
-	return <Outlet/>;
+	return <Outlet />;
 }

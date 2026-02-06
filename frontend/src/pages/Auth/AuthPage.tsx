@@ -1,8 +1,4 @@
-import {
-    exchangeCodeForToken,
-    getUserInfo,
-    initiateYandexAuth,
-} from "@/shared/lib/yandexAuth";
+import { exchangeCodeForToken, getUserInfo, initiateYandexAuth } from "@/shared/lib/yandexAuth";
 import { Alert, Button, Card, Space, Typography } from "antd";
 import { LogIn } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -18,33 +14,35 @@ export default function AuthPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState(false);
 
-	const handleAuthCallback = useCallback(async (code: string) => {
-		setLoading(true);
-		setError(null);
+	const handleAuthCallback = useCallback(
+		async (code: string) => {
+			setLoading(true);
+			setError(null);
 
-		try {
-			const tokenData = await exchangeCodeForToken(code);
-			const userInfo = await getUserInfo(tokenData.access_token);
+			try {
+				const tokenData = await exchangeCodeForToken(code);
+				const userInfo = await getUserInfo(tokenData.access_token);
 
-			localStorage.setItem("yandex_access_token", tokenData.access_token);
-			if (tokenData.refresh_token) {
-				localStorage.setItem("yandex_refresh_token", tokenData.refresh_token);
+				localStorage.setItem("yandex_access_token", tokenData.access_token);
+				if (tokenData.refresh_token) {
+					localStorage.setItem("yandex_refresh_token", tokenData.refresh_token);
+				}
+				localStorage.setItem("user_info", JSON.stringify(userInfo));
+
+				setSuccess(true);
+
+				setTimeout(() => {
+					navigate("/");
+				}, 2000);
+			} catch (err) {
+				const errorMessage =
+					err instanceof Error ? err.message : "Произошла ошибка при авторизации";
+				setError(errorMessage);
+				setLoading(false);
 			}
-			localStorage.setItem("user_info", JSON.stringify(userInfo));
-
-			setSuccess(true);
-
-			setTimeout(() => {
-				navigate("/");
-			}, 2000);
-		} catch (err) {
-			const errorMessage = err instanceof Error
-				? err.message
-				: "Произошла ошибка при авторизации";
-			setError(errorMessage);
-			setLoading(false);
-		}
-	}, [navigate]);
+		},
+		[navigate]
+	);
 
 	useEffect(() => {
 		const code = searchParams.get("code");
@@ -112,4 +110,3 @@ export default function AuthPage() {
 		</div>
 	);
 }
-

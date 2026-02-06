@@ -1,3 +1,3 @@
 import ProtectionRouter from "./ProtectionRouter";
 
-export {ProtectionRouter};
+export { ProtectionRouter };

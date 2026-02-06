@@ -14,8 +14,7 @@ export const mockMiniProducts: Product[] = [
 	{
 		id: "2",
 		name: "Футболка Oversize",
-		description:
-			"Свободный крой, мягкий материал, подходит для повседневного ношения.",
+		description: "Свободный крой, мягкий материал, подходит для повседневного ношения.",
 		size: "L",
 		article: "TSH-002",
 		price: 1799,
@@ -45,8 +44,7 @@ export const mockMiniProducts: Product[] = [
 	{
 		id: "5",
 		name: "Лонгслив Basic",
-		description:
-			"Длинный рукав, приятный к телу материал, подходит для любого сезона.",
+		description: "Длинный рукав, приятный к телу материал, подходит для любого сезона.",
 		size: "M",
 		article: "LS-201",
 		price: 1899,

@@ -13,8 +13,8 @@ type Props = {
 
 export default function SearchProductCard({ product, toggleDrawer }: Props) {
 	const navigate = useNavigate();
-	const {setContent} = useSearch();
-	
+	const { setContent } = useSearch();
+
 	const handleClick = () => {
 		setContent("");
 		toggleDrawer();

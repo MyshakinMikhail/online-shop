@@ -5,11 +5,4 @@ import ProductPage from "./Product/ProductPage";
 import ProductsPage from "./Products/ProductsPage";
 import ProfilePage from "./Profile/ProfilePage";
 
-export {
-	AuthAdminPage,
-	AuthPage,
-	EditProductPage,
-	ProductPage,
-	ProductsPage,
-	ProfilePage,
-};
+export { AuthAdminPage, AuthPage, EditProductPage, ProductPage, ProductsPage, ProfilePage };

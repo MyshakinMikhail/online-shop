@@ -2,13 +2,12 @@ const YANDEX_CLIENT_ID = import.meta.env.VITE_YANDEX_CLIENT_ID || "your-client-i
 const YANDEX_REDIRECT_URI = import.meta.env.VITE_YANDEX_REDIRECT_URI || "your-redirect-uri";
 
 export function getYandexAuthUrl(): string {
-	
 	const params = new URLSearchParams({
 		response_type: "code",
 		client_id: YANDEX_CLIENT_ID,
 		redirect_uri: YANDEX_REDIRECT_URI,
 	});
-	
+
 	return `https://oauth.yandex.ru/authorize?${params.toString()}`;
 }
 
@@ -29,14 +28,14 @@ export async function exchangeCodeForToken(code: string): Promise<{
 	refresh_token?: string;
 }> {
 	const clientSecret = import.meta.env.VITE_YANDEX_CLIENT_SECRET || "";
-	
+
 	const requestBody = new URLSearchParams({
 		grant_type: "authorization_code",
 		code: code,
 		client_id: YANDEX_CLIENT_ID,
 		redirect_uri: YANDEX_REDIRECT_URI,
 	});
-	
+
 	if (clientSecret) {
 		requestBody.append("client_secret", clientSecret);
 	}
@@ -100,4 +99,3 @@ export async function getUserInfo(accessToken: string): Promise<{
 
 	return response.json();
 }
-

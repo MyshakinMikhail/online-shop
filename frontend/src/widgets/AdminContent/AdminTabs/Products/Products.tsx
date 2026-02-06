@@ -12,12 +12,7 @@ export default function Products() {
 				<Input placeholder="Поиск товара" />
 				<Button>Добавить товар</Button>
 			</Flex>
-			<Flex
-				gap={20}
-				justify="flex-start"
-				align="center"
-				className={classes.products}
-			>
+			<Flex gap={20} justify="flex-start" align="center" className={classes.products}>
 				{products.map((product: Product) => (
 					<AdminProductCard product={product} />
 				))}

@@ -12,11 +12,9 @@ export const SearchProvider = ({ children }: { children: ReactNode }) => {
 
 		const query = content.toLowerCase().trim();
 
-		return mockMiniProducts.filter((product) => {
+		return mockMiniProducts.filter(product => {
 			const titleMatch = product.name?.toLowerCase().includes(query);
-			const descriptionMatch = product.description
-				?.toLowerCase()
-				.includes(query);
+			const descriptionMatch = product.description?.toLowerCase().includes(query);
 			return titleMatch || descriptionMatch;
 		});
 	}, [content]);

@@ -5,9 +5,9 @@ import type { Product } from "@/shared/types";
 
 type Props = {
 	product: Product;
-}
+};
 
-export default function AdminProductCard({product}: Props) {
+export default function AdminProductCard({ product }: Props) {
 	const navigate = useNavigate();
 	const handleDelete = () => {};
 	const handleEdit = () => {
@@ -16,13 +16,7 @@ export default function AdminProductCard({product}: Props) {
 
 	return (
 		<>
-			<Flex
-				vertical
-				gap={10}
-				justify="center"
-				align="center"
-				className={classes.container}
-			>
+			<Flex vertical gap={10} justify="center" align="center" className={classes.container}>
 				<Image
 					src="https://static.tildacdn.com/stor3435-3861-4835-b432-323134376130/56150826.jpg"
 					width="200px"

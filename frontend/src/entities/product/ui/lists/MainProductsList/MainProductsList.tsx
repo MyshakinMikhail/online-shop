@@ -8,7 +8,7 @@ export default function MainProductsList() {
 	return (
 		<div className={classes.list}>
 			{products.length === 0 && <div>Товары отсутствуют</div>}
-			{products.map((product) => (
+			{products.map(product => (
 				<MainProductCard key={product.id} product={product} />
 			))}
 		</div>

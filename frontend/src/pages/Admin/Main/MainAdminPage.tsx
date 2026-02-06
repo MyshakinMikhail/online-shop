@@ -7,12 +7,7 @@ export default function MainAdminPage() {
 	const [activeTab, setActiveTab] = useState("1");
 
 	return (
-		<Flex
-			vertical
-			justify="center"
-			align="center"
-			className={classes.container}
-		>
+		<Flex vertical justify="center" align="center" className={classes.container}>
 			<AdminHeader activeTab={activeTab} onTabChange={setActiveTab} />
 			<AdminContent activeTab={activeTab} />
 		</Flex>

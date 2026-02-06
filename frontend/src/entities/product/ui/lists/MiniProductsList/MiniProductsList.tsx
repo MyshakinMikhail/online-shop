@@ -16,16 +16,12 @@ export default function MiniProductsList({ type, toggleDrawer }: Props) {
 	const [products, setProducts] = useState<Product[]>(mockMiniProducts);
 
 	const handleDelete = (id: string) => {
-		setProducts((prevProducts) =>
-			prevProducts.filter((product) => product.id !== id)
-		);
+		setProducts(prevProducts => prevProducts.filter(product => product.id !== id));
 	};
 
 	return (
 		<>
-			{products.length === 0 ? (
-				<Paragraph>Товары не добавлены</Paragraph>
-			) : null}
+			{products.length === 0 ? <Paragraph>Товары не добавлены</Paragraph> : null}
 			<Flex className={classes.products}>
 				{products.map((product: Product) => (
 					<MiniProductCard
