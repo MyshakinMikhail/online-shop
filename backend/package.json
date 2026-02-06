@@ -14,6 +14,7 @@
 		"format": "prettier --write .",
 		"format:check": "prettier --check .",
 		"validate": "npm run lint && npm run format:check",
+		"fix": "npm run format && npm run lint:fix",
 		"type-check": "tsc --noEmit"
 	},
 	"dependencies": {
