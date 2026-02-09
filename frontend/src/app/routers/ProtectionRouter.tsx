@@ -1,5 +1,6 @@
 import { api } from "@/shared/api";
 import type { YandexUserInfo } from "@/shared/types/yandexUserInfo";
+import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -41,15 +42,17 @@ export default function ProtectionRouter() {
 						console.log("Unexpected status:", response.status);
 						setIsAuthenticated(false);
 					}
-				} catch (apiError: any) {
-					console.log("API check error:", apiError.response?.status);
+				} catch (apiError: unknown) {
+					if (isAxiosError(apiError)) {
+						console.log("API check error:", apiError.response?.status);
 
-					if (apiError.response?.status === 404) {
-						// Пользователь не найден в БД
-						console.log("User not found in database, clearing storage");
-						setIsAuthenticated(false);
-						localStorage.removeItem("user_info");
-						localStorage.removeItem("yandex_access_token");
+						if (apiError.response?.status === 404) {
+							// Пользователь не найден в БД
+							console.log("User not found in database, clearing storage");
+							setIsAuthenticated(false);
+							localStorage.removeItem("user_info");
+							localStorage.removeItem("yandex_access_token");
+						}
 					} else {
 						// Другие ошибки
 						console.error("Other API error:", apiError);
