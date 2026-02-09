@@ -8,5 +8,6 @@ export type Product = {
 	article: string;
 	price: number;
 	category: Category;
+	categoryId: number;
 	stock: number;
 };

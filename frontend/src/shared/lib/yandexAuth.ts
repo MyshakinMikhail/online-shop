@@ -1,3 +1,5 @@
+import type { YandexUserInfo } from "../types/yandexUserInfo";
+
 const YANDEX_CLIENT_ID = import.meta.env.VITE_YANDEX_CLIENT_ID || "your-client-id";
 const YANDEX_REDIRECT_URI = import.meta.env.VITE_YANDEX_REDIRECT_URI || "your-redirect-uri";
 
@@ -72,21 +74,7 @@ export async function exchangeCodeForToken(code: string): Promise<{
 	}
 }
 
-export async function getUserInfo(accessToken: string): Promise<{
-	id: string;
-	login: string;
-	client_id: string;
-	display_name?: string;
-	real_name?: string;
-	first_name?: string;
-	last_name?: string;
-	sex?: string;
-	default_email?: string;
-	emails?: string[];
-	default_avatar_id?: string;
-	is_avatar_empty?: boolean;
-	pwd_sha256?: string;
-}> {
+export async function getUserInfo(accessToken: string): Promise<YandexUserInfo> {
 	const response = await fetch("https://login.yandex.ru/info", {
 		headers: {
 			Authorization: `OAuth ${accessToken}`,

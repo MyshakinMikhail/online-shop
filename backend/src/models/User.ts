@@ -6,7 +6,7 @@ export type UserSex = "male" | "female" | "other";
 export type UserRole = "super_admin" | "admin" | "user";
 
 export interface UserAttributes {
-	id: number;
+	id?: number;
 	role: UserRole;
 	psuid: string;
 	first_name: string;

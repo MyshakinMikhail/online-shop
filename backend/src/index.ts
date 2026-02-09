@@ -4,7 +4,7 @@ import express from "express";
 import { fromZodError } from "zod-validation-error";
 import sequelize from "./db.ts";
 import "./models/index.ts";
-import { FavouriteItem, Product, User } from "./models/index.ts";
+import { Product, User } from "./models/index.ts";
 import { ProductsQuerySchema } from "./schemas/productsQuery.ts";
 
 dotenv.config();
@@ -24,10 +24,78 @@ app.use(
 
 app.post("/api/auth/yandex/", async (req, res) => {
 	try {
-		await User.create(req.body.user);
-		res.status(200).json({ message: "Пользователь успешно создан" });
-	} catch (e) {
-		res.status(500).json(e);
+		if (!req.body?.user?.psuid) {
+			return res.status(400).json({
+				message: "Не указан Yandex ID пользователя",
+			});
+		}
+
+		const userData = req.body.user;
+
+		const [user, created] = await User.findOrCreate({
+			where: { psuid: userData.psuid },
+			defaults: userData,
+		});
+
+		if (!created) {
+			await user.update(userData);
+		}
+
+		return res.status(created ? 201 : 200).json({
+			message: created ? "Пользователь успешно создан" : "Данные пользователя обновлены",
+			user: {
+				id: user.id,
+				psuid: user.psuid,
+				first_name: user.first_name,
+				last_name: user.last_name,
+				email: user.default_email,
+				role: user.role,
+			},
+			created,
+		});
+	} catch (error) {
+		console.error("Auth error:", error);
+
+		return res.status(500).json({
+			message: "Ошибка при сохранении пользователя",
+		});
+	}
+});
+
+// Простой endpoint для проверки существования пользователя
+// НЕ создает пользователя, только проверяет
+app.get("/api/checkUser/:psuid", async (req, res) => {
+	console.log(1);
+	try {
+		const psuid = req.params.psuid; // Это Yandex ID, не путать с нашим id
+		console.log(psuid);
+
+		// Ищем по psuid (Yandex ID), а не по id
+		const user = await User.findOne({ where: { psuid } });
+
+		if (!user) {
+			return res.status(404).json({
+				message: "Пользователь не найден",
+				found: false,
+			});
+		}
+
+		res.status(200).json({
+			message: "Пользователь найден",
+			user: {
+				id: user.id,
+				psuid: user.psuid,
+				first_name: user.first_name,
+				last_name: user.last_name,
+				email: user.default_email,
+			},
+			found: true,
+		});
+	} catch (error) {
+		console.error("Error getting user:", error);
+		res.status(500).json({
+			message: "Ошибка получения пользователя",
+		});
 	}
 });
 
@@ -81,144 +149,6 @@ app.get("/api/products/:id", async (req, res) => {
 	}
 });
 
-app.get("/api/favourites", async (req, res) => {
-	try {
-		// желательно возвращать избранные только если пользователь авторизован
-		// добавить это после перемещения авторизации через Яндекс ID на бэк
-		const { userId } = req.body;
-		if (!userId) {
-			return res.status(400).json({
-				message: "Неверные параметры запроса",
-				error: "user_id is required",
-			});
-		}
-
-		const user = await User.findByPk(userId);
-		if (!user) {
-			return res.status(404).json({
-				message: "Пользователь не найден",
-				error: "user not found",
-			});
-		}
-
-		const favourites = await FavouriteItem.findAll({
-			where: { user_id: userId },
-			include: [
-				{
-					model: Product,
-					attributes: [
-						"id",
-						"name",
-						"description",
-						"sizes",
-						"article",
-						"price",
-						"category",
-						"stock",
-						"image_url",
-						"images",
-						"is_active",
-					],
-				},
-			],
-			attributes: [],
-		});
-
-		const products = favourites.map(fav => fav.Product);
-
-		res.json({ data: { products } });
-	} catch (error) {
-		console.error(error);
-		res.status(500).json({ message: "Ошибка при загрузке избранного" });
-	}
-});
-
-app.post("/api/favourites", async (req, res) => {
-	try {
-		const { userId, productId } = req.body;
-		if (!userId || !productId) {
-			return res.status(400).json({
-				message: "Неверные параметры запроса",
-				error: "user_id and product_id are required",
-			});
-		}
-
-		const user = await User.findByPk(userId);
-		if (!user) {
-			return res.status(404).json({
-				message: "Пользователь не найден",
-				error: "user not found",
-			});
-		}
-
-		const product = await Product.findByPk(productId);
-		if (!product) {
-			return res.status(404).json({
-				message: "Товар не найден",
-				error: "product not found",
-			});
-		}
-
-		const newFavouriteProduct = await FavouriteItem.create({
-			user_id: userId,
-			product_id: productId,
-		});
-		res.status(200).json({
-			data: { newFavouriteProduct },
-			message: "Товар добавлен в избранное",
-		});
-	} catch (e) {
-		res.status(500).json(`Ошибка при добавлении избранного ${e}`);
-	}
-});
-
-app.delete("/api/favourites/:id", async (req, res) => {
-	try {
-		const { id } = req.params;
-		const { psuid } = req.body;
-		if (!id) {
-			return res.status(400).json({
-				message: "Неверные параметры запроса",
-				error: "id is required",
-			});
-		}
-
-		if (!psuid) {
-			return res.status(400).json({
-				message: "Неверные параметры запроса",
-				error: "psuid is required",
-			});
-		}
-
-		const user = await User.findOne({ where: { psuid } });
-
-		if (!user) {
-			return res.status(404).json({
-				message: "Пользователь не найден",
-				error: "user not found",
-			});
-		}
-
-		const deletedItem = await FavouriteItem.destroy({
-			where: {
-				user_id: user.id,
-				product_id: id,
-			},
-		});
-
-		if (!deletedItem) {
-			res.status(404).json({ message: "Избранное не найдено" });
-		}
-
-		res.status(200).json({
-			data: { deletedItem },
-			message: "Избранное удалено",
-		});
-	} catch (e) {
-		res.status(500).json({ message: `Ошибка удаления избранного: ${e}` });
-	}
-});
-
 // admin routes
 app.post("/api/admin/login", (req, res) => {
 	try {
@@ -244,6 +174,13 @@ const start = async () => {
 		app.listen(PORT, () => {
 			console.log(`🚀 Server is running on port ${PORT}`);
 		});
+
+		// await seeders.reseed();
+
+		// await seeders.clearAllData();
+		// await seeders.seedTesting();
+
+		console.log("server started");
 	} catch (error) {
 		console.error("❌ Error starting server:", error);
 	}

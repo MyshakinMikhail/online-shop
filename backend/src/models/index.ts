@@ -1,8 +1,11 @@
-import FavouriteItem from "./FavouriteItem.ts";
+import Category from "./Category.ts";
 import Product from "./Product.ts";
 import User from "./User.ts";
 
-User.hasMany(FavouriteItem, { foreignKey: "user_id" });
-Product.hasMany(FavouriteItem, { foreignKey: "product_id" });
+Category.hasMany(Product, {
+	foreignKey: "categoryId",
+	as: "products",
+});
 
-export { FavouriteItem, Product, User };
+export type ModelsType = Category | Product | User;
+export { Category, Product, User };

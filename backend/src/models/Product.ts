@@ -12,6 +12,7 @@ export interface ProductAttributes {
 	article: string;
 	price: number;
 	category: ProductCategory;
+	categoryId: number;
 	stock: number;
 	image_url?: string | null;
 	images?: string[] | null;
@@ -32,6 +33,7 @@ class Product
 	declare article: string;
 	declare price: number;
 	declare category: ProductCategory;
+	declare categoryId: number;
 	declare stock: number;
 	declare image_url: string | null | undefined;
 	declare images: string[] | null | undefined;
@@ -68,6 +70,10 @@ Product.init(
 		},
 		category: {
 			type: DataTypes.ENUM("all", "tShirts", "hoodies", "longSleeves", "trousers"),
+			allowNull: false,
+		},
+		categoryId: {
+			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
 		stock: {
