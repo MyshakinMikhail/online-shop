@@ -16,10 +16,12 @@
 	},
 	"dependencies": {
 		"@ant-design/v5-patch-for-react-19": "^1.0.3",
+		"@reduxjs/toolkit": "^2.11.2",
 		"antd": "^5.27.6",
 		"lucide-react": "^0.546.0",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1",
+		"react-redux": "^9.2.0",
 		"react-router-dom": "^7.9.4",
 		"styled-components": "^6.1.19"
 	},

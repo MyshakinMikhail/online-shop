@@ -4,10 +4,11 @@ import Category from "../models/Category.ts";
 export const seedCategories = async (): Promise<void> => {
 	try {
 		const categories: CategoryAttributes[] = [
-			{ id: 1, name: "Футболки" },
-			{ id: 2, name: "Худи" },
-			{ id: 3, name: "Лонгсливы" },
-			{ id: 4, name: "Штаны" },
+			{ id: 1, name: "Все товары", slug: "all" },
+			{ id: 2, name: "Футболки", slug: "tShirts" },
+			{ id: 3, name: "Худи", slug: "hoodies" },
+			{ id: 4, name: "Лонгсливы", slug: "longSleeves" },
+			{ id: 5, name: "Штаны", slug: "trousers" },
 		];
 
 		// Используем findOrCreate для идемпотентности

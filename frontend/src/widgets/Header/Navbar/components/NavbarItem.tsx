@@ -1,5 +1,8 @@
+import { changeCategory } from "@/entities/categories/model/slice";
+import type { Category } from "@/shared/types";
 import { Typography } from "antd";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
@@ -9,12 +12,22 @@ type Props = {
 	isUnderline: boolean;
 	path: string;
 	setOpen: Dispatch<SetStateAction<boolean>>;
+	category: Category;
 };
 
-export default function NavbarItem({ children, isUnderline, path, setOpen }: Props) {
+export default function NavbarItem({ children, isUnderline, path, setOpen, category }: Props) {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
+
 	const handleClick = () => {
 		navigate(path);
+		dispatch(
+			changeCategory({
+				category: category,
+				loading: false,
+				error: null,
+			})
+		);
 		setOpen(false);
 	};
 

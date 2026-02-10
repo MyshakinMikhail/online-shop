@@ -1,1 +1,5 @@
-export type Category = "all" | "tShirts" | "hoodies" | "longSleeves" | "trousers";
+export type Category = {
+	id: number;
+	name: string;
+	slug: string;
+};

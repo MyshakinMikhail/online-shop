@@ -5,6 +5,7 @@ import sequelize from "../db.ts";
 export interface CategoryAttributes {
 	id: number;
 	name: string;
+	slug: string;
 }
 
 type CategoryCreationAttributes = Optional<CategoryAttributes, "id">;
@@ -15,6 +16,7 @@ class Category
 {
 	declare id: number;
 	declare name: string;
+	declare slug: string;
 }
 
 Category.init(
@@ -25,6 +27,11 @@ Category.init(
 			primaryKey: true,
 		},
 		name: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			unique: true,
+		},
+		slug: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			unique: true,

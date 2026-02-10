@@ -1,6 +1,11 @@
+import { CategoriesServise } from "@/entities/categories/CategoiesServise";
+import { changeCategory } from "@/entities/categories/model/slice";
+import type { RootState } from "@/shared/lib/store";
+import type { Category } from "@/shared/types";
 import { Drawer, Flex, Typography } from "antd";
 import { TextAlignJustify } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import classes from "./Navbar.module.css";
 import NavbarItem from "./components/NavbarItem";
@@ -9,6 +14,23 @@ const { Title } = Typography;
 
 export default function Navbar() {
 	const [open, setOpen] = useState(false);
+	const [categories, setCategories] = useState<Category[]>([]);
+	const activeCategory = useSelector((state: RootState) => state.category.category);
+	const dispatch = useDispatch();
+
+	useEffect(() => {
+		const fetchCategories = async () => {
+			try {
+				const data = await CategoriesServise.getCategories();
+				setCategories(data);
+			} catch (error) {
+				console.error("Ошибка загрузки категорий:", error);
+			}
+		};
+
+		fetchCategories();
+	}, []);
+
 	const navigate = useNavigate();
 
 	const showDrawer = () => {
@@ -29,6 +51,13 @@ export default function Navbar() {
 					className={classes.title}
 					onClick={() => {
 						navigate("/all");
+						dispatch(
+							changeCategory({
+								category: { id: 1, name: "Все товары", slug: "all" },
+								loading: false,
+								error: null,
+							})
+						);
 					}}
 				>
 					Магазин Одежды
@@ -42,22 +71,21 @@ export default function Navbar() {
 				onClose={onClose}
 				open={open}
 			>
-				<Flex className={classes.navbarItems}>
-					<NavbarItem isUnderline={true} path="/all" setOpen={setOpen}>
-						Все товары
-					</NavbarItem>
-					<NavbarItem isUnderline={false} path="/tShirts" setOpen={setOpen}>
-						Футболки
-					</NavbarItem>
-					<NavbarItem isUnderline={false} path="/hoodies" setOpen={setOpen}>
-						Худи
-					</NavbarItem>
-					<NavbarItem isUnderline={false} path="/longSleeves" setOpen={setOpen}>
-						Лонгсливы
-					</NavbarItem>
-					<NavbarItem isUnderline={false} path="/trousers" setOpen={setOpen}>
-						Штаны
-					</NavbarItem>
+				<Flex vertical className={classes.navbarItems} gap={12}>
+					{categories.map(category => {
+						const path = "/" + category.slug;
+						return (
+							<NavbarItem
+								key={category.id} // Добавляем key
+								isUnderline={activeCategory?.id === category.id} // Безопасное обращение
+								path={path}
+								setOpen={setOpen}
+								category={category}
+							>
+								{category.name}
+							</NavbarItem>
+						);
+					})}
 				</Flex>
 			</Drawer>
 		</>

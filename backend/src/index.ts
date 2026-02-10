@@ -4,7 +4,7 @@ import express from "express";
 import { fromZodError } from "zod-validation-error";
 import sequelize from "./db.ts";
 import "./models/index.ts";
-import { Product, User } from "./models/index.ts";
+import { Category, Product, User } from "./models/index.ts";
 import { ProductsQuerySchema } from "./schemas/productsQuery.ts";
 
 dotenv.config();
@@ -149,7 +149,33 @@ app.get("/api/products/:id", async (req, res) => {
 	}
 });
 
-// admin routes
+app.get("/api/categories", async (req, res) => {
+	try {
+		const categories = await Category.findAll();
+
+		if (!categories) {
+			return res.status(404).json({ message: "Категорий не существует" });
+		}
+		res.status(200).json({ categories });
+	} catch (error) {
+		res.status(500).json({ message: "Ошибка получения категорий на сервере" });
+	}
+});
+
+app.get("/api/category/:slug", async (req, res) => {
+	try {
+		const slug = req.params.slug;
+		const category = await Category.findOne({ where: { slug: slug } });
+		console.log(category)
+		if (!category) {
+			return res.status(404).json({ message: "Категории не существует" });
+		}
+		res.status(200).json( { category });
+	} catch (error) {
+		res.status(500).json({ message: "Ошибка получения категории на сервере" });
+	}
+});
+
 app.post("/api/admin/login", (req, res) => {
 	try {
 		const { login, password } = req.body;

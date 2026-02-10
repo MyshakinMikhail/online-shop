@@ -8,7 +8,7 @@ export const mockMiniProducts: Product[] = [
 		size: "M",
 		article: "TSH-001",
 		price: 1499,
-		category: "tShirts",
+		category: { id: 2, name: "Футболки", slug: "tShirts" },
 		stock: 25,
 	},
 	{
@@ -18,7 +18,7 @@ export const mockMiniProducts: Product[] = [
 		size: "L",
 		article: "TSH-002",
 		price: 1799,
-		category: "tShirts",
+		category: { id: 2, name: "Футболки", slug: "tShirts" },
 		stock: 18,
 	},
 	{
@@ -28,7 +28,7 @@ export const mockMiniProducts: Product[] = [
 		size: "L",
 		article: "HD-101",
 		price: 2999,
-		category: "hoodies",
+		category: { id: 3, name: "Худи", slug: "hoodies" },
 		stock: 12,
 	},
 	{
@@ -38,7 +38,7 @@ export const mockMiniProducts: Product[] = [
 		size: "XL",
 		article: "HD-102",
 		price: 3299,
-		category: "hoodies",
+		category: { id: 3, name: "Худи", slug: "hoodies" },
 		stock: 8,
 	},
 	{
@@ -48,7 +48,7 @@ export const mockMiniProducts: Product[] = [
 		size: "M",
 		article: "LS-201",
 		price: 1899,
-		category: "longSleeves",
+		category: { id: 4, name: "Лонгсливы", slug: "longSleeves" },
 		stock: 20,
 	},
 	{
@@ -58,7 +58,7 @@ export const mockMiniProducts: Product[] = [
 		size: "S",
 		article: "LS-202",
 		price: 1999,
-		category: "longSleeves",
+		category: { id: 4, name: "Лонгсливы", slug: "longSleeves" },
 		stock: 14,
 	},
 	{
@@ -68,7 +68,7 @@ export const mockMiniProducts: Product[] = [
 		size: "L",
 		article: "TR-301",
 		price: 2599,
-		category: "trousers",
+		category: { id: 5, name: "Штаны", slug: "trousers" },
 		stock: 10,
 	},
 	{
@@ -78,7 +78,7 @@ export const mockMiniProducts: Product[] = [
 		size: "XL",
 		article: "TR-302",
 		price: 2799,
-		category: "trousers",
+		category: { id: 5, name: "Штаны", slug: "trousers" },
 		stock: 9,
 	},
 	{
@@ -88,7 +88,7 @@ export const mockMiniProducts: Product[] = [
 		size: "M",
 		article: "TSH-003",
 		price: 1599,
-		category: "tShirts",
+		category: { id: 2, name: "Футболки", slug: "tShirts" },
 		stock: 30,
 	},
 	{
@@ -98,7 +98,7 @@ export const mockMiniProducts: Product[] = [
 		size: "L",
 		article: "HD-103",
 		price: 3499,
-		category: "hoodies",
+		category: { id: 3, name: "Худи", slug: "hoodies" },
 		stock: 7,
 	},
 ];

@@ -1,5 +1,10 @@
 import { createRoot } from "react-dom/client";
-import "./styles/index.css";
 import App from "./App";
+import { StoreProvider } from "./providers";
+import "./styles/index.css";
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+	<StoreProvider>
+		<App />
+	</StoreProvider>
+);
