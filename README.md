@@ -30,7 +30,7 @@
 | Сущность     | Поля                                                                         | Описание             |
 | ------------ | ---------------------------------------------------------------------------- | -------------------- |
 | **User**     | id, name, email, passwordHash, role                                          | Пользователь         |
-| **Product**  | id, name, description, price, category, stock (общ кол-во), images[], rating | Товар                |
+| **Product**  | id, name, description, price, category, stock (общ кол-во), images[]		  | Товар                |
 | **Category** | id, name                                                                     | Категория            |
 | **Cart**     | id, userId, items[]                                                          | Корзина пользователя |
 | **CartItem** | productId, quantity, price                                                   | Элемент корзины      |
@@ -74,10 +74,10 @@
 
 **Концепция:** минимализм, фокус на визуале товара, интуитивная навигация.
 
--   Gravity UI Kit— основа компонентной системы.
+-   Ant Design — основа компонентной системы.
 -   React Hook Form — формы.
 -   React Query — запросы к API.
--   Gravity Icons — иконки.
+-   Licude Icons — иконки.
 -   Цветовая схема — светлая, темная.
 
 **Базовые компоненты UI:**
