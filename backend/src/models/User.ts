@@ -18,7 +18,7 @@ export interface UserAttributes {
 
 type UserCreationAttributes = Optional<UserAttributes, "id" | "role">;
 
-class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
+export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
 	declare id: number;
 	declare role: UserRole;
 	declare psuid: string;
@@ -75,5 +75,3 @@ User.init(
 		timestamps: true,
 	}
 );
-
-export default User;

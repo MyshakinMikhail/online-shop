@@ -6,7 +6,7 @@ export const store = configureStore({
 	reducer: rootReducer,
 });
 
-const slug = window.location.pathname.split("/").pop();
+const slug = window.location.pathname.split("/").pop() || "all";
 
 if (slug) {
 	store.dispatch(getCurrentCategory(slug));

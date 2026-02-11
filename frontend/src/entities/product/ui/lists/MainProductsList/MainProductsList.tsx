@@ -1,10 +1,12 @@
-import { mockMiniProducts } from "@/entities/product/model/mocks";
+import { type Product } from "@/shared/types";
 import { MainProductCard } from "../../cards";
 import classes from "./MainProductsList.module.css";
 
-export default function MainProductsList() {
-	const products = mockMiniProducts;
+type Props = {
+	products: Product[];
+};
 
+export default function MainProductsList({ products }: Props) {
 	return (
 		<div className={classes.list}>
 			{products.length === 0 && <div>Товары отсутствуют</div>}

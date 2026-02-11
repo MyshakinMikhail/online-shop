@@ -8,7 +8,11 @@ type CategoryType = {
 	error: null | string;
 };
 
-const initialState: CategoryType = { category: null, loading: false, error: null };
+const initialState: CategoryType = {
+	category: { id: 1, name: "Все товары", slug: "all" },
+	loading: false,
+	error: null,
+};
 
 export const categorySlice = createSlice({
 	name: "category",

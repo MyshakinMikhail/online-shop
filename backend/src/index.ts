@@ -1,11 +1,9 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { fromZodError } from "zod-validation-error";
 import sequelize from "./db.ts";
 import "./models/index.ts";
 import { Category, Product, User } from "./models/index.ts";
-import { ProductsQuerySchema } from "./schemas/productsQuery.ts";
 
 dotenv.config();
 
@@ -65,10 +63,8 @@ app.post("/api/auth/yandex/", async (req, res) => {
 // Простой endpoint для проверки существования пользователя
 // НЕ создает пользователя, только проверяет
 app.get("/api/checkUser/:psuid", async (req, res) => {
-	console.log(1);
 	try {
 		const psuid = req.params.psuid; // Это Yandex ID, не путать с нашим id
-		console.log(psuid);
 
 		// Ищем по psuid (Yandex ID), а не по id
 		const user = await User.findOne({ where: { psuid } });
@@ -101,26 +97,24 @@ app.get("/api/checkUser/:psuid", async (req, res) => {
 
 app.get("/api/products", async (req, res) => {
 	try {
-		if (req.query.category === undefined) {
+		const {page, limit, categoryId} = req.query
+		
+		if (!categoryId) {
 			return res.status(400).json({
 				message: "Неверные параметры запроса",
-				error: "category is required",
 			});
 		}
 
-		const result = ProductsQuerySchema.safeParse(req.query);
+		const whereClause = categoryId === "1" ? undefined : {categoryId: +categoryId};
 
-		if (!result.success) {
-			return res.status(400).json({
-				message: "Неверные параметры запроса",
-				error: fromZodError(result.error).toString(),
-			});
-		}
-
-		const whereClause = result.data.category === "all" ? undefined : result.data;
-
-		const products = await Product.findAll({ where: whereClause });
-		res.status(200).json({ data: { products } });
+		const {count, rows} = await Product.findAndCountAll({ 
+			where: whereClause, 
+			limit: Number(limit) || 12, 
+			offset: ((Number(page) || 1) - 1) * (Number(limit) || 10)
+		});
+		
+		console.log( "count", count)
+		res.status(200).json({ rows, count });
 	} catch (error) {
 		res.status(500).json({ message: `Ошибка получения продуктов: ${error}` });
 	}
