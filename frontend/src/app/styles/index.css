@@ -1,9 +1,0 @@
-html,
-body {
-	text-rendering: optimizeLegibility; /** Оптимизирует рендеринг текста для улучшения читаемости, особенно для шрифтов с засечками. **/
-	-webkit-font-smoothing: antialiased; /** Включает сглаживание шрифтов, чтобы текст выглядел более мягким и ровным, особенно на маленьких размерах. **/
-	/* background-color: #b8d5df; */
-	font-family: "Times New Roman", Times, serif;
-	margin: 0;
-	overflow: hidden;
-}
