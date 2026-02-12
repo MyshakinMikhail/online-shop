@@ -1,5 +1,4 @@
 import { getProductsByCategoryId } from "@/entities/product/api/getProductsByCategoryId";
-import { mockMiniProducts } from "@/entities/product/model/mocks";
 import MainProductsList from "@/entities/product/ui/lists/MainProductsList/MainProductsList";
 import type { RootState } from "@/shared/lib/store";
 import type { Product } from "@/shared/types";
@@ -11,25 +10,29 @@ import classes from "./ProductsPage.module.css";
 const { Text } = Typography;
 
 export default function ProductsPage() {
-	const [products, setProducts] = useState<Product[]>(mockMiniProducts);
+	const [products, setProducts] = useState<Product[] | undefined>();
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<string | null>(null);
 	const [currPage, setCurrPage] = useState<number>(1);
 	const [total, setTotal] = useState<number>();
-	const [limit, setLimit] = useState<number>(12);
+	const [limit, setLimit] = useState<number>(16);
 	const category = useSelector((state: RootState) => state.category.category);
 
 	useEffect(() => {
+		setCurrPage(1);
+	}, [category]);
+
+	useEffect(() => {
 		const fetchProducts = async () => {
-			const products = await getProductsByCategoryId({
+			await getProductsByCategoryId({
 				category,
 				setIsLoading,
 				setError,
 				setTotal,
+				setProducts,
 				currPage,
 				limit,
 			});
-			setProducts(products);
 		};
 
 		fetchProducts();
