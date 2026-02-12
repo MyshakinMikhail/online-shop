@@ -46,8 +46,6 @@ export default function AuthPage() {
 					},
 				});
 
-				console.log("Server response:", response);
-
 				if (response.status === 200 || response.status === 201) {
 					// Успешно создан/обновлен
 					setSuccess(true);

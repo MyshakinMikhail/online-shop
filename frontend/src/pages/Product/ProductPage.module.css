@@ -1,7 +1,27 @@
 .body {
+	display: flex;
 	margin-top: 15px;
+	justify-content: center;
+	gap: 30px;
 }
 
 .description {
+	padding: 15px;
+	min-width: none;
 	max-width: 270px;
+}
+
+@media (max-width: 900px) {
+	.page {
+		overflow-y: scroll;
+		height: 100vh;
+	}
+	.description {
+		margin-left: 0;
+	}
+
+	.body {
+		flex-direction: column;
+		align-items: center;
+	}
 }

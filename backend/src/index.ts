@@ -113,7 +113,6 @@ app.get("/api/products", async (req, res) => {
 			offset: ((Number(page) || 1) - 1) * (Number(limit) || 10)
 		});
 		
-		console.log( "count", count)
 		res.status(200).json({ rows, count });
 	} catch (error) {
 		res.status(500).json({ message: `Ошибка получения продуктов: ${error}` });
@@ -160,7 +159,6 @@ app.get("/api/category/:slug", async (req, res) => {
 	try {
 		const slug = req.params.slug;
 		const category = await Category.findOne({ where: { slug: slug } });
-		console.log(category)
 		if (!category) {
 			return res.status(404).json({ message: "Категории не существует" });
 		}

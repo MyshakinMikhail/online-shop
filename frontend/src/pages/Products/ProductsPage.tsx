@@ -26,7 +26,6 @@ export default function ProductsPage() {
 					categoryId: category?.id,
 				},
 			});
-			console.log("result.data.rows", result.data.rows);
 
 			setIsLoading(false);
 			setProducts(result.data.rows);
@@ -59,11 +58,10 @@ export default function ProductsPage() {
 					style={{ width: 120 }}
 					onChange={value => setLimit(value)}
 					options={[
-						{ label: "5 продуктов", value: 5 },
-						{ label: "10 продуктов", value: 10 },
-						{ label: "12 продуктов", value: 12 },
-						{ label: "25 продуктов", value: 25 },
-						{ label: "50 продуктов", value: 50 },
+						{ label: "8 продуктов", value: 8 },
+						{ label: "16 продуктов", value: 16 },
+						{ label: "32 продуктов", value: 32 },
+						{ label: "48 продуктов", value: 48 },
 					]}
 				/>
 			</div>

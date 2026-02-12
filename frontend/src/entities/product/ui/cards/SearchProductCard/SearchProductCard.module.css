@@ -1,4 +1,17 @@
+.container {
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	gap: 7px;
+}
+
+.info {
+	min-width: fit-content;
+}
+
 .image {
+	max-height: 170px;
+	width: auto;
 	border-radius: 15px;
 }
 

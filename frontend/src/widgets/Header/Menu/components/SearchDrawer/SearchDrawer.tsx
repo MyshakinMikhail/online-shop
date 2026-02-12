@@ -1,10 +1,9 @@
-import { SearchProductCard } from "@/entities/product/ui/cards";
+import SearchProductList from "@/entities/product/ui/lists/SearchProductList/SearchProductList";
 import { useSearch } from "@/shared/hooks";
 import { MenuIcon } from "@/shared/ui";
-import { Drawer, Flex, Input, Typography } from "antd";
+import { Drawer, Input, Typography } from "antd";
 import { Search } from "lucide-react";
 import { useState } from "react";
-import classes from "./SearchDrawer.module.css";
 
 const { Text } = Typography;
 
@@ -39,21 +38,18 @@ export default function SearchDrawer() {
 						setContent("");
 					}}
 				/>
-				<Flex className={classes.container} gap={15} justify="center">
+				<div>
 					{content.length > 0 ? (
 						sortedProducts.length > 0 ? (
-							sortedProducts.map(product => (
-								<SearchProductCard
-									product={product}
-									key={product.id}
-									toggleDrawer={toggleDrawer}
-								/>
-							))
+							<SearchProductList
+								sortedProducts={sortedProducts}
+								toggleDrawer={toggleDrawer}
+							/>
 						) : (
 							<Text>Товары не найдены</Text>
 						)
 					) : null}
-				</Flex>
+				</div>
 			</Drawer>
 		</>
 	);

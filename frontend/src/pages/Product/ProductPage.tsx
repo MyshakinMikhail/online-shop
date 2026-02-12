@@ -19,12 +19,12 @@ export default function ProductPage() {
 	};
 
 	return (
-		<>
+		<div className={classes.page}>
 			<Header />
-			<Flex className={classes.body} justify="center" gap="30px">
+			<Flex className={classes.body}>
 				<img
 					src="https://static.tildacdn.com/stor3435-3861-4835-b432-323134376130/56150826.jpg"
-					width="600px"
+					width="530px"
 					height="auto"
 					style={{ borderRadius: "10px" }}
 				/>
@@ -40,6 +40,6 @@ export default function ProductPage() {
 					</Flex>
 				</Flex>
 			</Flex>
-		</>
+		</div>
 	);
 }
