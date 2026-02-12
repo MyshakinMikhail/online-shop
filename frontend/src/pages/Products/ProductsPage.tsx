@@ -1,42 +1,51 @@
+import { getProductsByCategoryId } from "@/entities/product/api/getProductsByCategoryId";
 import { mockMiniProducts } from "@/entities/product/model/mocks";
 import MainProductsList from "@/entities/product/ui/lists/MainProductsList/MainProductsList";
-import { api } from "@/shared/api";
 import type { RootState } from "@/shared/lib/store";
 import type { Product } from "@/shared/types";
-import { Pagination, Select } from "antd";
+import { Pagination, Select, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import classes from "./ProductsPage.module.css";
 
+const { Text } = Typography;
+
 export default function ProductsPage() {
 	const [products, setProducts] = useState<Product[]>(mockMiniProducts);
-	const [isLoading, setIsLoading] = useState(false);
-	const [currPage, setCurrPage] = useState(1);
-	const [total, setTotal] = useState();
-	const [limit, setLimit] = useState(12);
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [error, setError] = useState<string | null>(null);
+	const [currPage, setCurrPage] = useState<number>(1);
+	const [total, setTotal] = useState<number>();
+	const [limit, setLimit] = useState<number>(12);
 	const category = useSelector((state: RootState) => state.category.category);
 
 	useEffect(() => {
 		const fetchProducts = async () => {
-			setIsLoading(true);
-			const result = await api.get("/products", {
-				params: {
-					page: currPage,
-					limit: limit,
-					categoryId: category?.id,
-				},
+			const products = await getProductsByCategoryId({
+				category,
+				setIsLoading,
+				setError,
+				setTotal,
+				currPage,
+				limit,
 			});
-
-			setIsLoading(false);
-			setProducts(result.data.rows);
-			setTotal(result.data.count);
+			setProducts(products);
 		};
 
 		fetchProducts();
-	}, [category, currPage, setIsLoading, setProducts, limit]);
+	}, [category, currPage, limit]);
 
 	if (isLoading) {
 		return <div>Загрузка...</div>;
+	}
+
+	if (error) {
+		return (
+			<div>
+				<Text>Ошибка получения продукта</Text>
+				<Text>{error}</Text>
+			</div>
+		);
 	}
 
 	return (

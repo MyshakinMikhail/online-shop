@@ -128,15 +128,16 @@ app.get("/api/products/:id", async (req, res) => {
 				error: "id is required",
 			});
 		}
-
+		
 		const product = await Product.findByPk(id);
+		
 		if (product === null) {
 			return res.status(404).json({
 				message: "Товар не найден",
 				error: "product not found",
 			});
 		}
-		res.status(200).json({ data: { product } });
+		res.status(200).json({ product });
 	} catch (e) {
 		res.status(500).json({ message: `Ошибка получения продукта по id: ${e}` });
 	}
@@ -183,6 +184,8 @@ app.post("/api/admin/login", (req, res) => {
 		res.status(500).json({ message: `Ошибка при входе в админ панель: ${e}` });
 	}
 });
+
+
 
 const start = async () => {
 	try {

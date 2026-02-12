@@ -1,22 +1,49 @@
-import { mockMiniProducts } from "@/entities/product/model/mocks";
-import type { Product } from "@/shared/types";
-
+import { getProductsById } from "@/entities/product/api";
+import { type Product } from "@/shared/types";
 import { HeartIcon, MyButton } from "@/shared/ui";
 import { Header } from "@/widgets/Header";
 import { Flex, Typography } from "antd";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import classes from "./ProductPage.module.css";
 
 const { Title, Text } = Typography;
 
 export default function ProductPage() {
-	const id = useParams().id || null;
-	const product: Product | undefined =
-		mockMiniProducts.find((item: Product) => item.id === id) || undefined;
+	const id = Number(useParams().id) || null;
+	const [isLoading, setIsLoading] = useState<boolean>(false);
+	const [error, setError] = useState<null | string>(null);
+	const [product, setProduct] = useState<Product | null>(null);
+	useEffect(() => {
+		const fetchProduct = async () => {
+			const product = await getProductsById({ id, setIsLoading, setError });
+			setProduct(product);
+		};
+
+		fetchProduct();
+	}, []);
+
+	// const product: Product | undefined =
+	// 	mockMiniProducts.find((item: Product) => item.id === id) || undefined;
+
+	console.log(product);
 
 	const handleClick = () => {
 		console.log("buy smth");
 	};
+
+	if (isLoading) {
+		return <Text>Загрузка товара..</Text>;
+	}
+
+	if (error) {
+		return (
+			<div>
+				<Text> Ошибка загрузки</Text>
+				<Text> {error}</Text>
+			</div>
+		);
+	}
 
 	return (
 		<div className={classes.page}>
