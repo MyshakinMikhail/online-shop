@@ -132,11 +132,11 @@ app.post("/api/products", async (req, res) => {
 		// }
 
 		const { product, userRole } = req.body;
-		if (!userRole){
+		if (!userRole) {
 			return res.status(400).json({
-				message: "Неверные параметры запроса", 
-				error: "userRole is empty"
-			})
+				message: "Неверные параметры запроса",
+				error: "userRole is empty",
+			});
 		}
 
 		if (!product) {
@@ -146,10 +146,9 @@ app.post("/api/products", async (req, res) => {
 			});
 		}
 
-		if (userRole !== "admin" && userRole !== "super_admin"){
-			return res.status(403).json({message: "Недостаточно прав для данного действия"})
+		if (userRole !== "admin" && userRole !== "super_admin") {
+			return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 		}
-
 
 		const [createdProduct, isCreated] = await Product.findOrCreate({
 			where: { article: product.article },
@@ -169,11 +168,11 @@ app.post("/api/products", async (req, res) => {
 app.put("/api/products/:article", async (req, res) => {
 	try {
 		const { product, userRole } = req.body;
-		if (!userRole){
+		if (!userRole) {
 			return res.status(400).json({
-				message: "Неверные параметры запроса", 
-				error: "userRole is empty"
-			})
+				message: "Неверные параметры запроса",
+				error: "userRole is empty",
+			});
 		}
 
 		if (!product) {
@@ -183,54 +182,58 @@ app.put("/api/products/:article", async (req, res) => {
 			});
 		}
 
-		if (userRole !== "admin" && userRole !== "super_admin"){
-			return res.status(403).json({message: "Недостаточно прав для данного действия"})
+		if (userRole !== "admin" && userRole !== "super_admin") {
+			return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 		}
 
-		const article  = req.params.article
+		const article = req.params.article;
 
-		const findedProduct = await Product.findOne({where: {article: article}});
-		if (!findedProduct){
+		const findedProduct = await Product.findOne({ where: { article: article } });
+		if (!findedProduct) {
 			return res.status(404).json({
-				message: "Продукта с таким артикулом нет"
-			})
+				message: "Продукта с таким артикулом нет",
+			});
 		}
 
-		const updatedProduct = await Product.update(product, {where: {article: product.article}})
-		res.status(200).json({updatedProduct: updatedProduct, message: "Продукт обновлен"}, )
+		const updatedProduct = await Product.update(product, {
+			where: { article: product.article },
+		});
+		res.status(200).json({ updatedProduct: updatedProduct, message: "Продукт обновлен" });
 	} catch (e) {
 		res.status(500).json({ message: "Ошибка обновления продукта на сервере" });
 	}
 });
 
 app.delete("/api/products/:article", async (req, res) => {
-	try{
+	try {
 		const { userRole } = req.body;
 		const { article } = req.params;
-		if (!userRole){
+		if (!userRole) {
 			return res.status(400).json({
-				message: "Неверные параметры запроса", 
-				error: "userRole is empty"
-			})
+				message: "Неверные параметры запроса",
+				error: "userRole is empty",
+			});
 		}
 
-		if (!article){
-			return res.status(400).json({message: "Неверные параметры запроса", error: "article is empty"})
+		if (!article) {
+			return res
+				.status(400)
+				.json({ message: "Неверные параметры запроса", error: "article is empty" });
 		}
 
-		if (userRole !== "admin" && userRole !== "super_admin"){
-			return res.status(403).json({message: "Недостаточно прав для данного действия"})
-		}
-		
-		const product = await Product.findOne({where: {article: article}})
-		if (!product){
-			return res.status(404).json({message: "Продукт не найден"})
+		if (userRole !== "admin" && userRole !== "super_admin") {
+			return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 		}
 
-		await Product.destroy({where: {article: article}}) 
-		res.status(200).json({message: "Продукт успешно удален"})
-	}catch(e){
-		res.status(500).json({message: "Ошибка удаления продукта на сервере"})
+		const product = await Product.findOne({ where: { article: article } });
+		if (!product) {
+			return res.status(404).json({ message: "Продукт не найден" });
+		}
+
+		await Product.destroy({ where: { article: article } });
+		res.status(200).json({ message: "Продукт успешно удален" });
+	} catch (e) {
+		res.status(500).json({ message: "Ошибка удаления продукта на сервере" });
 	}
 });
 

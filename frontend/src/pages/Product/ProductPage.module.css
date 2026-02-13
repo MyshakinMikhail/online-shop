@@ -5,7 +5,14 @@
 	gap: 30px;
 }
 
+.images {
+	display: flex;
+	flex-direction: column;
+	gap: 7px;
+}
+
 .description {
+	/* position: fixed;  а потом еще медиа запросик для смены position при скролле */
 	padding: 15px;
 	min-width: none;
 	max-width: 270px;

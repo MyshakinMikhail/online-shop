@@ -49,20 +49,32 @@ export default function ProductPage() {
 		<div className={classes.page}>
 			<Header />
 			<Flex className={classes.body}>
-				<img
-					src="https://static.tildacdn.com/stor3435-3861-4835-b432-323134376130/56150826.jpg"
-					width="530px"
-					height="auto"
-					style={{ borderRadius: "10px" }}
-				/>
+				<Flex className={classes.images}>
+					<img
+						src="https://static.tildacdn.com/stor3435-3861-4835-b432-323134376130/56150826.jpg"
+						width="530px"
+						height="auto"
+						style={{ borderRadius: "10px" }}
+					/>
+					<img
+						src="https://static.tildacdn.com/stor3435-3861-4835-b432-323134376130/56150826.jpg"
+						width="530px"
+						height="auto"
+						style={{ borderRadius: "10px" }}
+					/>
+				</Flex>
 				<Flex className={classes.description} vertical gap={15}>
 					<Title level={3}>{product?.name}</Title>
 					<Text>Артикул: {product?.article}</Text>
 					<Text>Цена: {product?.price}</Text>
 					<Text>Описание: {product?.description}</Text>
-					<Text>В наличии: {product?.stock} штук</Text>
+					{product?.stock === 0 ? (
+						<Text type="danger">Данного товара нет в наличии</Text>
+					) : (
+						<Text>В наличии: {product?.stock} штук</Text>
+					)}
 					<Flex align="center" justify="center" gap={15}>
-						<MyButton onClick={handleClick} />
+						<MyButton label="Добавить в корзину" onClick={handleClick} />
 						<HeartIcon />
 					</Flex>
 				</Flex>
