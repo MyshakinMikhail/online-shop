@@ -5,7 +5,7 @@ import { User } from "../models/User.ts";
 
 export const seedUsers = async (): Promise<void> => {
 	try {
-		const users: UserAttributes[] = mockUsers
+		const users: UserAttributes[] = mockUsers;
 
 		for (const user of users) {
 			await User.findOrCreate({

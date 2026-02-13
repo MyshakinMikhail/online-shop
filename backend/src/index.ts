@@ -97,27 +97,29 @@ app.get("/api/checkUser/:psuid", async (req, res) => {
 
 app.get("/api/products", async (req, res) => {
 	try {
-		const {page, limit, categoryId} = req.query
-		
+		const { page, limit, categoryId } = req.query;
+
 		if (!categoryId) {
 			return res.status(400).json({
 				message: "Неверные параметры запроса",
 			});
 		}
 
-		const whereClause = categoryId === "1" ? undefined : {categoryId: +categoryId};
+		const whereClause = categoryId === "1" ? undefined : { categoryId: +categoryId };
 
-		const {count, rows} = await Product.findAndCountAll({ 
-			where: whereClause, 
-			limit: Number(limit) || 12, 
-			offset: ((Number(page) || 1) - 1) * (Number(limit) || 10)
+		const { count, rows } = await Product.findAndCountAll({
+			where: whereClause,
+			limit: Number(limit) || 12,
+			offset: ((Number(page) || 1) - 1) * (Number(limit) || 10),
 		});
-		
+
 		res.status(200).json({ rows, count });
 	} catch (error) {
 		res.status(500).json({ message: `Ошибка получения продуктов: ${error}` });
 	}
 });
+
+
 
 app.get("/api/products/:id", async (req, res) => {
 	try {
@@ -128,9 +130,9 @@ app.get("/api/products/:id", async (req, res) => {
 				error: "id is required",
 			});
 		}
-		
+
 		const product = await Product.findByPk(id);
-		
+
 		if (product === null) {
 			return res.status(404).json({
 				message: "Товар не найден",
@@ -163,7 +165,7 @@ app.get("/api/category/:slug", async (req, res) => {
 		if (!category) {
 			return res.status(404).json({ message: "Категории не существует" });
 		}
-		res.status(200).json( { category });
+		res.status(200).json({ category });
 	} catch (error) {
 		res.status(500).json({ message: "Ошибка получения категории на сервере" });
 	}
@@ -184,8 +186,6 @@ app.post("/api/admin/login", (req, res) => {
 		res.status(500).json({ message: `Ошибка при входе в админ панель: ${e}` });
 	}
 });
-
-
 
 const start = async () => {
 	try {

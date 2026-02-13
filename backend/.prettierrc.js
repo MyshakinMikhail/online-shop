@@ -17,7 +17,7 @@ export default {
 			},
 		},
 		{
-			files: "*.md",
+			files: "*.md",	
 			options: {
 				proseWrap: "always",
 			},

@@ -4,7 +4,7 @@ import Category from "../models/Category.ts";
 
 export const seedCategories = async (): Promise<void> => {
 	try {
-		const categories: CategoryAttributes[] = mockCategories
+		const categories: CategoryAttributes[] = mockCategories;
 
 		// Используем findOrCreate для идемпотентности
 		for (const category of categories) {

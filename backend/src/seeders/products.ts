@@ -12,7 +12,7 @@ export const seedProducts = async (): Promise<void> => {
 			throw new Error("Categories not found. Run categories seeder first.");
 		}
 
-		 const products: Omit<ProductAttributes, "id">[] = mockProducts;
+		const products: Omit<ProductAttributes, "id">[] = mockProducts;
 
 		for (const product of products) {
 			await Product.findOrCreate({

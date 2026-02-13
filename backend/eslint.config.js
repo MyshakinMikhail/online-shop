@@ -1,6 +1,6 @@
 import prettierPlugin from "eslint-plugin-prettier";
-import tseslint from "typescript-eslint";
 import unusedImports from "eslint-plugin-unused-imports";
+import tseslint from "typescript-eslint";
 
 export default tseslint.config(
 	// Игнорируемые файлы/директории

@@ -14,7 +14,7 @@ export type ProductAttributes = {
 	image_url?: string | null;
 	images?: string[] | null;
 	is_active: boolean;
-}
+};
 
 type ProductCreationAttributes = Optional<ProductAttributes, "id" | "image_url" | "images">;
 
@@ -93,4 +93,3 @@ Product.init(
 		timestamps: true,
 	}
 );
-

@@ -2,7 +2,7 @@ import { getProductsByCategoryId } from "@/entities/product/api/getProductsByCat
 import MainProductsList from "@/entities/product/ui/lists/MainProductsList/MainProductsList";
 import type { RootState } from "@/shared/lib/store";
 import type { Product } from "@/shared/types";
-import { Pagination, Select, Typography } from "antd";
+import { Flex, Pagination, Select, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import classes from "./ProductsPage.module.css";
@@ -39,7 +39,7 @@ export default function ProductsPage() {
 	}, [category, currPage, limit]);
 
 	if (isLoading) {
-		return <div>Загрузка...</div>;
+		return <Flex justify="center">Загрузка...</Flex>;
 	}
 
 	if (error) {
