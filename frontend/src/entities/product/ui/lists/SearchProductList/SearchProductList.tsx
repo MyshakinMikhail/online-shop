@@ -19,7 +19,11 @@ export default function SearchProductList({ sortedProducts, toggleDrawer }: Prop
 			<div className={classes.products}>
 				{sortedProducts.length > 0 &&
 					sortedProducts.map((product: Product) => (
-						<SearchProductCard product={product} toggleDrawer={toggleDrawer} />
+						<SearchProductCard
+							key={product.article}
+							product={product}
+							toggleDrawer={toggleDrawer}
+						/>
 					))}
 			</div>
 		</div>

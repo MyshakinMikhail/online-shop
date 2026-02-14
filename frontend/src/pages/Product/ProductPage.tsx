@@ -13,6 +13,7 @@ export default function ProductPage() {
 	const id = Number(useParams().id) || null;
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<null | string>(null);
+
 	const [product, setProduct] = useState<Product | null>(null);
 	useEffect(() => {
 		const fetchProduct = async () => {
@@ -66,7 +67,7 @@ export default function ProductPage() {
 				<Flex className={classes.description} vertical gap={15}>
 					<Title level={3}>{product?.name}</Title>
 					<Text>Артикул: {product?.article}</Text>
-					<Text>Цена: {product?.price}</Text>
+					<Text>Цена: {product?.price} руб.</Text>
 					<Text>Описание: {product?.description}</Text>
 					{product?.stock === 0 ? (
 						<Text type="danger">Данного товара нет в наличии</Text>

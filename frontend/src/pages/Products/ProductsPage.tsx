@@ -1,10 +1,11 @@
 import { getProductsByCategoryId } from "@/entities/product/api/getProductsByCategoryId";
+import { updateProducts } from "@/entities/product/model/slice";
 import MainProductsList from "@/entities/product/ui/lists/MainProductsList/MainProductsList";
 import type { RootState } from "@/shared/lib/store";
 import type { Product } from "@/shared/types";
 import { Flex, Pagination, Select, Typography } from "antd";
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import classes from "./ProductsPage.module.css";
 
 const { Text } = Typography;
@@ -17,6 +18,7 @@ export default function ProductsPage() {
 	const [total, setTotal] = useState<number>();
 	const [limit, setLimit] = useState<number>(16);
 	const category = useSelector((state: RootState) => state.category.category);
+	const dispatch = useDispatch();
 
 	useEffect(() => {
 		setCurrPage(1);
@@ -25,7 +27,7 @@ export default function ProductsPage() {
 	useEffect(() => {
 		const fetchProducts = async () => {
 			await getProductsByCategoryId({
-				category,
+				categoryId: category?.id,
 				setIsLoading,
 				setError,
 				setTotal,
@@ -37,6 +39,12 @@ export default function ProductsPage() {
 
 		fetchProducts();
 	}, [category, currPage, limit]);
+
+	useEffect(() => {
+		if (products) {
+			dispatch(updateProducts(products));
+		}
+	}, [products, dispatch]);
 
 	if (isLoading) {
 		return <Flex justify="center">Загрузка...</Flex>;

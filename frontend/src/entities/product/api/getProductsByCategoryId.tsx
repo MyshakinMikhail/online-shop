@@ -1,10 +1,10 @@
 import { api } from "@/shared/api";
-import type { Category, Product } from "@/shared/types";
+import type { Product } from "@/shared/types";
 import { isAxiosError } from "axios";
 import type { Dispatch, SetStateAction } from "react";
 
 type Props = {
-	category: Category | null;
+	categoryId: number | undefined;
 	setIsLoading: Dispatch<SetStateAction<boolean>>;
 	setError: Dispatch<SetStateAction<string | null>>;
 	setTotal: Dispatch<SetStateAction<number | undefined>>;
@@ -14,7 +14,7 @@ type Props = {
 };
 
 export const getProductsByCategoryId = async ({
-	category,
+	categoryId,
 	setIsLoading,
 	setError,
 	setTotal,
@@ -28,7 +28,7 @@ export const getProductsByCategoryId = async ({
 			params: {
 				page: currPage,
 				limit: limit,
-				categoryId: category?.id,
+				categoryId: categoryId,
 			},
 		});
 		setTotal(result.data.count);

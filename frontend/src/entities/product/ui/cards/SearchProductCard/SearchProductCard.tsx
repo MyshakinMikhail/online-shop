@@ -21,7 +21,6 @@ export default function SearchProductCard({ product, toggleDrawer }: Props) {
 		navigate(`/products/${product.id}`);
 	};
 
-	console.log(product);
 	return (
 		<div className={classes.container} onClick={handleClick}>
 			<Image
