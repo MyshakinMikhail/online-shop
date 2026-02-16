@@ -32,7 +32,7 @@ export default function ProtectionRouter() {
 				// 3. Проверяем пользователя в БД по psuid (Yandex ID)
 				try {
 					// Ищем по psuid, а не по нашему id
-					const response = await api.get(`/checkUser/${userInfo.id}`); // userInfo.id = Yandex ID = psuid
+					const response = await api.get(`/auth/checkUser/${userInfo.id}`); // userInfo.id = Yandex ID = psuid
 
 					if (response.status === 200) {
 						// Пользователь найден

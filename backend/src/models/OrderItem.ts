@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "./../db";
+import { DataTypes, Model, type Optional } from "sequelize";
+import sequelize from "./../db.ts";
 
 export interface OrderItemAttributes {
 	id: number;

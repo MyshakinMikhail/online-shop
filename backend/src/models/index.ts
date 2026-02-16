@@ -53,4 +53,4 @@ Product.hasMany(OrderItem, {
 });
 
 export type ModelsType = Category | Product | User;
-export { Category, Product, User };
+export { Cart, CartItem, Category, Order, OrderItem, Product, User };

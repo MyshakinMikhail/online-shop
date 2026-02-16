@@ -1,10 +1,11 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "./../db";
+import { DataTypes, Model, type Optional } from "sequelize";
+import sequelize from "./../db.ts";
 
 export interface CartItemAttributes {
 	id: number;
 	cartId: number;
 	productId: number;
+	quantity: number;
 }
 
 type CartItemCreationAttributes = Optional<CartItemAttributes, "id">;
@@ -16,6 +17,7 @@ class CartItem
 	declare id: number;
 	declare cartId: number;
 	declare productId: number;
+	declare quantity: number;
 }
 
 CartItem.init(
@@ -30,6 +32,10 @@ CartItem.init(
 			allowNull: false,
 		},
 		productId: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+		},
+		quantity: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},

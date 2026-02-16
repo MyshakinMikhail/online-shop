@@ -27,7 +27,7 @@ export default function ProductPage() {
 	// const product: Product | undefined =
 	// 	mockMiniProducts.find((item: Product) => item.id === id) || undefined;
 
-	console.log(product);
+	// console.log(product);
 
 	const handleClick = () => {
 		console.log("buy smth");

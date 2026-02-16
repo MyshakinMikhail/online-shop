@@ -1,5 +1,5 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import sequelize from "./../db";
+import { DataTypes, Model, type Optional } from "sequelize";
+import sequelize from "./../db.ts";
 
 type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled";
 
