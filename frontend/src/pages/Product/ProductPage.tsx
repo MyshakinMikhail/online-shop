@@ -1,9 +1,11 @@
+import { addProduct } from "@/entities/cart/model/slice";
 import { getProductsById } from "@/entities/product/api";
 import { type Product } from "@/shared/types";
 import { HeartIcon, MyButton } from "@/shared/ui";
 import { Header } from "@/widgets/Header";
 import { Flex, Typography } from "antd";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import classes from "./ProductPage.module.css";
 
@@ -13,8 +15,9 @@ export default function ProductPage() {
 	const id = Number(useParams().id) || null;
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<null | string>(null);
-
+	const dispatch = useDispatch();
 	const [product, setProduct] = useState<Product | null>(null);
+
 	useEffect(() => {
 		const fetchProduct = async () => {
 			const product = await getProductsById({ id, setIsLoading, setError });
@@ -29,8 +32,10 @@ export default function ProductPage() {
 
 	// console.log(product);
 
-	const handleClick = () => {
-		console.log("buy smth");
+	const handleAddInCart = () => {
+		if (product) {
+			dispatch(addProduct(product));
+		}
 	};
 
 	if (isLoading) {
@@ -75,7 +80,7 @@ export default function ProductPage() {
 						<Text>В наличии: {product?.stock} штук</Text>
 					)}
 					<Flex align="center" justify="center" gap={15}>
-						<MyButton label="Добавить в корзину" onClick={handleClick} />
+						<MyButton label="Добавить в корзину" onClick={handleAddInCart} />
 						<HeartIcon />
 					</Flex>
 				</Flex>

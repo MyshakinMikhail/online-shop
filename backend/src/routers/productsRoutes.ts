@@ -6,14 +6,14 @@ const router = Router();
 router.get("/", async (req, res) => {
 	try {
 		const { page, limit, categoryId } = req.query;
-
-		if (!categoryId) {
+		if (isNaN(Number(categoryId))) {
 			return res.status(400).json({
 				message: "Неверные параметры запроса",
 			});
 		}
 
-		const whereClause = categoryId === "1" ? undefined : { categoryId: +categoryId };
+		const whereClause =
+			Number(categoryId) === 1 ? undefined : { categoryId: Number(categoryId) };
 
 		const { count, rows } = await Product.findAndCountAll({
 			where: whereClause,
@@ -148,7 +148,7 @@ router.delete("/:article", async (req, res) => {
 router.get("/:id", async (req, res) => {
 	try {
 		const id = req.params.id;
-		if (!id) {
+		if (!id && !isNaN(Number(id))) {
 			return res.status(400).json({
 				message: "Неверные параметры запроса",
 				error: "id is required",

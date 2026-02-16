@@ -1,29 +1,37 @@
-import type { Product, ProductCardType } from "@/shared/types";
+import {
+	decrementQuantity,
+	deleteProduct,
+	incrementQuantity,
+	type CartItem,
+} from "@/entities/cart/model/slice";
+import type { ProductCardType } from "@/shared/types";
 import { QuantityControl } from "@/shared/ui";
 import { Button, Col, Image, Row, Typography } from "antd";
 import { CircleX } from "lucide-react";
-import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import classes from "./MiniProductCard.module.css";
 
 const { Text } = Typography;
 
 type Props = {
-	product: Product;
+	product: CartItem;
 	type: ProductCardType;
-	handleDelete: (id: string) => void;
 	toggleDrawer: () => void;
 };
 
-export default function MiniProductCard({ product, type, handleDelete, toggleDrawer }: Props) {
-	const [count, setCount] = useState<number>(product.stock || 1);
+export default function MiniProductCard({ product, type, toggleDrawer }: Props) {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
 	const decrement = () => {
-		setCount(prev => prev - 1);
+		if (product.quantity === 1) {
+			dispatch(deleteProduct({ productId: product.id }));
+		}
+		dispatch(decrementQuantity({ productId: product.id }));
 	};
 	const increment = () => {
-		setCount(prev => prev + 1);
+		dispatch(incrementQuantity({ productId: product.id }));
 	};
 
 	return (
@@ -45,13 +53,13 @@ export default function MiniProductCard({ product, type, handleDelete, toggleDra
 							toggleDrawer();
 						}}
 					>
-						{product.description}
+						{product.name}
 					</Text>
 				</Col>
 				{type === "cart" && (
 					<Col span={4}>
 						<QuantityControl
-							count={count}
+							count={product.quantity}
 							increment={increment}
 							decrement={decrement}
 						/>
@@ -64,7 +72,7 @@ export default function MiniProductCard({ product, type, handleDelete, toggleDra
 					<Button
 						type="link"
 						onClick={() => {
-							handleDelete(product.id);
+							dispatch(deleteProduct({ productId: product.id }));
 						}}
 					>
 						<CircleX style={{ border: 0, color: "#5B5B5B" }} />

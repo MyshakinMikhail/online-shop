@@ -53,7 +53,7 @@ export default function ProductsPage() {
 	if (error) {
 		return (
 			<div>
-				<Text>Ошибка получения продукта</Text>
+				<Text>Ошибка получения продукта: </Text>
 				<Text>{error}</Text>
 			</div>
 		);

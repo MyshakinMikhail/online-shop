@@ -14,6 +14,7 @@ router.post("/:userId", async (req, res) => {
 				error: "userId must be a number",
 			});
 		}
+
 		if (!productId || isNaN(Number(productId))) {
 			return res.status(400).json({
 				message: "Неверные параметры зпароса",

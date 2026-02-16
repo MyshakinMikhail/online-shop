@@ -1,7 +1,8 @@
-import type { Product, ProductCardType } from "@/shared/types";
+import type { CartItem } from "@/entities/cart/model/slice";
+import type { RootState } from "@/shared/lib/store";
+import type { ProductCardType } from "@/shared/types";
 import { Flex, Typography } from "antd";
-import { useState } from "react";
-import { mockMiniProducts } from "../../../model/mocks";
+import { useSelector } from "react-redux";
 import MiniProductCard from "../../cards/MiniProductCard/MiniProductCard";
 import classes from "./MiniProductsList.module.css";
 
@@ -13,22 +14,18 @@ type Props = {
 };
 
 export default function MiniProductsList({ type, toggleDrawer }: Props) {
-	const [products, setProducts] = useState<Product[]>(mockMiniProducts);
-
-	const handleDelete = (id: string) => {
-		setProducts(prevProducts => prevProducts.filter(product => product.id !== id));
-	};
+	// const [products, setProducts] = useState<Product[]>(mockMiniProducts);
+	const items = useSelector((state: RootState) => state.cart);
 
 	return (
 		<>
-			{products.length === 0 ? <Paragraph>Товары не добавлены</Paragraph> : null}
+			{items?.length === 0 ? <Paragraph>Товары не добавлены</Paragraph> : null}
 			<Flex className={classes.products}>
-				{products.map((product: Product) => (
+				{items?.map((item: CartItem) => (
 					<MiniProductCard
-						key={product.id}
-						product={product}
+						key={item.id}
+						product={item}
 						type={type}
-						handleDelete={handleDelete}
 						toggleDrawer={toggleDrawer}
 					/>
 				))}
