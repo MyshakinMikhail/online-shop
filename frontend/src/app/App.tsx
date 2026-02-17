@@ -14,6 +14,9 @@ import { SearchProvider } from "./providers";
 import { ProtectionRouter } from "./routers";
 import "./styles/index.css";
 
+// переписать эту хуйню на объекты !!!
+// вынести все провайдеры в один Provider и с роутерами такая же поебень
+
 export default function App() {
 	return (
 		<ConfigProvider theme={{ algorithm: theme.defaultAlgorithm }}>

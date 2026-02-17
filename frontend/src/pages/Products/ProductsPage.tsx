@@ -20,6 +20,7 @@ export default function ProductsPage() {
 	const category = useSelector((state: RootState) => state.category.category);
 	const dispatch = useDispatch();
 
+	// добавить текущая страница в slice к продуктам !!!
 	useEffect(() => {
 		setCurrPage(1);
 	}, [category]);

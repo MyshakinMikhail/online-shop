@@ -2,7 +2,7 @@ import type { Product } from "@/shared/types";
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: Product[] = [];
-
+// { products: Product[] } - нельзя в state использовать [] для initialState
 const productsPageSlice = createSlice({
 	name: "productsPage",
 	initialState,

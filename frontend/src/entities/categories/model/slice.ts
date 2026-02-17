@@ -2,6 +2,10 @@ import type { Category } from "@/shared/types";
 import { createSlice } from "@reduxjs/toolkit";
 import { getCurrentCategory } from "./thunk";
 
+// вот это хорошо, так и надо в других слайсах инитить !!!
+// создать один инит для всего приложения в App.tsx и тогда пропадут
+// какие-то useEffects
+
 type CategoryType = {
 	category: Category | null;
 	loading: boolean;
