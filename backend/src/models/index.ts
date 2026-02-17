@@ -1,6 +1,7 @@
 import Cart from "./Cart.ts";
 import CartItem from "./CartItem.ts";
 import Category from "./Category.ts";
+import Favorite from "./Favorite.ts";
 import Order from "./Order.ts";
 import OrderItem from "./OrderItem.ts";
 import { Product } from "./Product.ts";
@@ -53,4 +54,4 @@ Product.hasMany(OrderItem, {
 });
 
 export type ModelsType = Category | Product | User;
-export { Cart, CartItem, Category, Order, OrderItem, Product, User };
+export { Cart, CartItem, Category, Favorite, Order, OrderItem, Product, User };

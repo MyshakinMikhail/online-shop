@@ -19,7 +19,7 @@ router.post("/yandex", async (req, res) => {
 		});
 
 		if (!created) {
-			await user.update(userData);
+			return await user.update(userData);
 		}
 
 		await Cart.findOrCreate({
