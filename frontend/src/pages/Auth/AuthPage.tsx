@@ -1,10 +1,8 @@
-import { storage } from "@/entities/user/api";
-import { api } from "@/shared/api";
-import { exchangeCodeForToken, getUserInfo, initiateYandexAuth } from "@/shared/lib/yandexAuth";
-import type { YandexUserInfo } from "@/shared/types/yandexUserInfo";
+import { userService, type AuthCallbackType } from "@/entities/user/api/userService";
+import { initiateYandexAuth } from "@/shared/lib/yandexAuth";
 import { Alert, Button, Card, Space, Typography } from "antd";
 import { LogIn } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import styles from "./AuthPage.module.css";
 
@@ -17,54 +15,6 @@ export default function AuthPage() {
 	const [error, setError] = useState<string | null>(null);
 	const [success, setSuccess] = useState(false);
 
-	const handleAuthCallback = useCallback(
-		async (code: string) => {
-			setLoading(true);
-			setError(null);
-
-			try {
-				const tokenData = await exchangeCodeForToken(code);
-				const userInfo: YandexUserInfo = await getUserInfo(tokenData.access_token);
-
-				localStorage.setItem("yandex_access_token", tokenData.access_token);
-				if (tokenData.refresh_token) {
-					localStorage.setItem("yandex_refresh_token", tokenData.refresh_token);
-				}
-				storage.setUser(userInfo);
-
-				const response = await api.post("/auth/yandex", {
-					user: {
-						role: "user",
-						psuid: userInfo.id,
-						first_name: userInfo.first_name,
-						last_name: userInfo.last_name,
-						sex: userInfo.sex,
-						default_email: userInfo.default_email,
-						is_buying_smth: false,
-					},
-				});
-
-				if (response.status === 200 || response.status === 201) {
-					setSuccess(true);
-
-					setTimeout(() => navigate("/"), 1000);
-				} else {
-					throw new Error(`Unexpected status: ${response.status}`);
-				}
-			} catch (err) {
-				console.error("Auth error:", err);
-				const errorMessage = "Произошла ошибка при авторизации";
-				setError(errorMessage);
-
-				storage.removeUser();
-				localStorage.removeItem("yandex_access_token");
-			} finally {
-				setLoading(false);
-			}
-		},
-		[navigate]
-	);
-
 	useEffect(() => {
 		const code = searchParams.get("code");
 		const errorParam = searchParams.get("error");
@@ -75,9 +25,25 @@ export default function AuthPage() {
 		}
 
 		if (code) {
-			handleAuthCallback(code);
+			const yandexAuth = async () => {
+				try {
+					setLoading(true);
+					setError(null);
+					const response: AuthCallbackType = await userService.handleAuthCallback(code);
+					if (response.isSuccess) {
+						setSuccess(true);
+						setTimeout(() => navigate("/"), 2000);
+						return;
+					}
+				} catch (error) {
+					console.log("Ошибка авторизации на сервере:", error);
+				} finally {
+					setLoading(false);
+				}
+			};
+			yandexAuth();
 		}
-	}, [searchParams, handleAuthCallback]);
+	}, [searchParams]);
 
 	const handleYandexLogin = async () => {
 		setError(null);

@@ -3,11 +3,11 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState: Product[] = [];
 
-const productsSlice = createSlice({
-	name: "products",
+const productsPageSlice = createSlice({
+	name: "productsPage",
 	initialState,
 	reducers: {
-		updateProducts: (state, action) => {
+		updateProductsPage: (state, action) => {
 			if (action.payload) {
 				state.length = 0;
 				state.push(...action.payload);
@@ -17,5 +17,5 @@ const productsSlice = createSlice({
 	},
 });
 
-export const { updateProducts } = productsSlice.actions;
-export const productsReducer = productsSlice.reducer;
+export const { updateProductsPage } = productsPageSlice.actions;
+export const productsPageReducer = productsPageSlice.reducer;

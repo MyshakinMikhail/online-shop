@@ -1,6 +1,4 @@
-import { storage } from "@/entities/user/api";
-import { api } from "@/shared/api";
-import { isAxiosError } from "axios";
+import { userService } from "@/entities/user/api";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -10,53 +8,9 @@ export default function ProtectionRouter() {
 
 	useEffect(() => {
 		const checkAuth = async () => {
-			try {
-				const userInfo = storage.getUserInfo();
-				// я не придумал, как мне сделать userSlice, поэтому пока что оставим так, но потом надо будет что-то придумать !!!
-
-				if (!userInfo) {
-					setIsAuthenticated(false);
-					return;
-				}
-
-				if (!userInfo?.id) {
-					setIsAuthenticated(false);
-					storage.removeUser();
-					return;
-				}
-
-				try {
-					// Ищем по psuid, а не по нашему id
-					const response = await api.get(`/auth/checkUser/${userInfo.id}`); // userInfo.id = Yandex ID = psuid
-
-					if (response.status === 200) {
-						setIsAuthenticated(true);
-					} else {
-						console.log("Unexpected status:", response.status);
-						setIsAuthenticated(false);
-					}
-				} catch (apiError: unknown) {
-					if (isAxiosError(apiError)) {
-						console.log("API check error:", apiError.response?.status);
-
-						if (apiError.response?.status === 404) {
-							console.log("User not found in database, clearing storage");
-							setIsAuthenticated(false);
-							storage.removeUser();
-							localStorage.removeItem("yandex_access_token");
-						}
-					} else {
-						console.error("Other API error:", apiError);
-						setIsAuthenticated(false);
-					}
-				}
-			} catch (error) {
-				console.error("Error parsing user info:", error);
-				setIsAuthenticated(false);
-				storage.removeUser();
-			} finally {
-				setIsChecking(false);
-			}
+			const result = await userService.checkAuth();
+			setIsAuthenticated(result);
+			setIsChecking(false);
 		};
 
 		checkAuth();

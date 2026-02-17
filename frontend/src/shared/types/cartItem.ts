@@ -9,10 +9,3 @@ export type CartItemType = {
 	createdAt?: string;
 	updatedAt?: string;
 };
-
-export type MiniCartItemType = {
-	product: Product;
-	quantity: number;
-};
-
-/// по хорошему избавиться от этих типов !!!

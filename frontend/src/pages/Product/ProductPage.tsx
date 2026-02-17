@@ -27,11 +27,6 @@ export default function ProductPage() {
 		fetchProduct();
 	}, []);
 
-	// const product: Product | undefined =
-	// 	mockMiniProducts.find((item: Product) => item.id === id) || undefined;
-
-	// console.log(product);
-
 	const handleAddInCart = () => {
 		if (product) {
 			dispatch(addProduct(product));

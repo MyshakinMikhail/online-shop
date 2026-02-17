@@ -1,3 +1,4 @@
 import { storage } from "./storage";
+import { userService } from "./userService";
 
-export { storage };
+export { storage, userService };

@@ -1,11 +1,31 @@
+import { api } from "@/shared/api";
 import { SearchContext } from "@/shared/context";
-import type { RootState } from "@/shared/lib/store";
-import { useMemo, useState, type ReactNode } from "react";
-import { useSelector } from "react-redux";
+import type { Product } from "@/shared/types";
+import { useEffect, useMemo, useState, type ReactNode } from "react";
 
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
 	const [content, setContent] = useState<string>("");
-	const products = useSelector((state: RootState) => state.products);
+	const [products, setProducts] = useState<Product[]>([]);
+
+	useEffect(() => {
+		const fetchProducts = async () => {
+			try {
+				const response = await api.get("/products/", {
+					params: {
+						page: 0,
+						limit: 10000,
+						categoryId: 1,
+					},
+				});
+
+				setProducts(response.data.rows);
+			} catch (error) {
+				console.error("Ошибка получения продуктов с сервера", error);
+			}
+		};
+
+		fetchProducts();
+	}, []);
 
 	const sortedProducts = useMemo(() => {
 		if (!content.trim()) {
@@ -15,9 +35,8 @@ export const SearchProvider = ({ children }: { children: ReactNode }) => {
 		const query = content.toLowerCase().trim();
 
 		return products.filter(product => {
-			const titleMatch = product.name?.toLowerCase().includes(query);
-			const descriptionMatch = product.description?.toLowerCase().includes(query);
-			return titleMatch || descriptionMatch;
+			const nameMatch = product.name?.toLowerCase().includes(query);
+			return nameMatch;
 		});
 	}, [content]);
 

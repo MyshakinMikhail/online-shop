@@ -1,5 +1,5 @@
 import { getProductsByCategoryId } from "@/entities/product/api/getProductsByCategoryId";
-import { updateProducts } from "@/entities/product/model/slice";
+import { updateProductsPage } from "@/entities/product/model/productsPageSlice";
 import MainProductsList from "@/entities/product/ui/lists/MainProductsList/MainProductsList";
 import type { RootState } from "@/shared/lib/store";
 import type { Product } from "@/shared/types";
@@ -42,7 +42,7 @@ export default function ProductsPage() {
 
 	useEffect(() => {
 		if (products) {
-			dispatch(updateProducts(products));
+			dispatch(updateProductsPage(products));
 		}
 	}, [products, dispatch]);
 
