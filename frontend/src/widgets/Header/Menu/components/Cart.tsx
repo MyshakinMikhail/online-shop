@@ -9,7 +9,6 @@ import { useEffect } from "react";
 import { useDispatch } from "react-redux";
 
 export default function Cart() {
-	// const products = mockMiniProducts;
 	const user: YandexUserInfo = storage.getUserInfo();
 	const dispatch = useDispatch();
 
@@ -23,7 +22,6 @@ export default function Cart() {
 				}));
 
 				dispatch(initCartProducts(items));
-				// console.log(items);
 			} catch (e) {
 				console.log(e);
 			}
