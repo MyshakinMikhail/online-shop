@@ -1,5 +1,6 @@
 import type { Product } from "@/shared/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { CartServise } from "../api/CartServise";
 
 export interface CartItem extends Product {
 	quantity: number;
@@ -20,24 +21,18 @@ const cartSlice = createSlice({
 
 			if (existingProduct) {
 				existingProduct.quantity += 1;
+				CartServise.updateQuantity(action.payload.id, true);
 				return;
 			}
 
 			state.push({ ...action.payload, quantity: 1 });
+			CartServise.addProduct(action.payload.id);
 		},
 
-		updateProductQuantity: (
-			state,
-			action: PayloadAction<{ productId: number; quantity: number }>
-		) => {
-			const existingProduct = state.find(product => product.id === action.payload.productId);
-			if (existingProduct && action.payload.quantity > 0) {
-				existingProduct.quantity = action.payload.quantity;
-			}
-		},
 		deleteProduct: (state, action: PayloadAction<{ productId: number }>) => {
 			const existingProduct = state.find(product => product.id === action.payload.productId);
 			if (existingProduct) {
+				CartServise.deleteProduct(existingProduct.id);
 				return state.filter(product => product.id !== existingProduct.id);
 			}
 		},
@@ -45,6 +40,7 @@ const cartSlice = createSlice({
 			const existingProduct = state.find(product => product.id === action.payload.productId);
 			if (existingProduct) {
 				existingProduct.quantity += 1;
+				CartServise.updateQuantity(existingProduct.id, true);
 			}
 		},
 
@@ -52,10 +48,12 @@ const cartSlice = createSlice({
 			const existingProduct = state.find(product => product.id === action.payload.productId);
 			if (existingProduct) {
 				existingProduct.quantity -= 1;
+				CartServise.updateQuantity(existingProduct.id, false);
 			}
 		},
 
 		clearCart: () => {
+			CartServise.deleteCart();
 			return [];
 		},
 	},
@@ -64,7 +62,6 @@ const cartSlice = createSlice({
 export const {
 	initCartProducts,
 	addProduct,
-	updateProductQuantity,
 	deleteProduct,
 	incrementQuantity,
 	decrementQuantity,

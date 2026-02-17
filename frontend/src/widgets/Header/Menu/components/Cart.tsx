@@ -1,4 +1,5 @@
 import { initCartProducts } from "@/entities/cart/model/slice";
+import { storage } from "@/entities/user/api";
 import { api } from "@/shared/api";
 import type { CartItemType } from "@/shared/types";
 import type { YandexUserInfo } from "@/shared/types/yandexUserInfo";
@@ -9,7 +10,7 @@ import { useDispatch } from "react-redux";
 
 export default function Cart() {
 	// const products = mockMiniProducts;
-	const user: YandexUserInfo = JSON.parse(localStorage.getItem("user_info") || "null");
+	const user: YandexUserInfo = storage.getUserInfo();
 	const dispatch = useDispatch();
 
 	useEffect(() => {

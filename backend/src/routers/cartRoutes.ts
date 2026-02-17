@@ -59,12 +59,12 @@ router.delete("/:userId", async (req, res) => {
 				.json({ message: "Неверные параметры запроса", error: "userId must be a number" });
 		}
 
-		const user = await User.findByPk(userId);
+		const user = await User.findOne({ where: { psuid: userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с таким id не существует" });
 		}
 
-		const cart = await Cart.findOne({ where: { userId: userId } });
+		const cart = await Cart.findOne({ where: { userId: user.id } });
 		if (!cart) {
 			return res.status(404).json({
 				message:
