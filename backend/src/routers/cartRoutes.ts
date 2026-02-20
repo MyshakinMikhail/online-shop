@@ -17,7 +17,6 @@ router.get("/:userId", async (req, res) => {
 			return res.status(404).json({ message: "Пользователя с таким id не существует" });
 		}
 
-		console.log(user);
 		const cart = await Cart.findOne({
 			where: { userId: user.id },
 			include: [

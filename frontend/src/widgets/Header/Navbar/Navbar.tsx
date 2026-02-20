@@ -1,4 +1,4 @@
-import { CategoriesServise } from "@/entities/categories/CategoiesServise";
+import { CategoriesServise } from "@/entities/categories/api/CategoiesService";
 import { changeCategory } from "@/entities/categories/model/slice";
 import type { RootState } from "@/shared/lib/store";
 import type { Category } from "@/shared/types";

@@ -1,4 +1,5 @@
+import { AppProvider } from "./AppProvider";
 import { SearchProvider } from "./SearchProvider";
 import { StoreProvider } from "./StoreProvider";
 
-export { SearchProvider, StoreProvider };
+export { AppProvider, SearchProvider, StoreProvider };

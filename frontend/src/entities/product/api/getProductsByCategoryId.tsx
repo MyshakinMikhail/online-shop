@@ -1,14 +1,18 @@
+import { storage } from "@/entities/user/api";
 import { api } from "@/shared/api";
-import type { Product } from "@/shared/types";
+import type { AppDispatch } from "@/shared/lib/store";
+import type { YandexUserInfo } from "@/shared/types/yandexUserInfo";
 import { isAxiosError } from "axios";
 import type { Dispatch, SetStateAction } from "react";
+import { getAllProducts } from "../model/getAllProducts";
+import { updateProductsForPage } from "../model/productsPageSlice";
 
 type Props = {
 	categoryId: number | undefined;
 	setIsLoading: Dispatch<SetStateAction<boolean>>;
 	setError: Dispatch<SetStateAction<string | null>>;
 	setTotal: Dispatch<SetStateAction<number | undefined>>;
-	setProducts: Dispatch<SetStateAction<Product[] | undefined>>;
+	dispatch: AppDispatch;
 	currPage: number;
 	limit: number;
 };
@@ -18,13 +22,14 @@ export const getProductsByCategoryId = async ({
 	setIsLoading,
 	setError,
 	setTotal,
-	setProducts,
+	dispatch,
 	currPage,
 	limit,
 }: Props) => {
 	try {
 		setIsLoading(true);
-		const result = await api.get("/products", {
+		const userInfo: YandexUserInfo = storage.getUserInfo();
+		const result = await api.get(`/products/${userInfo.id}`, {
 			params: {
 				page: currPage,
 				limit: limit,
@@ -32,7 +37,8 @@ export const getProductsByCategoryId = async ({
 			},
 		});
 		setTotal(result.data.count);
-		setProducts(result.data.rows);
+		dispatch(updateProductsForPage(result.data.products));
+		dispatch(getAllProducts()); // получаю каждый раз при смене страницы, это плохо, но потом уберу !!!
 	} catch (error) {
 		if (isAxiosError(error)) {
 			console.log(error);

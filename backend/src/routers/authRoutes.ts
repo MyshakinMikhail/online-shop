@@ -18,7 +18,7 @@ router.post("/yandex", async (req, res) => {
 			defaults: userData,
 		});
 
-		if (!created) {
+		if (created) {
 			return await user.update(userData);
 		}
 

@@ -1,5 +1,5 @@
+import { AdminProductCard } from "@/entities/admin/ui";
 import { mockMiniProducts } from "@/entities/product/model/mocks";
-import AdminProductCard from "@/entities/product/ui/cards/AdminProductCard/AdminProductCard";
 import type { Product } from "@/shared/types";
 import { Button, Flex, Input } from "antd";
 import classes from "./Products.module.css";

@@ -2,15 +2,16 @@ import { Avatar } from "antd";
 import { Heart } from "lucide-react";
 import classes from "./HeartIcon.module.css";
 
-export default function HeartIcon() {
-	const handleClick = () => {
-		console.log("Илья лох");
-	};
+type Props = {
+	isFavorite: boolean | undefined;
+	onClick: () => void;
+};
 
+export default function HeartIcon({ isFavorite, onClick }: Props) {
 	return (
 		<Avatar
-			onClick={handleClick}
-			icon={<Heart className={classes.icon} />}
+			onClick={onClick}
+			icon={<Heart className={isFavorite ? classes.activeIcon : classes.icon} />}
 			className={classes.avatar}
 		/>
 	);

@@ -1,17 +1,17 @@
-import { type Product } from "@/shared/types";
+import type { RootState } from "@/shared/lib/store";
+import type { Product } from "@/shared/types";
+import { useSelector } from "react-redux";
 import { MainProductCard } from "../../cards";
 import classes from "./MainProductsList.module.css";
 
-type Props = {
-	products: Product[] | undefined;
-};
+export default function MainProductsList() {
+	const { items } = useSelector((state: RootState) => state.productsPage.productsForPage);
 
-export default function MainProductsList({ products }: Props) {
 	return (
 		<div className={classes.list}>
-			{products?.length === 0 && <div>Товары отсутствуют</div>}
-			{products?.map(product => (
-				<MainProductCard key={product.id} product={product} />
+			{items?.length === 0 && <div>Товары отсутствуют</div>}
+			{items?.map((product: Product) => (
+				<MainProductCard key={product.article} product={product} />
 			))}
 		</div>
 	);

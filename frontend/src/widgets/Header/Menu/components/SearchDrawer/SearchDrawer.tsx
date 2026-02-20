@@ -1,4 +1,4 @@
-import SearchProductList from "@/entities/product/ui/lists/SearchProductList/SearchProductList";
+import SearchProductList from "@/entities/product/ui/lists/SearchProductsList/SearchProductsList";
 import { useSearch } from "@/shared/hooks";
 import { MenuIcon } from "@/shared/ui";
 import { Drawer, Input, Typography } from "antd";

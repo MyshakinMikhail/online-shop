@@ -1,4 +1,6 @@
+import { storage } from "@/entities/user/api";
 import { api } from "@/shared/api";
+import type { YandexUserInfo } from "@/shared/types/yandexUserInfo";
 import { isAxiosError } from "axios";
 import type { Dispatch, SetStateAction } from "react";
 
@@ -16,7 +18,8 @@ export const getProductsById = async ({ id, setIsLoading, setError }: Props) => 
 			setIsLoading(false);
 			return;
 		}
-		const result = await api.get(`/products/${id}`);
+		const userInfo: YandexUserInfo = storage.getUserInfo();
+		const result = await api.get(`/product/${userInfo.id}/${id}`);
 		return result.data.product;
 	} catch (error) {
 		if (isAxiosError(error)) {

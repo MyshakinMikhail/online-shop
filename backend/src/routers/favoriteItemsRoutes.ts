@@ -1,5 +1,5 @@
 import { Router, type Request } from "express";
-import { Favorite } from "../models/index.ts";
+import { Favorite, User } from "../models/index.ts";
 
 const router = Router();
 
@@ -28,9 +28,14 @@ router.post("/:userId", async (req: Request<FavoriteParamsType, {}, FavoriteBody
 			});
 		}
 
+		const user = await User.findOne({ where: { psuid: userId } });
+		if (!user) {
+			return res.status(404).json({ message: "Пользователя с данным id не существует" });
+		}
+
 		const [createdProduct, isAdded] = await Favorite.findOrCreate({
-			where: { userId: Number(userId), productId: productId },
-			defaults: { userId: Number(userId), productId: productId },
+			where: { userId: user.id, productId: productId },
+			defaults: { userId: user.id, productId: productId },
 		});
 
 		if (!isAdded) {
@@ -59,15 +64,21 @@ router.delete("/:userId", async (req: Request<FavoriteParamsType, {}, FavoriteBo
 				error: "productId must be a number",
 			});
 		}
+
+		const user = await User.findOne({ where: { psuid: userId } });
+		if (!user) {
+			return res.status(404).json({ message: "Пользователя с данным id не существует" });
+		}
+
 		const product = await Favorite.findOne({
-			where: { userId: Number(userId), productId: productId },
+			where: { userId: user.id, productId: productId },
 		});
 
 		if (!product) {
 			return res.status(404).json({ message: "Данного товара уже нет в корзине" });
 		}
 
-		await Favorite.destroy({ where: { userId: Number(userId), productId: productId } });
+		await Favorite.destroy({ where: { userId: user.id, productId: productId } });
 		res.status(200).json({ message: "Товар удален из избранного" });
 	} catch (error) {
 		res.status(500).json({ message: "Ошибка удаления избранного товара" });

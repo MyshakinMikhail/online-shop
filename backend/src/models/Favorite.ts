@@ -9,7 +9,7 @@ export interface FavoriteAttributes {
 
 type FavoriteCreatedAttributes = Optional<FavoriteAttributes, "id">;
 
-class Favourite
+class Favorite
 	extends Model<FavoriteAttributes, FavoriteCreatedAttributes>
 	implements FavoriteAttributes
 {
@@ -18,7 +18,7 @@ class Favourite
 	declare productId: number;
 }
 
-Favourite.init(
+Favorite.init(
 	{
 		id: {
 			type: DataTypes.INTEGER,
@@ -41,4 +41,4 @@ Favourite.init(
 	}
 );
 
-export default Favourite;
+export default Favorite;

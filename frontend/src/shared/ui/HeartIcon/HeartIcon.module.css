@@ -2,7 +2,8 @@
 	color: black;
 }
 
-.icon:hover {
+.activeIcon {
+	color: black;
 	fill: grey;
 }
 

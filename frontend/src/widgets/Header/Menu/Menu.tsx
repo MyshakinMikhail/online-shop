@@ -2,8 +2,8 @@ import { MenuIcon } from "@/shared/ui";
 import { Flex } from "antd";
 import { UserRound } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import Cart from "./components/Cart";
-import FavouritesDrawer from "./components/FavouritesDrawer";
+import Cart from "./components/CartDrawer/CartDrawer";
+import FavoritesDrawer from "./components/FavouritesDrawer/FavouritesDrawer";
 import SearchDrawer from "./components/SearchDrawer/SearchDrawer";
 import classes from "./Menu.module.css";
 
@@ -19,7 +19,7 @@ export default function Menu() {
 					navigate("/profile");
 				}}
 			/>
-			<FavouritesDrawer />
+			<FavoritesDrawer />
 			<Cart />
 		</Flex>
 	);

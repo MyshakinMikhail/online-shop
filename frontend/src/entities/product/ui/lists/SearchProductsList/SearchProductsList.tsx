@@ -1,7 +1,7 @@
 import type { Product } from "@/shared/types";
 import { Typography } from "antd";
 import { SearchProductCard } from "../../cards";
-import classes from "./SearchProductList.module.css";
+import classes from "./SearchProductsList.module.css";
 
 const { Paragraph } = Typography;
 

@@ -4,23 +4,21 @@ import {
 	incrementQuantity,
 	type CartItem,
 } from "@/entities/cart/model/slice";
-import type { ProductCardType } from "@/shared/types";
 import { QuantityControl } from "@/shared/ui";
 import { Button, Col, Image, Row, Typography } from "antd";
 import { CircleX } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import classes from "./MiniProductCard.module.css";
+import classes from "./ProductCard.module.css";
 
 const { Text } = Typography;
 
 type Props = {
 	product: CartItem;
-	type: ProductCardType;
 	toggleDrawer: () => void;
 };
 
-export default function MiniProductCard({ product, type, toggleDrawer }: Props) {
+export default function CartProductCard({ product, toggleDrawer }: Props) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
@@ -56,15 +54,13 @@ export default function MiniProductCard({ product, type, toggleDrawer }: Props) 
 						{product.name}
 					</Text>
 				</Col>
-				{type === "cart" && (
-					<Col span={4}>
-						<QuantityControl
-							count={product.quantity}
-							increment={increment}
-							decrement={decrement}
-						/>
-					</Col>
-				)}
+				<Col span={4}>
+					<QuantityControl
+						count={product.quantity}
+						increment={increment}
+						decrement={decrement}
+					/>
+				</Col>
 				<Col span={4}>
 					<Text>{product.price} руб.</Text>
 				</Col>

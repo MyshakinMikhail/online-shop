@@ -8,12 +8,14 @@ import favoriteItemsRoutes from "./favoriteItemsRoutes.ts";
 import favoritesRoutes from "./favoritesRoutes.ts";
 import orderItemsRoutes from "./orderItemsRoutes.ts";
 import orderRoutes from "./orderRoutes.ts";
+import productRoutes from "./productRoutes.ts";
 import productsRoutes from "./productsRoutes.ts";
 
 const router = Router();
 
 router.use("/auth", authRoutes);
 router.use("/products", productsRoutes);
+router.use("/product", productRoutes);
 router.use("/categories", categoriesRoutes);
 router.use("/cart/items", cartItemsRoutes);
 router.use("/cart", cartRoutes);

@@ -1,5 +1,8 @@
+import { FavoriteProductsService } from "@/entities/favorites/api/FavoriteProductsService";
+import { addFavoriteItem, deleteFavoriteItem } from "@/entities/product/model/productsPageSlice";
 import type { Product } from "@/shared/types";
 import { HeartIcon } from "@/shared/ui";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import classes from "./MainProductCard.module.css";
 
@@ -9,9 +12,20 @@ type Props = {
 
 export default function MainProductCard({ product }: Props) {
 	const navigate = useNavigate();
+	const dispatch = useDispatch();
 
-	const handleClick = () => {
-		navigate(`/products/${product.id}`);
+	const handlePictureClick = () => {
+		navigate(`/product/${product.id}`);
+	};
+
+	const handleIconClick = () => {
+		if (!product.isFavorite) {
+			dispatch(addFavoriteItem(product.id));
+			FavoriteProductsService.addFavoriteProduct(product.id);
+		} else {
+			dispatch(deleteFavoriteItem(product.id));
+			FavoriteProductsService.deleteFavoriteProduct(product.id);
+		}
 	};
 
 	return (
@@ -21,11 +35,11 @@ export default function MainProductCard({ product }: Props) {
 				width="100%"
 				height="auto"
 				style={{ borderRadius: "10px" }}
-				onClick={handleClick}
+				onClick={handlePictureClick}
 				className={classes.image}
 			/>
 			<div className={classes.like}>
-				<HeartIcon />
+				<HeartIcon isFavorite={product.isFavorite} onClick={handleIconClick} />
 			</div>
 			<p className={classes.text}>{product.name}</p>
 			<p className={classes.text}>{product.price} руб</p>

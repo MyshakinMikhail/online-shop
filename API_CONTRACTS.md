@@ -95,12 +95,12 @@
 3) Избранное:
      # GET /api/favourites ( + )
      Request Body: {user_id: User} 
-     Response: { favourites: FavouriteItem[] }
+     Response: { favourites: FavoriteItem[] }
      Описание: Получить список избранных товаров пользователя
 
      # POST /api/favourites ( + )
      Request Body: { user_id: number, product_id: number }
-     Response: { favourite: FavouriteItem }
+     Response: { favourite: FavoriteItem }
      Описание: Добавить товар в избранное
 
      # DELETE /api/favourites/:product_id ( + )

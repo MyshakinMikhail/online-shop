@@ -53,5 +53,10 @@ Product.hasMany(OrderItem, {
 	as: "orderItems",
 });
 
+Favorite.belongsTo(Product, {
+	foreignKey: "productId",
+	as: "product",
+});
+
 export type ModelsType = Category | Product | User;
 export { Cart, CartItem, Category, Favorite, Order, OrderItem, Product, User };

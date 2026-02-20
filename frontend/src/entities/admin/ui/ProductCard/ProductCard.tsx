@@ -1,7 +1,7 @@
+import type { Product } from "@/shared/types";
 import { Button, Flex, Image } from "antd";
 import { useNavigate } from "react-router-dom";
-import classes from "./AdminProductCard.module.css";
-import type { Product } from "@/shared/types";
+import classes from "./ProductCard.module.css";
 
 type Props = {
 	product: Product;

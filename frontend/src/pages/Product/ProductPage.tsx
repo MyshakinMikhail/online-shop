@@ -1,6 +1,8 @@
 import { addProduct } from "@/entities/cart/model/slice";
+import { FavoriteProductsService } from "@/entities/favorites/api/FavoriteProductsService";
 import { getProductsById } from "@/entities/product/api";
-import { type Product } from "@/shared/types";
+import { addFavoriteItem, deleteFavoriteItem } from "@/entities/product/model/productsPageSlice";
+import type { Product } from "@/shared/types";
 import { HeartIcon, MyButton } from "@/shared/ui";
 import { Header } from "@/widgets/Header";
 import { Flex, Typography } from "antd";
@@ -25,11 +27,23 @@ export default function ProductPage() {
 		};
 
 		fetchProduct();
-	}, []);
+	}, [id]);
 
 	const handleAddInCart = () => {
 		if (product) {
 			dispatch(addProduct(product));
+		}
+	};
+
+	const handleIconClick = async () => {
+		if (product && !product?.isFavorite) {
+			dispatch(addFavoriteItem(product.id));
+			FavoriteProductsService.addFavoriteProduct(product.id);
+			setProduct(prevProduct => (prevProduct ? { ...prevProduct, isFavorite: true } : null));
+		} else if (product) {
+			dispatch(deleteFavoriteItem(product.id));
+			FavoriteProductsService.deleteFavoriteProduct(product.id);
+			setProduct(prevProduct => (prevProduct ? { ...prevProduct, isFavorite: false } : null));
 		}
 	};
 
@@ -76,7 +90,7 @@ export default function ProductPage() {
 					)}
 					<Flex align="center" justify="center" gap={15}>
 						<MyButton label="Добавить в корзину" onClick={handleAddInCart} />
-						<HeartIcon />
+						<HeartIcon isFavorite={product?.isFavorite} onClick={handleIconClick} />
 					</Flex>
 				</Flex>
 			</Flex>
