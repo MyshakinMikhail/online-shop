@@ -1,35 +1,42 @@
 import type { Product } from "@/shared/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { getAllProducts } from "./getAllProducts";
+import { getAllProducts, getProductsForPageByCategoryId } from "./asyncThunks";
 
-type ProductsState = {
+type ProductsForPageState = {
+	items: Product[];
+	totalPages: number;
+	currPage: number;
+	isLoading: boolean;
+	error: string | null;
+};
+
+type AllProductsState = {
 	items: Product[];
 	isLoading: boolean;
 	error: string | null;
 };
 
 type ProductsStateType = {
-	productsForPage: ProductsState;
-	allProducts: ProductsState;
+	productsForPage: ProductsForPageState;
+	allProducts: AllProductsState;
 };
 
 const initialState: ProductsStateType = {
-	productsForPage: { items: [], isLoading: false, error: null },
+	productsForPage: { items: [], totalPages: 0, currPage: 1, isLoading: false, error: null },
 	allProducts: { items: [], isLoading: false, error: null },
 };
+
 // { products: Product[] } - нельзя в state использовать [] для initialState !!!
-// делать refetch для обновления продуктов
 
 const productsPageSlice = createSlice({
 	name: "productsPage",
 	initialState,
 	reducers: {
-		updateProductsForPage: (state, action: PayloadAction<Product[]>) => {
+		updateCurrPage: (state, action: PayloadAction<number>) => {
 			if (action.payload) {
-				state.productsForPage.items.length = 0;
-				state.productsForPage.items.push(...action.payload);
+				state.productsForPage.currPage = action.payload;
 			}
-		}, // вызывается после useEffect
+		},
 		addFavoriteItem: (state, action: PayloadAction<number>) => {
 			if (action.payload) {
 				state.productsForPage.items = state.productsForPage.items.map((product: Product) =>
@@ -70,19 +77,27 @@ const productsPageSlice = createSlice({
 			.addCase(getAllProducts.fulfilled, (state, action) => {
 				state.allProducts.isLoading = false;
 				state.allProducts.items = action.payload;
-				console.log("Продукты должны добавиться: ", action.payload);
 			})
 			.addCase(getAllProducts.rejected, (state, action) => {
 				state.allProducts.isLoading = false;
 				state.allProducts.error = action.error.message || "Неизвестная ошибка";
+			})
+			.addCase(getProductsForPageByCategoryId.pending, state => {
+				state.productsForPage.isLoading = true;
+				state.productsForPage.error = null;
+			})
+			.addCase(getProductsForPageByCategoryId.fulfilled, (state, action) => {
+				state.productsForPage.isLoading = false;
+				state.productsForPage.items = action.payload.products;
+				state.productsForPage.totalPages = action.payload.totalPages;
+			})
+			.addCase(getProductsForPageByCategoryId.rejected, (state, action) => {
+				state.productsForPage.isLoading = false;
+				state.productsForPage.error = action.error.message || "Неизвестная ошибка";
 			});
 	},
 });
 
-export const {
-	updateProductsForPage,
-	addFavoriteItem,
-	deleteFavoriteItem,
-	deleteAllFavoriteItems,
-} = productsPageSlice.actions;
+export const { updateCurrPage, addFavoriteItem, deleteFavoriteItem, deleteAllFavoriteItems } =
+	productsPageSlice.actions;
 export const productsPageReducer = productsPageSlice.reducer;

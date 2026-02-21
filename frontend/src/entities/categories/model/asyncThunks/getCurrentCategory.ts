@@ -1,19 +1,12 @@
-// import { api } from "@/shared/api";
-// import { createAsyncThunk } from "@reduxjs/toolkit";
-
-// export const getCurrentCategory = createAsyncThunk("category/getByClug", async (slug: string) => {
-// 	const response = await api.get(`/categories/${slug}`);
-// 	return response.data.category;
-// });
-
 import { api } from "@/shared/api";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isAxiosError } from "axios";
 
 export const getCurrentCategory = createAsyncThunk(
 	"category/getByClug",
-	async (slug: string, { rejectWithValue }) => {
+	async (_, { rejectWithValue }) => {
 		try {
+			const slug = window.location.pathname.split("/").pop();
 			if (!slug) {
 				return rejectWithValue({ message: "slug must be a string" });
 			}

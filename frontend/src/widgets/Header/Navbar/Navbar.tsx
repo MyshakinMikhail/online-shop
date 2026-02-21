@@ -1,5 +1,6 @@
 import { CategoriesServise } from "@/entities/categories/api/CategoiesService";
 import { changeCategory } from "@/entities/categories/model/slice";
+import { updateCurrPage } from "@/entities/product/model/productsPageSlice";
 import type { RootState } from "@/shared/lib/store";
 import type { Category } from "@/shared/types";
 import { Drawer, Flex, Typography } from "antd";
@@ -53,11 +54,12 @@ export default function Navbar() {
 						navigate("/all");
 						dispatch(
 							changeCategory({
-								category: { id: 1, name: "Все товары", slug: "all" },
-								loading: false,
-								error: null,
+								id: 1,
+								name: "Все товары",
+								slug: "all",
 							})
 						);
+						dispatch(updateCurrPage(1));
 					}}
 				>
 					Магазин Одежды

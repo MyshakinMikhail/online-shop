@@ -18,7 +18,7 @@ export default function SearchProductCard({ product, toggleDrawer }: Props) {
 	const handleClick = () => {
 		setContent("");
 		toggleDrawer();
-		navigate(`/products/${product.id}`);
+		navigate(`/product/${product.id}`);
 	};
 
 	return (

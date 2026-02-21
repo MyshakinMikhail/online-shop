@@ -53,10 +53,10 @@ export default function ProductPage() {
 
 	if (error) {
 		return (
-			<div>
-				<Text> Ошибка загрузки</Text>
+			<Flex>
+				<Text> Ошибка загрузки товара: </Text>
 				<Text> {error}</Text>
-			</div>
+			</Flex>
 		);
 	}
 

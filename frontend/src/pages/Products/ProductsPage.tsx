@@ -1,6 +1,7 @@
-import { getProductsByCategoryId } from "@/entities/product/api/getProductsByCategoryId";
+import { getProductsForPageByCategoryId } from "@/entities/product/model/asyncThunks";
+import { updateCurrPage } from "@/entities/product/model/productsPageSlice";
 import MainProductsList from "@/entities/product/ui/lists/MainProductsList/MainProductsList";
-import type { RootState } from "@/shared/lib/store";
+import type { AppDispatch, RootState } from "@/shared/lib/store";
 import { Flex, Pagination, Select, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -9,37 +10,28 @@ import classes from "./ProductsPage.module.css";
 const { Text } = Typography;
 
 export default function ProductsPage() {
-	// const [products, setProducts] = useState<Product[] | undefined>();
-
-	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [error, setError] = useState<string | null>(null);
-	const [currPage, setCurrPage] = useState<number>(1);
-	const [total, setTotal] = useState<number>();
 	const [limit, setLimit] = useState<number>(16);
-	const category = useSelector((state: RootState) => state.category.category);
-	const dispatch = useDispatch();
-
-	// добавить текущая страница в slice к продуктам !!!
-
-	useEffect(() => {
-		setCurrPage(1);
-	}, [category]);
+	const { category } = useSelector((state: RootState) => state.category);
+	const dispatch = useDispatch<AppDispatch>();
+	const { totalPages, currPage, isLoading, error } = useSelector(
+		(state: RootState) => state.productsPage.productsForPage
+	);
 
 	useEffect(() => {
 		const fetchProducts = async () => {
-			await getProductsByCategoryId({
-				categoryId: category?.id,
-				setIsLoading,
-				setError,
-				setTotal,
-				dispatch,
-				currPage,
-				limit,
-			});
+			if (category?.id) {
+				dispatch(
+					getProductsForPageByCategoryId({
+						currPage: currPage,
+						limit: limit,
+						categoryId: category.id,
+					})
+				);
+			}
 		};
 
 		fetchProducts();
-	}, [category, currPage, limit, dispatch]);
+	}, [category?.id, currPage, limit, dispatch]);
 
 	if (isLoading) {
 		return <Flex justify="center">Загрузка...</Flex>;
@@ -63,9 +55,9 @@ export default function ProductsPage() {
 					align="center"
 					pageSize={limit}
 					defaultCurrent={currPage}
-					total={total}
+					total={totalPages}
 					onChange={page => {
-						setCurrPage(page);
+						dispatch(updateCurrPage(page));
 					}}
 				/>
 				<Select

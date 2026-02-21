@@ -1,4 +1,5 @@
 import { changeCategory } from "@/entities/categories/model/slice";
+import { updateCurrPage } from "@/entities/product/model/productsPageSlice";
 import type { Category } from "@/shared/types";
 import { Typography } from "antd";
 import type { Dispatch, ReactNode, SetStateAction } from "react";
@@ -21,13 +22,8 @@ export default function NavbarItem({ children, isUnderline, path, setOpen, categ
 
 	const handleClick = () => {
 		navigate(path);
-		dispatch(
-			changeCategory({
-				category: category,
-				loading: false,
-				error: null,
-			})
-		);
+		dispatch(changeCategory(category));
+		dispatch(updateCurrPage(1));
 		setOpen(false);
 	};
 

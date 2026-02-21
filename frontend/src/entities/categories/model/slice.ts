@@ -1,18 +1,18 @@
 import type { Category } from "@/shared/types";
-import { createSlice } from "@reduxjs/toolkit";
-import { getCurrentCategory } from "./thunk";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { getCurrentCategory } from "./asyncThunks";
 
 // вот это хорошо, так и надо в других слайсах инитить !!!
 // создать один инит для всего приложения в App.tsx и тогда пропадут
 // какие-то useEffects
 
-type CategoryType = {
+type CategoryStateType = {
 	category: Category | null;
 	loading: boolean;
 	error: null | string;
 };
 
-const initialState: CategoryType = {
+const initialState: CategoryStateType = {
 	category: { id: 1, name: "Все товары", slug: "all" },
 	loading: false,
 	error: null,
@@ -22,9 +22,10 @@ export const categorySlice = createSlice({
 	name: "category",
 	initialState: initialState,
 	reducers: {
-		changeCategory: (state, action) => {
-			// state.category = action.payload;
-			return action.payload;
+		changeCategory: (state, action: PayloadAction<Category>) => {
+			if (action.payload) {
+				state.category = action.payload;
+			}
 		},
 	},
 	extraReducers: builder => {
