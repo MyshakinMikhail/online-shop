@@ -1,14 +1,25 @@
-import { Router } from "express";
+import { Router, type Request } from "express";
+import { Op } from "sequelize";
 import { Favorite, Product, User } from "../models/index.ts";
 
 const router = Router();
 
-router.get("/:userId", async (req, res) => {
-	// добавить сюда параметр query, по которому буду получать продукты для глобальной сортировки
-	// понять, как по параметру сделать поиск продуктов в бд
+type RequestParamsType = {
+	userId: number;
+};
+
+type RequestQueryType = {
+	page?: number;
+	limit?: number;
+	categoryId?: number;
+	searchQuery?: string;
+	isFavorites?: boolean;
+};
+
+router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryType>, res) => {
 	try {
 		const { userId } = req.params;
-		const { page, limit, categoryId } = req.query;
+		const { page, limit, categoryId, searchQuery, isFavorites } = req.query;
 
 		if (isNaN(Number(userId))) {
 			return res.status(400).json({
@@ -17,10 +28,18 @@ router.get("/:userId", async (req, res) => {
 			});
 		}
 
-		if (isNaN(Number(categoryId))) {
-			return res.status(400).json({
-				message: "Неверные параметры запроса",
-				error: "categoryId must be a number",
+		if (searchQuery) {
+			const products = await Product.findAll({
+				where: {
+					[Op.or]: [
+						{ name: { [Op.iLike]: `%${searchQuery}%` } }, // Поиск по названию
+					],
+				},
+			});
+
+			return res.status(200).json({
+				products: products,
+				message: "Продукты по search-qyery получены успешно",
 			});
 		}
 
@@ -30,6 +49,32 @@ router.get("/:userId", async (req, res) => {
 		}
 
 		const favoriteProducts = await Favorite.findAll({ where: { userId: user.id } });
+
+		if (isFavorites) {
+			const favorites = await Favorite.findAll({
+				where: { userId: user.id },
+				include: [{ model: Product, as: "product" }],
+			});
+
+			const products = favorites.map(fav => {
+				const productData = fav.product?.get({ plain: true });
+				return {
+					...productData,
+				};
+			});
+
+			return res.status(200).json({
+				products,
+				message: "Избранные продукты пользователя успешно получены",
+			});
+		}
+
+		if (isNaN(Number(categoryId))) {
+			return res.status(400).json({
+				message: "Неверные параметры запроса",
+				error: "categoryId must be a number",
+			});
+		}
 
 		const favoriteIds = new Set(favoriteProducts.map(fav => fav.productId));
 

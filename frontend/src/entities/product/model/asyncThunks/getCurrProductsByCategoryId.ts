@@ -22,7 +22,7 @@ type RejectValue = {
 	data?: unknown;
 };
 
-export const getProductsForPageByCategoryId = createAsyncThunk<
+export const getCurrProductsByCategoryId = createAsyncThunk<
 	ResultType,
 	Props,
 	{ rejectValue: RejectValue }

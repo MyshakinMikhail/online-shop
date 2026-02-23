@@ -1,7 +1,7 @@
 import { FavoriteProductsService } from "@/entities/favorites/api/FavoriteProductsService";
+import { deleteAllFavorites } from "@/entities/favorites/model/favoriteSlice";
 import { FavoriteProductsList } from "@/entities/favorites/ui";
 import { deleteAllFavoriteItems } from "@/entities/product/model/productsPageSlice";
-import type { AppDispatch } from "@/shared/lib/store";
 import { MenuIcon, MyButton } from "@/shared/ui";
 import { Drawer, Flex } from "antd";
 import { Heart } from "lucide-react";
@@ -10,15 +10,16 @@ import { useDispatch } from "react-redux";
 
 export default function FavoritesDrawer() {
 	const [open, setOpen] = useState<boolean>(false);
-	const dispatch = useDispatch<AppDispatch>();
+	const dispatch = useDispatch();
 
 	const toggleDrawer = () => {
 		setOpen(open => !open);
 	};
 
 	const handleDelete = () => {
-		dispatch(deleteAllFavoriteItems());
 		FavoriteProductsService.deleteAllFavoriteProducts();
+		dispatch(deleteAllFavoriteItems());
+		dispatch(deleteAllFavorites());
 	};
 
 	return (

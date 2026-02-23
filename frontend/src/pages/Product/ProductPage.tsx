@@ -1,5 +1,6 @@
 import { addProduct } from "@/entities/cart/model/slice";
 import { FavoriteProductsService } from "@/entities/favorites/api/FavoriteProductsService";
+import { updateFavorites } from "@/entities/favorites/model/favoriteSlice";
 import { getProductsById } from "@/entities/product/api";
 import { addFavoriteItem, deleteFavoriteItem } from "@/entities/product/model/productsPageSlice";
 import type { Product } from "@/shared/types";
@@ -36,12 +37,17 @@ export default function ProductPage() {
 	};
 
 	const handleIconClick = async () => {
-		if (product && !product?.isFavorite) {
-			dispatch(addFavoriteItem(product.id));
-			FavoriteProductsService.addFavoriteProduct(product.id);
-			setProduct(prevProduct => (prevProduct ? { ...prevProduct, isFavorite: true } : null));
-		} else if (product) {
+		if (product) {
+			if (!product?.isFavorite) {
+				dispatch(addFavoriteItem(product.id));
+				FavoriteProductsService.addFavoriteProduct(product.id);
+				setProduct(prevProduct =>
+					prevProduct ? { ...prevProduct, isFavorite: true } : null
+				);
+				return;
+			}
 			dispatch(deleteFavoriteItem(product.id));
+			dispatch(updateFavorites({ product }));
 			FavoriteProductsService.deleteFavoriteProduct(product.id);
 			setProduct(prevProduct => (prevProduct ? { ...prevProduct, isFavorite: false } : null));
 		}

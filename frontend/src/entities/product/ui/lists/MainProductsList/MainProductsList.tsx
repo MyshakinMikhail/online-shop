@@ -5,7 +5,7 @@ import { MainProductCard } from "../../cards";
 import classes from "./MainProductsList.module.css";
 
 export default function MainProductsList() {
-	const { items } = useSelector((state: RootState) => state.productsPage.productsForPage);
+	const { items } = useSelector((state: RootState) => state.productsPage.currProducts);
 
 	return (
 		<div className={classes.list}>

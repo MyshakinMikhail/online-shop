@@ -9,13 +9,13 @@ const { Text } = Typography;
 
 export default function SearchDrawer() {
 	const [open, setOpen] = useState<boolean>(false);
-	const { content, setContent, sortedProducts } = useSearch();
+	const { content, setContent, products } = useSearch();
 
 	const toggleDrawer = () => {
 		setOpen(open => !open);
 	};
 
-	const drawerHeight = sortedProducts.length > 0 ? "100dvh" : 175;
+	const drawerHeight = products.length > 0 ? "100dvh" : 175;
 
 	return (
 		<>
@@ -40,9 +40,9 @@ export default function SearchDrawer() {
 				/>
 				<div>
 					{content.length > 0 ? (
-						sortedProducts.length > 0 ? (
+						products.length > 0 ? (
 							<SearchProductList
-								sortedProducts={sortedProducts}
+								sortedProducts={products}
 								toggleDrawer={toggleDrawer}
 							/>
 						) : (

@@ -1,4 +1,5 @@
 import { FavoriteProductsService } from "@/entities/favorites/api/FavoriteProductsService";
+import { updateFavorites } from "@/entities/favorites/model/favoriteSlice";
 import { addFavoriteItem, deleteFavoriteItem } from "@/entities/product/model/productsPageSlice";
 import type { Product } from "@/shared/types";
 import { HeartIcon } from "@/shared/ui";
@@ -26,6 +27,7 @@ export default function MainProductCard({ product }: Props) {
 			dispatch(deleteFavoriteItem(product.id));
 			FavoriteProductsService.deleteFavoriteProduct(product.id);
 		}
+		dispatch(updateFavorites({ product }));
 	};
 
 	return (

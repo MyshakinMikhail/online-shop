@@ -1,4 +1,3 @@
-import { getAllProducts } from "./getAllProducts";
-import { getProductsForPageByCategoryId } from "./getProductsForPageByCategoryId";
+import { getCurrProductsByCategoryId } from "./getCurrProductsByCategoryId";
 
-export { getAllProducts, getProductsForPageByCategoryId };
+export { getCurrProductsByCategoryId };

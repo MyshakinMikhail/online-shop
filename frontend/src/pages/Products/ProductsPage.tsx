@@ -1,36 +1,31 @@
-import { getProductsForPageByCategoryId } from "@/entities/product/model/asyncThunks";
-import { updateCurrPage } from "@/entities/product/model/productsPageSlice";
+import { getCurrProductsByCategoryId } from "@/entities/product/model/asyncThunks";
+import { setLimit, updateCurrPage } from "@/entities/product/model/productsPageSlice";
 import MainProductsList from "@/entities/product/ui/lists/MainProductsList/MainProductsList";
 import type { AppDispatch, RootState } from "@/shared/lib/store";
 import { Flex, Pagination, Select, Typography } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./ProductsPage.module.css";
 
 const { Text } = Typography;
 
 export default function ProductsPage() {
-	const [limit, setLimit] = useState<number>(16);
-	const { category } = useSelector((state: RootState) => state.category);
 	const dispatch = useDispatch<AppDispatch>();
-	const { totalPages, currPage, isLoading, error } = useSelector(
-		(state: RootState) => state.productsPage.productsForPage
+	const { category } = useSelector((state: RootState) => state.category);
+	const { totalPages, currPage, limit, isLoading, error } = useSelector(
+		(state: RootState) => state.productsPage.currProducts
 	);
 
 	useEffect(() => {
-		const fetchProducts = async () => {
-			if (category?.id) {
-				dispatch(
-					getProductsForPageByCategoryId({
-						currPage: currPage,
-						limit: limit,
-						categoryId: category.id,
-					})
-				);
-			}
-		};
-
-		fetchProducts();
+		if (category?.id) {
+			dispatch(
+				getCurrProductsByCategoryId({
+					currPage: currPage,
+					limit: limit,
+					categoryId: category.id,
+				})
+			);
+		}
 	}, [category?.id, currPage, limit, dispatch]);
 
 	if (isLoading) {
@@ -63,7 +58,7 @@ export default function ProductsPage() {
 				<Select
 					defaultValue={limit}
 					style={{ width: 120 }}
-					onChange={value => setLimit(value)}
+					onChange={value => dispatch(setLimit({ limit: value }))}
 					options={[
 						{ label: "8 продуктов", value: 8 },
 						{ label: "16 продуктов", value: 16 },

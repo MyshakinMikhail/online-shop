@@ -1,5 +1,6 @@
+import { getCartProducts } from "@/entities/cart/model/asyncThunks";
 import { getCurrentCategory } from "@/entities/categories/model/asyncThunks";
-import { getAllProducts } from "@/entities/product/model/asyncThunks";
+import { getFavoriteProducts } from "@/entities/favorites/model/asyncThunks";
 import { configureStore } from "@reduxjs/toolkit";
 import { rootReducer } from "./reducer";
 
@@ -9,9 +10,9 @@ export const store = configureStore({
 
 const initStore = async () => {
 	console.log("initStore");
-	store.dispatch(getAllProducts());
-	// store.dispatch(getCartProducts());
+	store.dispatch(getFavoriteProducts());
 	store.dispatch(getCurrentCategory());
+	store.dispatch(getCartProducts());
 };
 
 initStore();

@@ -1,5 +1,6 @@
 import { DataTypes, Model, type Optional } from "sequelize";
 import sequelize from "./../db.ts";
+import { Product } from "./Product.ts";
 
 export interface FavoriteAttributes {
 	id: number;
@@ -16,6 +17,7 @@ class Favorite
 	declare id: number;
 	declare userId: number;
 	declare productId: number;
+	declare product: Product;
 }
 
 Favorite.init(

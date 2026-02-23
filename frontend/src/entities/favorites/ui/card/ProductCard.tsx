@@ -5,6 +5,7 @@ import { CircleX } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { FavoriteProductsService } from "../../api/FavoriteProductsService";
+import { updateFavorites } from "../../model/favoriteSlice";
 import classes from "./ProductCard.module.css";
 
 const { Text } = Typography;
@@ -21,7 +22,7 @@ export default function FavoriteProductCard({ product, toggleDrawer }: Props) {
 	const handleClick = () => {
 		dispatch(deleteFavoriteItem(product.id));
 		FavoriteProductsService.deleteFavoriteProduct(product.id);
-		// dispatch(updateProduct(product.id));
+		dispatch(updateFavorites({ product }));
 	};
 
 	return (
