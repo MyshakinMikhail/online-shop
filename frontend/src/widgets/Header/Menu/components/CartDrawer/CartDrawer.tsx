@@ -1,22 +1,30 @@
+import { getCartProducts } from "@/entities/cart/model/asyncThunks";
 import { clearCart } from "@/entities/cart/model/slice";
 import { CartProductsList } from "@/entities/cart/ui";
-import type { RootState } from "@/shared/lib/store";
+import type { AppDispatch, RootState } from "@/shared/lib/store";
 import { MenuIcon, MyButton } from "@/shared/ui";
 import { Avatar, Drawer, Flex, Typography } from "antd";
 import { ShoppingCart, Trash } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 const { Text } = Typography;
 
 export default function Cart() {
 	const [open, setOpen] = useState<boolean>(false);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const { products } = useSelector((state: RootState) => state.cart);
 	const totalPrice = products.reduce((total, item) => {
 		const itemTotal = item.price * item.quantity;
 		return total + itemTotal;
 	}, 0);
+
+	useEffect(() => {
+		const fetchCartProducts = () => {
+			dispatch(getCartProducts());
+		};
+		fetchCartProducts();
+	}, [dispatch]);
 
 	const handleBuy = () => {
 		console.log("Купили чо-та)");

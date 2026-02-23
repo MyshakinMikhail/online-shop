@@ -1,9 +1,14 @@
-import { Router } from "express";
+import { Router, type Request } from "express";
 import { Cart, User } from "../models/index.ts";
+import { type UserAttributes } from "../models/User.ts";
 
 const router = Router();
 
-router.post("/yandex", async (req, res) => {
+type PostRequestBodyType = {
+	user: UserAttributes;
+};
+
+router.post("/yandex", async (req: Request<{}, {}, PostRequestBodyType>, res) => {
 	try {
 		if (!req.body?.user?.psuid) {
 			return res.status(400).json({
@@ -29,14 +34,7 @@ router.post("/yandex", async (req, res) => {
 
 		return res.status(created ? 201 : 200).json({
 			message: created ? "Пользователь успешно создан" : "Данные пользователя обновлены",
-			user: {
-				id: user.id,
-				psuid: user.psuid,
-				first_name: user.first_name,
-				last_name: user.last_name,
-				email: user.default_email,
-				role: user.role,
-			},
+			user: user,
 			created,
 		});
 	} catch (error) {
@@ -48,6 +46,9 @@ router.post("/yandex", async (req, res) => {
 	}
 });
 
+type GetRequestBodyType = {
+	psuid: number;
+};
 // Простой endpoint для проверки существования пользователя
 // НЕ создает пользователя, только проверяет
 router.get("/checkUser/:psuid", async (req, res) => {
@@ -66,6 +67,7 @@ router.get("/checkUser/:psuid", async (req, res) => {
 
 		res.status(200).json({
 			message: "Пользователь найден",
+			// user: user,
 			user: {
 				id: user.id,
 				psuid: user.psuid,

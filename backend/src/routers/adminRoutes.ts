@@ -1,8 +1,13 @@
-import { Router } from "express";
+import { Router, type Request } from "express";
 
 const router = Router();
 
-router.post("/login", (req, res) => {
+type RequestBodyType = {
+	login: string;
+	password: string;
+};
+
+router.post("/login", (req: Request<{}, {}, RequestBodyType>, res) => {
 	try {
 		const { login, password } = req.body;
 		if (!login || !password) {

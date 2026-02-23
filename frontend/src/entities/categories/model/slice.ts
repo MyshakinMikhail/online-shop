@@ -2,10 +2,6 @@ import type { Category } from "@/shared/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { getCurrentCategory } from "./asyncThunks";
 
-// вот это хорошо, так и надо в других слайсах инитить !!!
-// создать один инит для всего приложения в App.tsx и тогда пропадут
-// какие-то useEffects
-
 type CategoryStateType = {
 	category: Category | null;
 	loading: boolean;
@@ -34,7 +30,7 @@ export const categorySlice = createSlice({
 				state.loading = true;
 				state.error = null;
 			})
-			.addCase(getCurrentCategory.fulfilled, (state, action) => {
+			.addCase(getCurrentCategory.fulfilled, (state, action: PayloadAction<Category>) => {
 				state.loading = false;
 				state.category = action.payload;
 			})

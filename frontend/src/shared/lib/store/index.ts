@@ -1,4 +1,3 @@
-import { getCartProducts } from "@/entities/cart/model/asyncThunks";
 import { getCurrentCategory } from "@/entities/categories/model/asyncThunks";
 import { getAllProducts } from "@/entities/product/model/asyncThunks";
 import { configureStore } from "@reduxjs/toolkit";
@@ -9,8 +8,9 @@ export const store = configureStore({
 });
 
 const initStore = async () => {
-	store.dispatch(getAllProducts()); // глобальный инит стора ( пока что инитится только все продукты ) !!!
-	store.dispatch(getCartProducts());
+	console.log("initStore");
+	store.dispatch(getAllProducts());
+	// store.dispatch(getCartProducts());
 	store.dispatch(getCurrentCategory());
 };
 

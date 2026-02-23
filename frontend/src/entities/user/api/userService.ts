@@ -49,9 +49,8 @@ export const userService = {
 
 	checkAuth: async () => {
 		try {
-			const userInfo = storage.getUserInfo();
+			const userInfo: YandexUserInfo = storage.getUserInfo();
 			// я не придумал, как мне сделать userSlice, поэтому пока что оставим так, но потом надо будет что-то придумать !!!
-
 			if (!userInfo) {
 				return false;
 			}
@@ -88,6 +87,7 @@ export const userService = {
 		} catch (error) {
 			console.error("Error parsing user info:", error);
 			storage.removeUser();
+			localStorage.removeItem("yandex_access_token");
 			return false;
 		}
 	},

@@ -23,10 +23,12 @@ type ProductsStateType = {
 
 const initialState: ProductsStateType = {
 	productsForPage: { items: [], totalPages: 0, currPage: 1, isLoading: false, error: null },
-	allProducts: { items: [], isLoading: false, error: null },
+	allProducts: { items: [], isLoading: false, error: null }, // это не надо
+	// делать запрос на серв поиска продуктов и загрузки избранных ( тут еще будет локальный стейт для отображения )
 };
 
-// { products: Product[] } - нельзя в state использовать [] для initialState !!!
+// разделить на два слайса
+// не бояться делать запросы на бэк ( для глобального поиска я написал подробности в ручке получения продуктов)
 
 const productsPageSlice = createSlice({
 	name: "productsPage",

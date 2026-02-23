@@ -4,6 +4,8 @@ import { Favorite, Product, User } from "../models/index.ts";
 const router = Router();
 
 router.get("/:userId", async (req, res) => {
+	// добавить сюда параметр query, по которому буду получать продукты для глобальной сортировки
+	// понять, как по параметру сделать поиск продуктов в бд
 	try {
 		const { userId } = req.params;
 		const { page, limit, categoryId } = req.query;
@@ -54,4 +56,4 @@ router.get("/:userId", async (req, res) => {
 	}
 });
 
-export default router
+export default router;

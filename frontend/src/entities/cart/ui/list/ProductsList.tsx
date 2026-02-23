@@ -12,7 +12,6 @@ type Props = {
 };
 
 export default function CartProductsList({ toggleDrawer }: Props) {
-	// const [products, setProducts] = useState<Product[]>(mockMiniProducts);
 	const { products } = useSelector((state: RootState) => state.cart);
 
 	return (
@@ -26,5 +25,3 @@ export default function CartProductsList({ toggleDrawer }: Props) {
 		</>
 	);
 }
-
-// победа!!!
