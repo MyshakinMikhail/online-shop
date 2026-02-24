@@ -30,7 +30,7 @@ const initialState: ProductsStateType = {
 // разделить на два слайса
 // не бояться делать запросы на бэк ( для глобального поиска я написал подробности в ручке получения продуктов)
 
-const productsPageSlice = createSlice({
+const currProductsSlice = createSlice({
 	name: "productsPage",
 	initialState,
 	reducers: {
@@ -87,5 +87,5 @@ export const {
 	deleteFavoriteItem,
 	deleteAllFavoriteItems,
 	setLimit,
-} = productsPageSlice.actions;
-export const productsPageReducer = productsPageSlice.reducer;
+} = currProductsSlice.actions;
+export const productsPageReducer = currProductsSlice.reducer;

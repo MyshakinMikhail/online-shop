@@ -1,7 +1,8 @@
 import { CategoriesServise } from "@/entities/categories/api/CategoiesService";
 import { changeCategory } from "@/entities/categories/model/slice";
+import { getCurrProductsByCategoryId } from "@/entities/product/model/asyncThunks";
 import { updateCurrPage } from "@/entities/product/model/productsPageSlice";
-import type { RootState } from "@/shared/lib/store";
+import type { AppDispatch, RootState } from "@/shared/lib/store";
 import type { Category } from "@/shared/types";
 import { Drawer, Flex, Typography } from "antd";
 import { TextAlignJustify } from "lucide-react";
@@ -17,7 +18,7 @@ export default function Navbar() {
 	const [open, setOpen] = useState(false);
 	const [categories, setCategories] = useState<Category[]>([]);
 	const activeCategory = useSelector((state: RootState) => state.category.category);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
 		const fetchCategories = async () => {
@@ -60,6 +61,7 @@ export default function Navbar() {
 							})
 						);
 						dispatch(updateCurrPage(1));
+						dispatch(getCurrProductsByCategoryId({}));
 					}}
 				>
 					Магазин Одежды

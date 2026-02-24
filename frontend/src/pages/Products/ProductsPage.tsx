@@ -2,6 +2,7 @@ import { getCurrProductsByCategoryId } from "@/entities/product/model/asyncThunk
 import { setLimit, updateCurrPage } from "@/entities/product/model/productsPageSlice";
 import MainProductsList from "@/entities/product/ui/lists/MainProductsList/MainProductsList";
 import type { AppDispatch, RootState } from "@/shared/lib/store";
+import { initStore } from "@/shared/lib/store/init";
 import { Flex, Pagination, Select, Typography } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,22 +12,13 @@ const { Text } = Typography;
 
 export default function ProductsPage() {
 	const dispatch = useDispatch<AppDispatch>();
-	const { category } = useSelector((state: RootState) => state.category);
 	const { totalPages, currPage, limit, isLoading, error } = useSelector(
 		(state: RootState) => state.productsPage.currProducts
 	);
 
 	useEffect(() => {
-		if (category?.id) {
-			dispatch(
-				getCurrProductsByCategoryId({
-					currPage: currPage,
-					limit: limit,
-					categoryId: category.id,
-				})
-			);
-		}
-	}, [category?.id, currPage, limit, dispatch]);
+		initStore();
+	}, []);
 
 	if (isLoading) {
 		return <Flex justify="center">Загрузка...</Flex>;
@@ -53,12 +45,16 @@ export default function ProductsPage() {
 					total={totalPages}
 					onChange={page => {
 						dispatch(updateCurrPage(page));
+						dispatch(getCurrProductsByCategoryId({ currPage: page }));
 					}}
 				/>
 				<Select
 					defaultValue={limit}
 					style={{ width: 120 }}
-					onChange={value => dispatch(setLimit({ limit: value }))}
+					onChange={value => {
+						dispatch(setLimit({ limit: value }));
+						dispatch(getCurrProductsByCategoryId({ limit: value }));
+					}}
 					options={[
 						{ label: "8 продуктов", value: 8 },
 						{ label: "16 продуктов", value: 16 },

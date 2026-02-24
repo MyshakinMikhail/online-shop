@@ -2,15 +2,17 @@ import { FavoriteProductsService } from "@/entities/favorites/api/FavoriteProduc
 import { deleteAllFavorites } from "@/entities/favorites/model/favoriteSlice";
 import { FavoriteProductsList } from "@/entities/favorites/ui";
 import { deleteAllFavoriteItems } from "@/entities/product/model/productsPageSlice";
+import type { RootState } from "@/shared/lib/store";
 import { MenuIcon, MyButton } from "@/shared/ui";
 import { Drawer, Flex } from "antd";
 import { Heart } from "lucide-react";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function FavoritesDrawer() {
 	const [open, setOpen] = useState<boolean>(false);
 	const dispatch = useDispatch();
+	const { favorites } = useSelector((state: RootState) => state.favoriteProducts);
 
 	const toggleDrawer = () => {
 		setOpen(open => !open);
@@ -24,7 +26,7 @@ export default function FavoritesDrawer() {
 
 	return (
 		<>
-			<MenuIcon Icon={Heart} onClick={toggleDrawer} />
+			<MenuIcon totalCount={favorites.length} Icon={Heart} onClick={toggleDrawer} />
 			<Drawer
 				title="Избранное"
 				width={450}

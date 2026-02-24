@@ -6,19 +6,19 @@ import { Avatar, Drawer, Flex, Typography } from "antd";
 import { ShoppingCart, Trash } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const { Text } = Typography;
 
 export default function Cart() {
+	const navigate = useNavigate();
+
 	const [open, setOpen] = useState<boolean>(false);
 	const dispatch = useDispatch<AppDispatch>();
-	const { products } = useSelector((state: RootState) => state.cart);
-	const totalPrice = products.reduce((total, item) => {
-		const itemTotal = item.price * item.quantity;
-		return total + itemTotal;
-	}, 0);
+	const { products, totalPrice } = useSelector((state: RootState) => state.cart);
 
 	const handleBuy = () => {
+		navigate("/checkout");
 		console.log("Купили чо-та)");
 	};
 
@@ -32,7 +32,7 @@ export default function Cart() {
 
 	return (
 		<>
-			<MenuIcon Icon={ShoppingCart} onClick={toggleDrawer} />
+			<MenuIcon totalCount={products.length} Icon={ShoppingCart} onClick={toggleDrawer} />
 			<Drawer
 				title="Корзина"
 				width={450}
@@ -42,7 +42,6 @@ export default function Cart() {
 			>
 				<CartProductsList toggleDrawer={toggleDrawer} />
 				<div>
-					<Text>Итоговая сумма: {totalPrice} рублей</Text>
 					<Flex justify="center" align="center" gap={5}>
 						<Avatar onClick={handleDelete}>
 							<Trash />

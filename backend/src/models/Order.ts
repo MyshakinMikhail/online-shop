@@ -1,7 +1,7 @@
 import { DataTypes, Model, type Optional } from "sequelize";
 import sequelize from "./../db.ts";
 
-type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled";
+type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled"; // "paid" после "pending"
 
 export interface OrderAttributes {
 	id: number;

@@ -37,11 +37,6 @@ router.get("/:userId", async (req, res) => {
 		// 	return res.status(200).json({ message: "Корзина пустая" });
 		// }
 
-		// const productsWithQuantity = cart.items.map(item => ({
-		// 	...item.product,
-		// 	quantity: item.quantity,
-		// }));
-
 		res.status(200).json({ cart });
 	} catch (e) {
 		res.status(500).json({ message: "Ошибка получения корзины пользователя на сервере" });

@@ -1,12 +1,16 @@
+import { getCartProducts } from "@/entities/cart/model/asyncThunks";
 import { addProduct } from "@/entities/cart/model/slice";
 import { FavoriteProductsService } from "@/entities/favorites/api/FavoriteProductsService";
+import { getFavoriteProducts } from "@/entities/favorites/model/asyncThunks";
 import { updateFavorites } from "@/entities/favorites/model/favoriteSlice";
 import { getProductsById } from "@/entities/product/api";
 import { addFavoriteItem, deleteFavoriteItem } from "@/entities/product/model/productsPageSlice";
+import type { AppDispatch } from "@/shared/lib/store";
 import type { Product } from "@/shared/types";
 import { HeartIcon, MyButton } from "@/shared/ui";
 import { Header } from "@/widgets/Header";
-import { Flex, Typography } from "antd";
+import { Flex, notification, Typography } from "antd";
+import type { NotificationPlacement } from "antd/es/notification/interface";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -18,8 +22,29 @@ export default function ProductPage() {
 	const id = Number(useParams().id) || null;
 	const [isLoading, setIsLoading] = useState<boolean>(false);
 	const [error, setError] = useState<null | string>(null);
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 	const [product, setProduct] = useState<Product | null>(null);
+
+	const [api, contextHolder] = notification.useNotification();
+	const openFavoritesNotification = (placement: NotificationPlacement, newStatus: boolean) => {
+		api.success({
+			message: `Обновление избранных товаров`,
+			description: newStatus
+				? "Товар успешно добавлен в избранное"
+				: "Товар удален из избранного",
+			placement,
+			duration: 3,
+		});
+	};
+
+	const openCartNotification = (placement: NotificationPlacement) => {
+		api.success({
+			message: "Обновление корзины",
+			description: `"${product?.name}" добавлен в корзину`,
+			placement,
+			duration: 3,
+		});
+	};
 
 	useEffect(() => {
 		const fetchProduct = async () => {
@@ -28,29 +53,30 @@ export default function ProductPage() {
 		};
 
 		fetchProduct();
+		dispatch(getCartProducts());
+		dispatch(getFavoriteProducts());
 	}, [id]);
 
 	const handleAddInCart = () => {
 		if (product) {
 			dispatch(addProduct(product));
+			openCartNotification("top");
 		}
 	};
 
 	const handleIconClick = async () => {
-		if (product) {
-			if (!product?.isFavorite) {
-				dispatch(addFavoriteItem(product.id));
-				FavoriteProductsService.addFavoriteProduct(product.id);
-				setProduct(prevProduct =>
-					prevProduct ? { ...prevProduct, isFavorite: true } : null
-				);
-				return;
-			}
+		if (product && !product?.isFavorite) {
+			dispatch(addFavoriteItem(product.id));
+			dispatch(updateFavorites({ product }));
+			FavoriteProductsService.addFavoriteProduct(product.id);
+			setProduct(prevProduct => (prevProduct ? { ...prevProduct, isFavorite: true } : null));
+		} else if (product) {
 			dispatch(deleteFavoriteItem(product.id));
 			dispatch(updateFavorites({ product }));
 			FavoriteProductsService.deleteFavoriteProduct(product.id);
 			setProduct(prevProduct => (prevProduct ? { ...prevProduct, isFavorite: false } : null));
 		}
+		openFavoritesNotification("top", !product?.isFavorite);
 	};
 
 	if (isLoading) {
@@ -68,6 +94,7 @@ export default function ProductPage() {
 
 	return (
 		<div className={classes.page}>
+			{contextHolder}
 			<Header />
 			<Flex className={classes.body}>
 				<Flex className={classes.images}>

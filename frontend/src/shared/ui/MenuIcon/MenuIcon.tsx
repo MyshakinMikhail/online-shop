@@ -3,13 +3,13 @@ import type { ComponentType } from "react";
 
 type Props = {
 	Icon: ComponentType<{ size: number; color: string }>;
-	countNotifications?: number;
+	totalCount?: number;
 	onClick?: () => void; // временно необязательный
 };
 
-export default function MenuIcon({ Icon, countNotifications, onClick }: Props) {
+export default function MenuIcon({ Icon, totalCount, onClick }: Props) {
 	return (
-		<Badge count={countNotifications} size="small">
+		<Badge count={totalCount} size="small">
 			<Avatar
 				style={{
 					backgroundColor: "white",

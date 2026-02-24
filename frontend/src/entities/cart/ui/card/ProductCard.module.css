@@ -1,3 +1,39 @@
+.card {
+	display: flex;
+	align-items: center;
+	gap: 20px;
+	padding: 20px;
+	border-radius: 16px;
+	background: white;
+	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+	width: 100%;
+}
+
+.image {
+	border-radius: 12px;
+	flex-shrink: 0;
+}
+
+.info {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	flex: 1; /* занимает всё свободное место */
+}
+
 .description {
+	font-size: 16px;
+	font-weight: 500;
 	cursor: pointer;
+}
+
+.price {
+	font-size: 15px;
+	color: #555;
+}
+
+.controls {
+	display: flex;
+	align-items: center;
+	gap: 12px;
 }

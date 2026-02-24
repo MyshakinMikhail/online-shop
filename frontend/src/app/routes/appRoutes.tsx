@@ -1,6 +1,7 @@
 import {
 	AuthAdminPage,
 	AuthPage,
+	CheckoutPage,
 	EditProductPage,
 	ProductPage,
 	ProductsPage,
@@ -42,6 +43,10 @@ export const appRoutes: RouteObject[] = [
 			{
 				path: "/product/:id",
 				element: <ProductPage />,
+			},
+			{
+				path: "/checkout",
+				element: <CheckoutPage />,
 			},
 			{
 				element: <MainLayout />,

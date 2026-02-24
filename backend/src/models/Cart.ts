@@ -5,6 +5,7 @@ import { Product } from "./Product.ts";
 export interface CartAttributes {
 	id: number;
 	userId: number;
+	// totalSum: number
 }
 
 type CartCreationAttributes = Optional<CartAttributes, "id">;

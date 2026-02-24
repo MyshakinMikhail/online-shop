@@ -5,7 +5,7 @@ import {
 	type CartItem,
 } from "@/entities/cart/model/slice";
 import { QuantityControl } from "@/shared/ui";
-import { Button, Col, Image, Row, Typography } from "antd";
+import { Button, Image, Typography } from "antd";
 import { CircleX } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -15,7 +15,7 @@ const { Text } = Typography;
 
 type Props = {
 	product: CartItem;
-	toggleDrawer: () => void;
+	toggleDrawer?: () => void;
 };
 
 export default function CartProductCard({ product, toggleDrawer }: Props) {
@@ -25,56 +25,52 @@ export default function CartProductCard({ product, toggleDrawer }: Props) {
 	const decrement = () => {
 		if (product.quantity === 1) {
 			dispatch(deleteProduct({ productId: product.id }));
+			return;
 		}
 		dispatch(decrementQuantity({ productId: product.id }));
 	};
+
 	const increment = () => {
 		dispatch(incrementQuantity({ productId: product.id }));
 	};
 
 	return (
-		<div>
-			<Row align="middle" justify="space-evenly">
-				<Col span={4}>
-					<Image
-						src="https://static.tildacdn.com/stor3435-3861-4835-b432-323134376130/56150826.jpg"
-						width={60}
-						height="auto"
-						style={{ borderRadius: "10px" }}
-					/>
-				</Col>
-				<Col span={10}>
-					<Text
-						className={classes.description}
-						onClick={() => {
-							navigate(`/products/${product.id}`);
-							toggleDrawer();
-						}}
-					>
-						{product.name}
-					</Text>
-				</Col>
-				<Col span={4}>
-					<QuantityControl
-						count={product.quantity}
-						increment={increment}
-						decrement={decrement}
-					/>
-				</Col>
-				<Col span={4}>
-					<Text>{product.price} руб.</Text>
-				</Col>
-				<Col span={2}>
-					<Button
-						type="link"
-						onClick={() => {
-							dispatch(deleteProduct({ productId: product.id }));
-						}}
-					>
-						<CircleX style={{ border: 0, color: "#5B5B5B" }} />
-					</Button>
-				</Col>
-			</Row>
+		<div className={classes.card}>
+			<Image
+				src="https://static.tildacdn.com/stor3435-3861-4835-b432-323134376130/56150826.jpg"
+				width={60}
+				// preview={false}
+				className={classes.image}
+			/>
+
+			<div className={classes.info}>
+				<Text
+					className={classes.description}
+					onClick={() => {
+						navigate(`/product	/${product.id}`);
+						if (toggleDrawer) toggleDrawer();
+					}}
+				>
+					{product.name}
+				</Text>
+
+				<Text className={classes.price}>{product.price} руб.</Text>
+			</div>
+
+			<div className={classes.controls}>
+				<QuantityControl
+					count={product.quantity}
+					increment={increment}
+					decrement={decrement}
+				/>
+
+				<Button
+					type="text"
+					onClick={() => dispatch(deleteProduct({ productId: product.id }))}
+				>
+					<CircleX size={20} />
+				</Button>
+			</div>
 		</div>
 	);
 }

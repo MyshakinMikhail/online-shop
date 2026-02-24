@@ -6,9 +6,9 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isAxiosError } from "axios";
 
 type Props = {
-	currPage: number;
-	limit: number;
-	categoryId: number;
+	currPage?: number;
+	limit?: number;
+	categoryId?: number;
 };
 
 type ResultType = {
@@ -28,7 +28,7 @@ export const getCurrProductsByCategoryId = createAsyncThunk<
 	{ rejectValue: RejectValue }
 >(
 	"getProduct/ByCategoryId",
-	async ({ currPage, limit, categoryId }: Props, { rejectWithValue }) => {
+	async ({ currPage = 1, limit = 16, categoryId = 1 }: Props, { rejectWithValue }) => {
 		try {
 			const userInfo: YandexUserInfo = storage.getUserInfo();
 			const result = await api.get(`/products/${userInfo.id}`, {

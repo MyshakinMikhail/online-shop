@@ -9,11 +9,12 @@ export interface CartItem extends Product {
 
 type CartState = {
 	products: CartItem[];
+	totalPrice: number;
 	isLoading: boolean;
 	error: string | null;
 };
 
-const initialState: CartState = { products: [], isLoading: false, error: null };
+const initialState: CartState = { products: [], totalPrice: 0, isLoading: false, error: null };
 
 const cartSlice = createSlice({
 	name: "cart",
@@ -78,7 +79,8 @@ const cartSlice = createSlice({
 			})
 			.addCase(getCartProducts.fulfilled, (state, action) => {
 				state.isLoading = false;
-				state.products = action.payload;
+				state.products = action.payload.items;
+				state.totalPrice = action.payload.totalSum;
 			})
 			.addCase(getCartProducts.rejected, (state, action) => {
 				state.isLoading = false;

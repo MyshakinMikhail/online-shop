@@ -5,23 +5,24 @@ import { useSelector } from "react-redux";
 import CartProductCard from "../card/ProductCard";
 import classes from "./ProductsList.module.css";
 
-const { Paragraph } = Typography;
+const { Text, Paragraph } = Typography;
 
 type Props = {
-	toggleDrawer: () => void;
+	toggleDrawer?: () => void;
 };
 
 export default function CartProductsList({ toggleDrawer }: Props) {
-	const { products } = useSelector((state: RootState) => state.cart);
+	const { products, totalPrice } = useSelector((state: RootState) => state.cart);
 
 	return (
-		<>
+		<div>
 			{products?.length === 0 ? <Paragraph>Товары не добавлены</Paragraph> : null}
 			<Flex className={classes.products}>
 				{products?.map((item: CartItem) => (
 					<CartProductCard key={item.id} product={item} toggleDrawer={toggleDrawer} />
 				))}
 			</Flex>
-		</>
+			<Text strong>Итоговая сумма: {totalPrice}руб.</Text>
+		</div>
 	);
 }
