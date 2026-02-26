@@ -1,5 +1,4 @@
 import {
-	AuthAdminPage,
 	AuthPage,
 	CheckoutPage,
 	EditProductPage,
@@ -8,8 +7,9 @@ import {
 	ProfilePage,
 } from "@/pages";
 import MainAdminPage from "@/pages/Admin/Main/MainAdminPage";
-import { type RouteObject } from "react-router-dom";
+import { Navigate, type RouteObject } from "react-router-dom";
 import { MainLayout } from "../layouts";
+import ProtectionAdminRouter from "./ProtectionAdminRouter";
 import ProtectionRouter from "./ProtectionRouter";
 
 export const appRoutes: RouteObject[] = [
@@ -21,18 +21,25 @@ export const appRoutes: RouteObject[] = [
 		path: "/auth/callback",
 		element: <AuthPage />,
 	},
+
 	{
-		path: "/admin/auth",
-		element: <AuthAdminPage />,
+		element: <ProtectionAdminRouter />,
+		children: [
+			{
+				path: "/admin/main",
+				element: <MainAdminPage />,
+			},
+			{
+				path: "/admin/main/edit/product/:id",
+				element: <EditProductPage />,
+			},
+			{
+				path: "/admin/*",
+				element: <Navigate to="/admin/main" replace />,
+			},
+		],
 	},
-	{
-		path: "/admin/main",
-		element: <MainAdminPage />,
-	},
-	{
-		path: "/admin/main/edit/product/:id",
-		element: <EditProductPage />,
-	},
+
 	{
 		element: <ProtectionRouter />,
 		children: [
@@ -52,15 +59,24 @@ export const appRoutes: RouteObject[] = [
 				element: <MainLayout />,
 				children: [
 					{
+						index: true,
+						element: <ProductsPage />,
+					},
+					{
 						path: "/:category",
 						element: <ProductsPage />,
 					},
 					{
 						path: "*",
-						element: <ProductsPage />,
+						element: <Navigate to="/" replace />,
 					},
 				],
 			},
 		],
+	},
+
+	{
+		path: "*",
+		element: <Navigate to="/auth" replace />,
 	},
 ];

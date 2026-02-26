@@ -14,6 +14,7 @@ import productsRoutes from "./productsRoutes.ts";
 const router = Router();
 
 router.use("/auth", authRoutes);
+router.use("/admin", adminRoutes);
 router.use("/products", productsRoutes);
 router.use("/product", productRoutes);
 router.use("/categories", categoriesRoutes);

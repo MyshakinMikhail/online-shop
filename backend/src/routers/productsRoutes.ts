@@ -28,7 +28,12 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 			});
 		}
 
-		if (searchQuery) {
+		const user = await User.findOne({ where: { psuid: userId } });
+		if (!user) {
+			return res.status(404).json({ message: "Данного пользователя не существует" });
+		}
+
+		if (searchQuery != null) {
 			const products = await Product.findAll({
 				where: {
 					[Op.or]: [
@@ -41,11 +46,6 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 				products: products,
 				message: "Продукты по search-qyery получены успешно",
 			});
-		}
-
-		const user = await User.findOne({ where: { psuid: userId } });
-		if (!user) {
-			return res.status(404).json({ message: "Данного пользователя не существует" });
 		}
 
 		const favoriteProducts = await Favorite.findAll({ where: { userId: user.id } });

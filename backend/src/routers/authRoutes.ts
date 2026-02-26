@@ -46,9 +46,6 @@ router.post("/yandex", async (req: Request<{}, {}, PostRequestBodyType>, res) =>
 	}
 });
 
-type GetRequestBodyType = {
-	psuid: number;
-};
 // Простой endpoint для проверки существования пользователя
 // НЕ создает пользователя, только проверяет
 router.get("/checkUser/:psuid", async (req, res) => {

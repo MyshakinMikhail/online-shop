@@ -2,7 +2,7 @@ import { type UserAttributes } from "../models/User.ts";
 
 export const mockUsers: UserAttributes[] = [
 	{
-		role: "super_admin",
+		role: "admin",
 		psuid: "admin_001",
 		first_name: "Александр",
 		last_name: "Иванов",
@@ -38,12 +38,12 @@ export const mockUsers: UserAttributes[] = [
 		is_buying_smth: false,
 	},
 	{
-		role: "user",
-		psuid: "user_003",
-		first_name: "Алексей",
-		last_name: "Смирнов",
+		role: "super_admin",
+		psuid: "1553467676",
+		first_name: "Миша",
+		last_name: "Мышакин",
 		sex: "male",
-		default_email: "alex@example.com",
-		is_buying_smth: true,
+		default_email: "myshakinm@mail.ru",
+		is_buying_smth: false,
 	},
 ];
