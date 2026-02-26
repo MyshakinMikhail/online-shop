@@ -1,12 +1,17 @@
 import { DataTypes, Model, type Optional } from "sequelize";
 import sequelize from "./../db.ts";
+import { Product } from "./Product.ts";
 
-type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled"; // "paid" после "pending"
+type OrderStatus = "pending" | "processing" | "ready to give" | "delivered" | "cancelled"; // "paid" после "pending"
 
 export interface OrderAttributes {
 	id: number;
 	userId: number;
-	// items: Product[];
+	userName: string;
+	email: string;
+	phoneNumber: string;
+	promocode: string | null;
+	city: string;
 	totalPrice: number;
 	status: OrderStatus;
 }
@@ -16,7 +21,13 @@ type OrderCreationAttributes = Optional<OrderAttributes, "id">;
 class Order extends Model<OrderAttributes, OrderCreationAttributes> implements OrderAttributes {
 	declare id: number;
 	declare userId: number;
+	declare userName: string;
+	declare email: string;
+	declare phoneNumber: string;
+	declare promocode: string | null;
+	declare city: string;
 	declare totalPrice: number;
+	declare items: Product[];
 	declare status: OrderStatus;
 }
 
@@ -31,6 +42,26 @@ Order.init(
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},
+		userName: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		email: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		phoneNumber: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		promocode: {
+			type: DataTypes.STRING,
+		},
+		city: {
+			type: DataTypes.STRING,
+			allowNull: false,
+		},
+
 		totalPrice: {
 			type: DataTypes.INTEGER,
 			allowNull: false,

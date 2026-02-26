@@ -1,11 +1,10 @@
 import { DataTypes, Model, type Optional } from "sequelize";
 import sequelize from "./../db.ts";
-import { Product } from "./Product.ts";
+import CartItem from "./CartItem.ts";
 
 export interface CartAttributes {
 	id: number;
 	userId: number;
-	// totalSum: number
 }
 
 type CartCreationAttributes = Optional<CartAttributes, "id">;
@@ -13,7 +12,7 @@ type CartCreationAttributes = Optional<CartAttributes, "id">;
 class Cart extends Model<CartAttributes, CartCreationAttributes> implements CartAttributes {
 	declare id: number;
 	declare userId: number;
-	declare items: Product[];
+	declare items: CartItem[];
 }
 
 Cart.init(

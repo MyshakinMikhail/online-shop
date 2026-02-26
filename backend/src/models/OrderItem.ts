@@ -5,6 +5,8 @@ export interface OrderItemAttributes {
 	id: number;
 	orderId: number;
 	productId: number;
+	quantity: number;
+	priceAtPurchase: number;
 }
 
 type OrderItemCreationAttributes = Optional<OrderItemAttributes, "id">;
@@ -16,6 +18,8 @@ class OrderItem
 	declare id: number;
 	declare orderId: number;
 	declare productId: number;
+	declare quantity: number;
+	declare priceAtPurchase: number;
 }
 
 OrderItem.init(
@@ -30,6 +34,14 @@ OrderItem.init(
 			allowNull: false,
 		},
 		productId: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+		},
+		quantity: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+		},
+		priceAtPurchase: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
 		},

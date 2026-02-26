@@ -19,7 +19,6 @@ router.get("/", async (req, res) => {
 router.get("/:slug", async (req, res) => {
 	try {
 		const slug = req.params.slug;
-		console.log(slug);
 		const category = await Category.findOne({ where: { slug: slug } });
 		if (!category) {
 			return res.status(404).json({ message: "Категории не существует" });

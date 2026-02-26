@@ -1,5 +1,6 @@
 import { DataTypes, Model, type Optional } from "sequelize";
 import sequelize from "./../db.ts";
+import { Product } from "./Product.ts";
 
 export interface CartItemAttributes {
 	id: number;
@@ -18,6 +19,7 @@ class CartItem
 	declare cartId: number;
 	declare productId: number;
 	declare quantity: number;
+	declare product: Product;
 }
 
 CartItem.init(
