@@ -4,46 +4,49 @@ import { Button, Card, Flex, Image, notification, Tag, Typography } from "antd";
 import { isAxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ProductService } from "../../api/ProductService";
 import classes from "./ProductCard.module.css";
 
 const { Text } = Typography;
 
 type Props = {
 	product: Product;
+	onDelete: (id: number) => void;
 };
 
-export default function AdminProductCard({ product }: Props) {
+export default function AdminProductCard({ product, onDelete }: Props) {
 	const navigate = useNavigate();
 	const [error, setError] = useState<string | null>(null);
-
 	const [api, contextHolder] = notification.useNotification();
 
-	const showDeletedProduct = () => {
-		api.success({
-			message: "Статус товара",
-			description: "Товар успешно удален с сервера",
-			placement: "top",
-			duration: 3,
-		});
-	};
-
-	const handleDelete = async (productId: number) => {
+	const handleDelete = async () => {
 		try {
-			const createdProduct = await ProductService.deleteProduct(productId);
-			if (createdProduct) {
-				showDeletedProduct();
-				setTimeout(() => {
-					navigate("/admin/main");
-				}, 3000);
-			}
+			await onDelete(product.id);
+			notification.destroy();
 		} catch (error) {
 			if (isAxiosError(error)) {
 				setError(error.message);
 			} else {
-				setError("Неизвестная ошибка при добавлении товара на сервер");
+				setError("Неизвестная ошибка при удалении товара");
 			}
 		}
+	};
+
+	const showDeletedProduct = () => {
+		api.error({
+			message: "Вы уверены, что хотите удалить товар?",
+			description: (
+				<Flex className={classes.alert}>
+					<Text className={classes.alertText}>
+						Данное действие нельзя будет отменить!
+					</Text>
+					<Button variant="solid" color="danger" onClick={handleDelete}>
+						Удалить товар {product.name}
+					</Button>
+				</Flex>
+			),
+			placement: "top",
+			duration: 60,
+		});
 	};
 
 	const handleEdit = () => {
@@ -53,8 +56,7 @@ export default function AdminProductCard({ product }: Props) {
 	if (error) {
 		return (
 			<Flex>
-				<Text> Ошибка удаления товара: </Text>
-				<Text> {error}</Text>
+				<Text>Ошибка удаления товара: {error}</Text>
 			</Flex>
 		);
 	}
@@ -78,7 +80,6 @@ export default function AdminProductCard({ product }: Props) {
 					</Flex>
 
 					<Text className={classes.description}>{product.description}</Text>
-
 					<Text className={classes.price}>{product.price} ₽</Text>
 
 					<Flex gap={10} className={classes.footer}>
@@ -86,11 +87,7 @@ export default function AdminProductCard({ product }: Props) {
 							Редактировать
 						</Button>
 
-						<Button
-							danger
-							icon={<DeleteOutlined />}
-							onClick={() => handleDelete(product.id)}
-						>
+						<Button danger icon={<DeleteOutlined />} onClick={showDeletedProduct}>
 							Удалить
 						</Button>
 					</Flex>

@@ -1,12 +1,13 @@
 import { storage } from "@/entities/user/api";
 import { api } from "@/shared/api";
-import type { CartItemType, Product } from "@/shared/types";
+import type { CartItemType } from "@/shared/types";
 import type { YandexUserInfo } from "@/shared/types/yandexUserInfo";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isAxiosError } from "axios";
+import type { CartItem } from "../slice";
 
 type Returned = {
-	items: Product[];
+	items: CartItem[];
 	totalSum: number;
 };
 
