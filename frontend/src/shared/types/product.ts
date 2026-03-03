@@ -2,11 +2,12 @@ export type Product = {
 	id: number;
 	name: string;
 	description: string;
-	size: string;
+	sizes: string[];
 	article: string;
 	price: number;
-	quantity: number;
-	isFavorite: boolean;
+	cartQuantity?: number; // Количество товара в корзине
+	isFavorite?: boolean; // Любимое или нет
+	isActive: boolean;
 	categoryId: number;
 	stock: number;
 };

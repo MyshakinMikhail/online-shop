@@ -7,11 +7,16 @@ export const getCurrentCategory = createAsyncThunk(
 	async (_, { rejectWithValue }) => {
 		try {
 			const slug = window.location.pathname.split("/").pop() || "all";
+			console.log(slug);
 			if (!slug) {
 				return rejectWithValue({ message: "slug must be a string" });
 			}
-			const response = await api.get(`/categories/${slug}`);
-			return response.data.category;
+			const currCategoryResponse = await api.get(`/categories/${slug}`);
+			const allCategoriesResponse = await api.get("/categories/");
+			return {
+				allCategories: allCategoriesResponse.data.categories,
+				currCategory: currCategoryResponse.data.category,
+			};
 		} catch (error) {
 			console.log("Ошибка получения категории по slug");
 			if (isAxiosError(error)) {

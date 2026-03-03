@@ -5,10 +5,10 @@ import { getCurrProductsByCategoryId } from "@/entities/product/model/asyncThunk
 import { store } from ".";
 
 export const initStore = async () => {
-	const category = await store.dispatch(getCurrentCategory()).unwrap();
+	const { currCategory } = await store.dispatch(getCurrentCategory()).unwrap();
 
-	if (category.id) {
-		store.dispatch(getCurrProductsByCategoryId({ categoryId: category.id }));
+	if (currCategory.id) {
+		store.dispatch(getCurrProductsByCategoryId({ categoryId: currCategory.id }));
 	}
 
 	store.dispatch(getFavoriteProducts());

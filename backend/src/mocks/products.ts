@@ -10,7 +10,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1499,
 		categoryId: 2,
 		stock: 25,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Basic Black",
@@ -20,7 +20,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1499,
 		categoryId: 2,
 		stock: 30,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Oversize Grey",
@@ -30,7 +30,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1799,
 		categoryId: 2,
 		stock: 18,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Premium",
@@ -40,7 +40,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2199,
 		categoryId: 2,
 		stock: 12,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Sport",
@@ -50,7 +50,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1899,
 		categoryId: 2,
 		stock: 20,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Minimal",
@@ -60,7 +60,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1399,
 		categoryId: 2,
 		stock: 22,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Graphic",
@@ -70,7 +70,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1999,
 		categoryId: 2,
 		stock: 15,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Neon",
@@ -80,7 +80,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1699,
 		categoryId: 2,
 		stock: 19,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Vintage",
@@ -90,7 +90,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2099,
 		categoryId: 2,
 		stock: 14,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Summer",
@@ -100,7 +100,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1399,
 		categoryId: 2,
 		stock: 28,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Slim Fit",
@@ -110,7 +110,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1799,
 		categoryId: 2,
 		stock: 16,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Classic Blue",
@@ -120,7 +120,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1499,
 		categoryId: 2,
 		stock: 21,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Urban",
@@ -130,7 +130,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1899,
 		categoryId: 2,
 		stock: 17,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Soft Touch",
@@ -140,7 +140,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2299,
 		categoryId: 2,
 		stock: 13,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Футболка Collection 2026",
@@ -150,7 +150,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2499,
 		categoryId: 2,
 		stock: 11,
-		is_active: true,
+		isActive: true,
 	},
 
 	// ================== ХУДИ (12) ==================
@@ -162,7 +162,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2999,
 		categoryId: 3,
 		stock: 15,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Oversize",
@@ -172,7 +172,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3499,
 		categoryId: 3,
 		stock: 10,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Street",
@@ -182,7 +182,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3699,
 		categoryId: 3,
 		stock: 8,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Zip",
@@ -192,7 +192,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3299,
 		categoryId: 3,
 		stock: 9,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Warm",
@@ -202,7 +202,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3799,
 		categoryId: 3,
 		stock: 7,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Minimal",
@@ -212,7 +212,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2899,
 		categoryId: 3,
 		stock: 18,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Sport",
@@ -222,7 +222,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3199,
 		categoryId: 3,
 		stock: 12,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Graphic",
@@ -232,7 +232,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3399,
 		categoryId: 3,
 		stock: 11,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Urban Black",
@@ -242,7 +242,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3599,
 		categoryId: 3,
 		stock: 10,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Grey",
@@ -252,7 +252,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2999,
 		categoryId: 3,
 		stock: 14,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Blue",
@@ -262,7 +262,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3099,
 		categoryId: 3,
 		stock: 16,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Худи Limited",
@@ -272,7 +272,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3999,
 		categoryId: 3,
 		stock: 6,
-		is_active: true,
+		isActive: true,
 	},
 
 	// ================== ЛОНГСЛИВЫ (11) ==================
@@ -284,7 +284,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1899,
 		categoryId: 4,
 		stock: 22,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Лонгслив Slim",
@@ -294,7 +294,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1999,
 		categoryId: 4,
 		stock: 18,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Лонгслив Oversize",
@@ -304,7 +304,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2099,
 		categoryId: 4,
 		stock: 14,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Лонгслив Minimal",
@@ -314,7 +314,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1799,
 		categoryId: 4,
 		stock: 20,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Лонгслив Sport",
@@ -324,7 +324,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2199,
 		categoryId: 4,
 		stock: 11,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Лонгслив White",
@@ -334,7 +334,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1899,
 		categoryId: 4,
 		stock: 17,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Лонгслив Black",
@@ -344,7 +344,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1899,
 		categoryId: 4,
 		stock: 16,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Лонгслив Grey",
@@ -354,7 +354,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1799,
 		categoryId: 4,
 		stock: 19,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Лонгслив Blue",
@@ -364,7 +364,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 1999,
 		categoryId: 4,
 		stock: 15,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Лонгслив Urban",
@@ -374,7 +374,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2099,
 		categoryId: 4,
 		stock: 13,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Лонгслив Collection",
@@ -384,7 +384,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2299,
 		categoryId: 4,
 		stock: 10,
-		is_active: true,
+		isActive: true,
 	},
 
 	// ================== ШТАНЫ (12) ==================
@@ -396,7 +396,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2599,
 		categoryId: 5,
 		stock: 16,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Cargo",
@@ -406,7 +406,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2799,
 		categoryId: 5,
 		stock: 12,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Classic",
@@ -416,7 +416,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2899,
 		categoryId: 5,
 		stock: 14,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Slim",
@@ -426,7 +426,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2699,
 		categoryId: 5,
 		stock: 10,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Premium",
@@ -436,7 +436,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3399,
 		categoryId: 5,
 		stock: 7,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Urban",
@@ -446,7 +446,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2999,
 		categoryId: 5,
 		stock: 13,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Sport",
@@ -456,7 +456,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2499,
 		categoryId: 5,
 		stock: 18,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Grey",
@@ -466,7 +466,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2599,
 		categoryId: 5,
 		stock: 15,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Black",
@@ -476,7 +476,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2699,
 		categoryId: 5,
 		stock: 20,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Blue",
@@ -486,7 +486,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2799,
 		categoryId: 5,
 		stock: 9,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Relax",
@@ -496,7 +496,7 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 2899,
 		categoryId: 5,
 		stock: 11,
-		is_active: true,
+		isActive: true,
 	},
 	{
 		name: "Брюки Collection",
@@ -506,6 +506,6 @@ export const mockProducts: Omit<ProductAttributes, "id">[] = [
 		price: 3099,
 		categoryId: 5,
 		stock: 10,
-		is_active: true,
+		isActive: true,
 	},
 ];

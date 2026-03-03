@@ -4,6 +4,7 @@ import express from "express";
 import sequelize from "./db.ts";
 import "./models/index.ts";
 import router from "./routers/index.ts";
+import seeders from "./seeders/index.ts";
 
 dotenv.config();
 
@@ -31,7 +32,9 @@ const start = async () => {
 			console.log(`🚀 S	erver is running on port ${PORT}`);
 		});
 
-		// await seeders.reseed();
+		// проблемы с первым входом при авторизации, заходит со второй попытки!!!
+
+		await seeders.reseed();
 
 		// await seeders.clearAllData();
 		// await seeders.seedTesting();

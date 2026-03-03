@@ -1,6 +1,6 @@
 import { Router, type Request } from "express";
 import { Op } from "sequelize";
-import { Favorite, Product, User } from "../models/index.ts";
+import { CartItem, Favorite, OrderItem, Product, User } from "../models/index.ts";
 
 const router = Router();
 
@@ -15,6 +15,30 @@ type RequestQueryType = {
 	searchQuery?: string;
 	isFavorites?: boolean;
 };
+
+router.delete("/:userId", async (req, res) => {
+	try {
+		const { userId } = req.params;
+
+		const user = await User.findOne({ where: { psuid: userId } });
+		if (!user) {
+			return res.status(400).json({ message: "Пользователя с данным id не существует" });
+		}
+		if (user.role !== "admin" && user.role !== "super_admin") {
+			return res
+				.status(403)
+				.json({ message: "Недостаточно прав для совершения данного действия" });
+		}
+		await Favorite.destroy({ where: {} });
+		await CartItem.destroy({ where: {} });
+		await OrderItem.destroy({ where: {} });
+		await Product.destroy({ where: {} });
+
+		res.status(200).json({ message: "Все продукты успешно удалнены" });
+	} catch (error) {
+		res.status(500).json({ message: `Ошибка удаления продукта: ${error}` });
+	}
+});
 
 router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryType>, res) => {
 	try {
@@ -37,7 +61,10 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 			const products = await Product.findAll({
 				where: {
 					[Op.or]: [
-						{ name: { [Op.iLike]: `%${searchQuery}%` } }, // Поиск по названию
+						{
+							name: { [Op.iLike]: `%${searchQuery}%` },
+							...(user?.role === "user" && { isActive: true }),
+						},
 					],
 				},
 			});
@@ -58,11 +85,18 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 
 			const products = favorites.map(fav => {
 				const productData = fav.product?.get({ plain: true });
-				return {
-					...productData,
-				};
+				if (productData.isActive) {
+					return {
+						...productData,
+					};
+				}
 			});
 
+			if (!products) {
+				return res
+					.status(404)
+					.json({ message: "Избранных товаров не существует или товар не активен" });
+			}
 			return res.status(200).json({
 				products,
 				message: "Избранные продукты пользователя успешно получены",
@@ -92,6 +126,7 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 			return {
 				...product,
 				isFavorite: favoriteIds.has(product.id),
+				...(user?.role === "user" && { isActive: true }),
 			};
 		});
 

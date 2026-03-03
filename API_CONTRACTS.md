@@ -30,7 +30,7 @@
   * stock: number ( общее количество товара в ассортименте )
   * image_url?: string ( URL главного изображения товара )
   * images?: string[] ( массив URL дополнительных изображений )
-  * is_active: boolean ( активен ли товар для продажи )
+  * isActive: boolean ( активен ли товар для продажи )
 
 3) favourite_item:
   * id: number ( уникальный идентификатор записи в избранном )
@@ -200,12 +200,12 @@ p.s для админов отдельные ручки ( недоступные
    * category: VARCHAR(100) NOT NULL CHECK (category IN ('all', 'tShirts', 'hoodies', 'longSleeves', 'trousers')) ( категория товара )
    * stock: INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0) ( общее количество товара, не может быть отрицательным )
    * image_url: VARCHAR(500) ( URL главного изображения товара )
-   * is_active: BOOLEAN DEFAULT TRUE ( активен ли товар для продажи )
+   * isActive: BOOLEAN DEFAULT TRUE ( активен ли товар для продажи )
    * created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    * updated_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    * INDEX idx_products_category (category) ( индекс для фильтрации по категории )
    * INDEX idx_products_article (article) ( индекс для поиска по артикулу )
-   * INDEX idx_products_active (is_active) ( индекс для фильтрации активных товаров )
+   * INDEX idx_products_active (isActive) ( индекс для фильтрации активных товаров )
    * FULLTEXT INDEX idx_products_search (name, description) ( полнотекстовый поиск по названию и описанию )
 
 3) product_sizes:

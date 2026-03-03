@@ -73,6 +73,7 @@ const currProductsSlice = createSlice({
 				state.currProducts.isLoading = false;
 				state.currProducts.items = action.payload.products;
 				state.currProducts.totalPages = action.payload.totalPages;
+				console.log("set products");
 			})
 			.addCase(getCurrProductsByCategoryId.rejected, (state, action) => {
 				state.currProducts.isLoading = false;

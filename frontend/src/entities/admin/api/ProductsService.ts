@@ -20,5 +20,15 @@ export const ProductsService = {
 			console.error("Неизвестная ошибка при получении продуктов с сервера");
 		}
 	},
-	deleteProducts: () => {},
+	deleteProducts: async () => {
+		try {
+			const userInfo: YandexUserInfo = storage.getUserInfo();
+			const response = await api.delete(`/products/${userInfo.id}`);
+			return response.data.message;
+		} catch (error) {
+			if (isAxiosError(error)) {
+				console.error(error.message);
+			}
+		}
+	},
 };

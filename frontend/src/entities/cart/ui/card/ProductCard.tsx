@@ -23,7 +23,7 @@ export default function CartProductCard({ product, toggleDrawer }: Props) {
 	const dispatch = useDispatch();
 
 	const decrement = () => {
-		if (product.quantity === 1) {
+		if (product.cartQuantity === 1) {
 			dispatch(deleteProduct({ productId: product.id }));
 			return;
 		}

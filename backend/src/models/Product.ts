@@ -13,10 +13,10 @@ export type ProductAttributes = {
 	stock: number;
 	image_url?: string | null;
 	images?: string[] | null;
-	is_active: boolean;
+	isActive: boolean;
 };
 
-type ProductCreationAttributes = Optional<ProductAttributes, "id" | "image_url" | "images">;
+export type ProductCreationAttributes = Optional<ProductAttributes, "id" | "image_url" | "images">;
 
 export class Product
 	extends Model<ProductAttributes, ProductCreationAttributes>
@@ -33,7 +33,7 @@ export class Product
 	declare stock: number;
 	declare image_url: string | null | undefined;
 	declare images: string[] | null | undefined;
-	declare is_active: boolean;
+	declare isActive: boolean;
 }
 
 Product.init(
@@ -80,7 +80,7 @@ Product.init(
 			type: DataTypes.ARRAY(DataTypes.STRING),
 			allowNull: true,
 		},
-		is_active: {
+		isActive: {
 			type: DataTypes.BOOLEAN,
 			allowNull: false,
 			defaultValue: true,

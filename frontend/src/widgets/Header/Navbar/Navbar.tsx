@@ -1,12 +1,10 @@
-import { CategoriesServise } from "@/entities/categories/api/CategoiesService";
 import { changeCategory } from "@/entities/categories/model/slice";
 import { getCurrProductsByCategoryId } from "@/entities/product/model/asyncThunks";
 import { updateCurrPage } from "@/entities/product/model/productsPageSlice";
 import type { AppDispatch, RootState } from "@/shared/lib/store";
-import type { Category } from "@/shared/types";
 import { Drawer, Flex, Typography } from "antd";
 import { TextAlignJustify } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import classes from "./Navbar.module.css";
@@ -16,22 +14,9 @@ const { Title } = Typography;
 
 export default function Navbar() {
 	const [open, setOpen] = useState(false);
-	const [categories, setCategories] = useState<Category[]>([]);
 	const activeCategory = useSelector((state: RootState) => state.category.category);
+	const { allCategories } = useSelector((state: RootState) => state.category);
 	const dispatch = useDispatch<AppDispatch>();
-
-	useEffect(() => {
-		const fetchCategories = async () => {
-			try {
-				const data = await CategoriesServise.getCategories();
-				setCategories(data);
-			} catch (error) {
-				console.error("Ошибка загрузки категорий:", error);
-			}
-		};
-
-		fetchCategories();
-	}, []);
 
 	const navigate = useNavigate();
 
@@ -76,7 +61,7 @@ export default function Navbar() {
 				open={open}
 			>
 				<Flex vertical className={classes.navbarItems} gap={12}>
-					{categories.map(category => {
+					{allCategories.map(category => {
 						const path = "/" + category.slug;
 						return (
 							<NavbarItem
