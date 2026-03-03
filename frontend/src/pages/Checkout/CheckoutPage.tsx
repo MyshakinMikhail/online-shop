@@ -17,8 +17,8 @@ export default function CheckoutPage() {
 		<div className={classes.page}>
 			<Header />
 			<div className={classes.body}>
-				<Form />
 				<CartProductsList />
+				<Form />
 			</div>
 		</div>
 	);
