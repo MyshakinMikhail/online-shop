@@ -4,7 +4,7 @@ import { CartServise } from "../api/CartServise";
 import { getCartProducts } from "./asyncThunks";
 
 export interface CartItem extends Product {
-	quantity: number;
+	cartQuantity: number;
 }
 
 type CartState = {
@@ -20,18 +20,20 @@ const cartSlice = createSlice({
 	name: "cart",
 	initialState,
 	reducers: {
-		addProduct: (state, action: PayloadAction<Product>) => {
+		addProduct: (state, action: PayloadAction<CartItem>) => {
 			const existingProduct = state.products.find(
 				product => product.id === action.payload.id
 			);
 
 			if (existingProduct) {
-				existingProduct.quantity += 1;
+				existingProduct.cartQuantity += 1;
+				state.totalPrice += existingProduct.price;
 				CartServise.updateQuantity(action.payload.id, true);
 				return;
 			}
 
-			state.products.push({ ...action.payload, quantity: 1 });
+			state.totalPrice += action.payload.price;
+			state.products.push({ ...action.payload, cartQuantity: 1 });
 			CartServise.addProduct(action.payload.id);
 		},
 
@@ -40,6 +42,7 @@ const cartSlice = createSlice({
 				product => product.id === action.payload.productId
 			);
 			if (existingProduct) {
+				state.totalPrice -= existingProduct.price;
 				CartServise.deleteProduct(existingProduct.id);
 				state.products = state.products.filter(
 					product => product.id !== existingProduct.id
@@ -51,7 +54,8 @@ const cartSlice = createSlice({
 				product => product.id === action.payload.productId
 			);
 			if (existingProduct) {
-				existingProduct.quantity += 1;
+				existingProduct.cartQuantity += 1;
+				state.totalPrice += existingProduct.price;
 				CartServise.updateQuantity(existingProduct.id, true);
 			}
 		},
@@ -61,7 +65,8 @@ const cartSlice = createSlice({
 				product => product.id === action.payload.productId
 			);
 			if (existingProduct) {
-				existingProduct.quantity -= 1;
+				existingProduct.cartQuantity -= 1;
+				state.totalPrice -= existingProduct.price;
 				CartServise.updateQuantity(existingProduct.id, false);
 			}
 		},

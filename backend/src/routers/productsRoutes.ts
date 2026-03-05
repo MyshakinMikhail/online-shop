@@ -67,6 +67,7 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 						},
 					],
 				},
+				order: [["name", "ASC"]],
 			});
 
 			return res.status(200).json({
@@ -113,12 +114,15 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 		const favoriteIds = new Set(favoriteProducts.map(fav => fav.productId));
 
 		const whereClause =
-			Number(categoryId) === 1 ? undefined : { categoryId: Number(categoryId) };
+			Number(categoryId) === 1
+				? { isActive: true }
+				: { isActive: true, categoryId: Number(categoryId) };
 
 		const { count, rows } = await Product.findAndCountAll({
 			where: whereClause,
 			limit: Number(limit) || 16,
 			offset: ((Number(page) || 1) - 1) * (Number(limit) || 16),
+			order: [["name", "ASC"]],
 		});
 
 		const products = rows.map(row => {

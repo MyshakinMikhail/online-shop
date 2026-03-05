@@ -7,7 +7,6 @@ export const getCurrentCategory = createAsyncThunk(
 	async (_, { rejectWithValue }) => {
 		try {
 			const slug = window.location.pathname.split("/").pop() || "all";
-			console.log(slug);
 			if (!slug) {
 				return rejectWithValue({ message: "slug must be a string" });
 			}

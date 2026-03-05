@@ -59,7 +59,7 @@ export default function CartProductCard({ product, toggleDrawer }: Props) {
 
 			<div className={classes.controls}>
 				<QuantityControl
-					count={product.quantity}
+					count={product.cartQuantity}
 					increment={increment}
 					decrement={decrement}
 				/>

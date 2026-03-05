@@ -5,7 +5,7 @@ export type Product = {
 	sizes: string[];
 	article: string;
 	price: number;
-	cartQuantity?: number; // Количество товара в корзине
+	// cartQuantity?: number; // Количество товара в корзине
 	isFavorite?: boolean; // Любимое или нет
 	isActive: boolean;
 	categoryId: number;
