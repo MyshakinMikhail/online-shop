@@ -50,7 +50,6 @@ export const userService = {
 	checkAuth: async () => {
 		try {
 			const userInfo: YandexUserInfo = storage.getUserInfo();
-			// я не придумал, как мне сделать userSlice, поэтому пока что оставим так, но потом надо будет что-то придумать !!!
 			if (!userInfo) {
 				return false;
 			}

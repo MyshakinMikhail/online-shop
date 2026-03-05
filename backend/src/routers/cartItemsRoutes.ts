@@ -66,7 +66,6 @@ interface UpdateCartParams {
 	userId: string;
 }
 router.put("/:userId", async (req: Request<UpdateCartParams, {}, UpdateCartBody>, res) => {
-	/// данные можно тут тоже типизировать !!!
 	try {
 		const { userId } = req.params;
 		const { productId, isIncrement } = req.body;

@@ -23,8 +23,11 @@ router.post("/yandex", async (req: Request<{}, {}, PostRequestBodyType>, res) =>
 			defaults: userData,
 		});
 
-		if (created) {
-			return await user.update(userData);
+		if (!created) {
+			return res.status(200).json({
+				message: "Пользователь уже существует в бд, авторизовали его",
+				created: false,
+			});
 		}
 
 		await Cart.findOrCreate({

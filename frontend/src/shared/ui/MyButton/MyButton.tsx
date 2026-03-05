@@ -4,9 +4,10 @@ import classes from "./MyButton.module.css";
 
 type Props = ButtonProps & {
 	label?: string; // текст кнопки по умолчанию
+	disabled?: boolean;
 };
 
-export default function MyButton({ label = "Купить", onClick, ...props }: Props) {
+export default function MyButton({ label = "Купить", onClick, disabled, ...props }: Props) {
 	return (
 		<>
 			<Button
@@ -16,6 +17,7 @@ export default function MyButton({ label = "Купить", onClick, ...props }: 
 				block
 				size="large"
 				onClick={onClick}
+				disabled={disabled}
 				{...props}
 			>
 				{label}

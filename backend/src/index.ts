@@ -4,7 +4,6 @@ import express from "express";
 import sequelize from "./db.ts";
 import "./models/index.ts";
 import router from "./routers/index.ts";
-import seeders from "./seeders/index.ts";
 
 dotenv.config();
 
@@ -28,16 +27,14 @@ const start = async () => {
 		await sequelize.authenticate();
 		await sequelize.sync();
 
+		// await seeders.reseed();
+
+		// await seeders.seedTesting();
+		// await seeders.clearAllData();
+
 		app.listen(PORT, () => {
 			console.log(`🚀 S	erver is running on port ${PORT}`);
 		});
-
-		// проблемы с первым входом при авторизации, заходит со второй попытки!!!
-
-		await seeders.reseed();
-
-		// await seeders.clearAllData();
-		// await seeders.seedTesting();
 
 		console.log("server started");
 	} catch (error) {

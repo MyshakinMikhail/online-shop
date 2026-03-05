@@ -12,7 +12,7 @@ router.get("/:userId", async (req, res) => {
 				.json({ message: "Неверные параметры запроса", error: "userId must be a number" });
 		}
 
-		const user = await User.findOne({ where: { psuid: userId } }); // psuid не должен быть string !!!
+		const user = await User.findOne({ where: { psuid: userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с таким id не существует" });
 		}

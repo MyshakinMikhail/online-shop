@@ -1,12 +1,11 @@
-import { CategoriesServise } from "@/entities/categories/api/CategoiesService";
-import { setAllCategories } from "@/entities/categories/model/slice";
+import { getAllCategories } from "@/entities/categories/model/asyncThunks/getAllCategories";
 import { sizeOptions } from "@/shared/consts";
 import type { AppDispatch, RootState } from "@/shared/lib/store";
 import type { Category, CreationProductType, Product } from "@/shared/types";
 import { MyButton } from "@/shared/ui";
 import type { FormProps } from "antd";
 import { Button, Flex, Form, Input, Select } from "antd";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./ProductForm.module.css";
 
@@ -26,19 +25,34 @@ type FieldType = {
 
 export const ProductForm = ({ product, postForm }: Props) => {
 	const [isActive, setIsActive] = useState<boolean>(product?.isActive || true);
-	const allCategories = useSelector((state: RootState) =>
-		state.category.allCategories.filter((category: Category) => category.id !== 1)
-	);
+	const allCategories = useSelector((state: RootState) => state.category.allCategories);
+	const filteredCategories = allCategories.filter((category: Category) => category.id !== 1);
+
 	const dispatch = useDispatch<AppDispatch>();
 	const [form] = Form.useForm<FieldType>();
+	const values = Form.useWatch<FieldType>([], form);
+
+	const isChanged = useMemo(() => {
+		if (!product) return true; // новая форма
+		if (!values) return false;
+
+		return (
+			isActive !== product.isActive ||
+			values.name !== product.name ||
+			values.description !== product.description ||
+			values.categoryId !== product.categoryId ||
+			values.price !== product.price ||
+			values.stock !== product.stock ||
+			values.sizes?.length !== product.sizes?.length ||
+			values.sizes?.some((s, i) => s !== product.sizes[i])
+		);
+	}, [values, product, isActive]);
 
 	useEffect(() => {
-		const fetchCategories = async () => {
-			const categories = await CategoriesServise.getCategories();
-			dispatch(setAllCategories({ allCategories: categories }));
-		};
-		fetchCategories();
-	}, [dispatch]);
+		if (!filteredCategories.length) {
+			dispatch(getAllCategories());
+		}
+	}, [dispatch, filteredCategories.length]);
 
 	useEffect(() => {
 		if (product) {
@@ -54,7 +68,7 @@ export const ProductForm = ({ product, postForm }: Props) => {
 	}, [product, form]);
 
 	const categoryOptions =
-		allCategories?.map(category => ({
+		filteredCategories?.map((category: Category) => ({
 			value: category.id,
 			label: category.name,
 		})) || [];
@@ -252,13 +266,14 @@ export const ProductForm = ({ product, postForm }: Props) => {
 					</Form.Item>
 				)}
 
-				<Form.Item className={classes.formItem}>
+				<Form.Item className={classes.formItem} shouldUpdate>
 					<MyButton
 						label={product ? "Сохранить изменения" : "Добавить новый товар"}
 						onClick={() => form.submit()}
+						disabled={!isChanged}
 					/>
 				</Form.Item>
 			</Form>
 		</Flex>
 	);
-}; // было бы круто, если бы форма не отправлялась при неизменности данных !!!
+};
