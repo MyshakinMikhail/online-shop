@@ -1,6 +1,7 @@
 import { Router } from "express";
 import sequelize from "../db.ts";
 import { Cart, CartItem, Order, OrderItem, Product, User } from "../models/index.ts";
+import { OrderService } from "../services/OrderService.ts";
 import { validateUserId } from "../utils/index.ts";
 
 const router = Router();
@@ -49,9 +50,7 @@ router.post("/:userId", async (req, res) => {
 				.json({ message: "У данного пользователя не существует корзины" });
 		}
 
-		const totalPrice = cart.items.reduce((sum, item) => {
-			return sum + item.quantity * item.product.price;
-		}, 0);
+		const totalPrice = OrderService.calculateOrderTotal(cart.items);
 
 		if (userName && email && phoneNumber && promocode) {
 			const order = await Order.create(

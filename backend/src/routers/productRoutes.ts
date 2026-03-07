@@ -3,6 +3,7 @@ import { Router } from "express";
 import { v4 as uniqueArticle } from "uuid";
 import { Favorite, Product, User } from "../models/index.ts";
 import type { ProductAttributes, ProductCreationAttributes } from "../models/Product.ts";
+import { AuthService } from "../services/index.ts";
 import { validateProductId, validateUserId } from "../utils/index.ts";
 import { validateProductCreationAttributes } from "../utils/validation/validation.ts";
 
@@ -75,7 +76,7 @@ router.post(
 				});
 			}
 
-			if (user.role !== "admin" && user.role !== "super_admin") {
+			if (AuthService.hasAdminRights(user.role)) {
 				return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 			}
 			const article = uniqueArticle();
@@ -117,7 +118,7 @@ router.put(
 				});
 			}
 
-			if (user.role !== "admin" && user.role !== "super_admin") {
+			if (AuthService.hasAdminRights(user.role)) {
 				return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 			}
 
@@ -164,7 +165,7 @@ router.delete("/:userId/:productId", async (req, res) => {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		if (user.role !== "admin" && user.role !== "super_admin") {
+		if (AuthService.hasAdminRights(user.role)) {
 			return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 		}
 

@@ -1,6 +1,7 @@
 import { Router, type Request } from "express";
 import { Op } from "sequelize";
 import { CartItem, Favorite, OrderItem, Product, User } from "../models/index.ts";
+import { AuthService } from "../services/index.ts";
 import { validateUserId } from "../utils/index.ts";
 
 const router = Router();
@@ -33,7 +34,7 @@ router.delete("/:userId", async (req, res) => {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		if (user.role !== "admin" && user.role !== "super_admin") {
+		if (AuthService.hasAdminRights(user.role)) {
 			return res
 				.status(403)
 				.json({ message: "Недостаточно прав для совершения данного действия" });
