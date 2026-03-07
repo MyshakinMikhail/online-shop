@@ -20,6 +20,8 @@ export const Form = () => {
 	const [city, setCity] = useState<string>("");
 	const navigate = useNavigate();
 
+	// !!! нужна валидация формы, чтобы нельзя было отправить всякую хрень
+
 	const [alert, contextHolder] = notification.useNotification();
 	const openFavoritesNotification = (placement: NotificationPlacement, error: string | null) => {
 		if (!error) {

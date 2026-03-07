@@ -8,7 +8,7 @@ export type UserRole = "super_admin" | "admin" | "user";
 export interface UserAttributes {
 	id?: number;
 	role: UserRole;
-	psuid: string;
+	psuid: number;
 	first_name: string;
 	last_name: string;
 	sex: UserSex;
@@ -21,7 +21,7 @@ type UserCreationAttributes = Optional<UserAttributes, "id" | "role">;
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
 	declare id: number;
 	declare role: UserRole;
-	declare psuid: string;
+	declare psuid: number;
 	declare first_name: string;
 	declare last_name: string;
 	declare sex: UserSex;
@@ -42,7 +42,7 @@ User.init(
 			defaultValue: "user",
 		},
 		psuid: {
-			type: DataTypes.STRING,
+			type: DataTypes.INTEGER,
 			allowNull: false,
 			unique: true,
 		},

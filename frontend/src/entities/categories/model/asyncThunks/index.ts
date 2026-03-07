@@ -1,3 +1,4 @@
+import { getAllCategories } from "./getAllCategories";
 import { getCurrentCategory } from "./getCurrentCategory";
 
-export { getCurrentCategory };
+export { getAllCategories, getCurrentCategory };

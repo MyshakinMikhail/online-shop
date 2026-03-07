@@ -1,33 +1,34 @@
 import { type Request, Router } from "express";
 import { Cart, CartItem, Product, User } from "../models/index.ts";
+import { validateProductId, validateUserId } from "../utils/index.ts";
 
 const router = Router();
 
 router.post("/:userId", async (req, res) => {
 	try {
-		let { userId } = req.params;
+		const { userId } = req.params;
 		const { productId } = req.body;
 
-		if (!userId || isNaN(Number(userId))) {
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
 			return res.status(400).json({
-				message: "Неверные параметры зпароса",
-				error: "userId must be a number",
+				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		if (!productId || isNaN(Number(productId))) {
+		const productIdValidationResult = validateProductId(productId);
+		if (!productIdValidationResult.isValid || !productIdValidationResult.productId) {
 			return res.status(400).json({
-				message: "Неверные параметры зпароса",
-				error: "productId must be a number",
+				message: productIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		const product = await Product.findByPk(Number(productId));
+		const product = await Product.findByPk(productIdValidationResult.productId);
 		if (!product) {
 			return res.status(404).json({ message: "Товара с данным id не существует" });
 		}
@@ -41,7 +42,7 @@ router.post("/:userId", async (req, res) => {
 		}
 
 		const cartItem = await CartItem.findOne({
-			where: { cartId: cart.id, productId: Number(productId) },
+			where: { cartId: cart.id, productId: product.id },
 		});
 
 		if (cartItem) {
@@ -50,7 +51,7 @@ router.post("/:userId", async (req, res) => {
 
 		const createdCartItem = await CartItem.create({
 			cartId: cart.id,
-			productId: productId,
+			productId: product.id,
 			quantity: 1,
 		});
 		res.status(201).json({ message: "Товар добавлен в корзину", cartItem: createdCartItem });
@@ -70,25 +71,26 @@ router.put("/:userId", async (req: Request<UpdateCartParams, {}, UpdateCartBody>
 		const { userId } = req.params;
 		const { productId, isIncrement } = req.body;
 
-		if (!userId || isNaN(Number(userId))) {
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
 			return res.status(400).json({
-				message: "Неверные параметры зпароса",
-				error: "userId must be a number",
-			});
-		}
-		if (!productId) {
-			return res.status(400).json({
-				message: "Неверные параметры зпароса",
-				error: "productId must be a number",
+				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userId } });
+		const productIdValidationResult = validateProductId(productId);
+		if (!productIdValidationResult.isValid || !productIdValidationResult.productId) {
+			return res.status(400).json({
+				message: productIdValidationResult.error || "Неверные параметры запроса",
+			});
+		}
+
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		const product = await Product.findByPk(productId);
+		const product = await Product.findByPk(productIdValidationResult.productId);
 		if (!product) {
 			return res.status(404).json({ message: "Товара с данным id не существует" });
 		}
@@ -102,7 +104,7 @@ router.put("/:userId", async (req: Request<UpdateCartParams, {}, UpdateCartBody>
 		}
 
 		const cartItem = await CartItem.findOne({
-			where: { cartId: cart.id, productId: productId },
+			where: { cartId: cart.id, productId: product.id },
 		});
 		if (!cartItem) {
 			return res.status(404).json({ message: "Товар в корзине пользователя не найден" });
@@ -110,7 +112,7 @@ router.put("/:userId", async (req: Request<UpdateCartParams, {}, UpdateCartBody>
 		if (isIncrement) {
 			await CartItem.update(
 				{ quantity: cartItem.quantity + 1 },
-				{ where: { cartId: cart.id, productId: productId } }
+				{ where: { cartId: cart.id, productId: product.id } }
 			);
 
 			return res.status(200).json({
@@ -120,7 +122,7 @@ router.put("/:userId", async (req: Request<UpdateCartParams, {}, UpdateCartBody>
 		}
 
 		if (cartItem.quantity - 1 <= 0) {
-			await CartItem.destroy({ where: { cartId: cart.id, productId: productId } });
+			await CartItem.destroy({ where: { cartId: cart.id, productId: product.id } });
 
 			return res.status(200).json({
 				message:
@@ -130,7 +132,7 @@ router.put("/:userId", async (req: Request<UpdateCartParams, {}, UpdateCartBody>
 
 		await CartItem.update(
 			{ quantity: cartItem.quantity - 1 },
-			{ where: { cartId: cart.id, productId: productId } }
+			{ where: { cartId: cart.id, productId: product.id } }
 		);
 
 		return res.status(200).json({
@@ -149,24 +151,26 @@ router.delete("/:userId", async (req, res) => {
 		const { userId } = req.params;
 		const { productId } = req.body;
 
-		if (!userId || isNaN(Number(userId))) {
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
 			return res.status(400).json({
-				message: "Неверные параметры зпароса",
-				error: "userId must be a number",
+				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
-		if (!productId) {
+
+		const productIdValidationResult = validateProductId(productId);
+		if (!productIdValidationResult.isValid || !productIdValidationResult.productId) {
 			return res.status(400).json({
-				message: "Неверные параметры зпароса",
-				error: "productId must be a number",
+				message: productIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
-		const user = await User.findOne({ where: { psuid: userId } });
+
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		const product = await Product.findByPk(Number(productId));
+		const product = await Product.findByPk(productIdValidationResult.productId);
 		if (!product) {
 			return res.status(404).json({ message: "Товара с данным id не существует" });
 		}
@@ -180,7 +184,7 @@ router.delete("/:userId", async (req, res) => {
 		}
 
 		const cartItem = await CartItem.findOne({
-			where: { cartId: cart.id, productId: productId },
+			where: { cartId: cart.id, productId: product.id },
 		});
 		if (!cartItem) {
 			return res.status(404).json({ message: "Товар в корзине пользователя не найден" });

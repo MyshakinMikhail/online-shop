@@ -4,7 +4,7 @@ import { CartServise } from "../api/CartServise";
 import { getCartProducts } from "./asyncThunks";
 
 export interface CartItem extends Product {
-	cartQuantity: number;
+	quantity: number;
 }
 
 type CartState = {
@@ -26,14 +26,14 @@ const cartSlice = createSlice({
 			);
 
 			if (existingProduct) {
-				existingProduct.cartQuantity += 1;
+				existingProduct.quantity += 1;
 				state.totalPrice += existingProduct.price;
 				CartServise.updateQuantity(action.payload.id, true);
 				return;
 			}
 
 			state.totalPrice += action.payload.price;
-			state.products.push({ ...action.payload, cartQuantity: 1 });
+			state.products.push({ ...action.payload, quantity: 1 });
 			CartServise.addProduct(action.payload.id);
 		},
 
@@ -54,7 +54,7 @@ const cartSlice = createSlice({
 				product => product.id === action.payload.productId
 			);
 			if (existingProduct) {
-				existingProduct.cartQuantity += 1;
+				existingProduct.quantity += 1;
 				state.totalPrice += existingProduct.price;
 				CartServise.updateQuantity(existingProduct.id, true);
 			}
@@ -65,7 +65,7 @@ const cartSlice = createSlice({
 				product => product.id === action.payload.productId
 			);
 			if (existingProduct) {
-				existingProduct.cartQuantity -= 1;
+				existingProduct.quantity -= 1;
 				state.totalPrice -= existingProduct.price;
 				CartServise.updateQuantity(existingProduct.id, false);
 			}

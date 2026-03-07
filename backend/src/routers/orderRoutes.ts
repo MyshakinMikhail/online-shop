@@ -1,6 +1,7 @@
 import { Router } from "express";
 import sequelize from "../db.ts";
 import { Cart, CartItem, Order, OrderItem, Product, User } from "../models/index.ts";
+import { validateUserId } from "../utils/index.ts";
 
 const router = Router();
 
@@ -11,13 +12,17 @@ router.post("/:userId", async (req, res) => {
 		const { userId } = req.params;
 		const { userName, email, phoneNumber, promocode, city } = req.body;
 
-		if (!userId || isNaN(Number(userId))) {
-			res.status(400).json({
-				message: "Неверные параметры запроса, userId must be a number",
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			return res.status(400).json({
+				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userId }, transaction: t });
+		const user = await User.findOne({
+			where: { psuid: userIdValidationResult.userId },
+			transaction: t,
+		});
 		if (!user) {
 			return res.status(404).json({ message: "Пользователь с данным id не найден" });
 		}

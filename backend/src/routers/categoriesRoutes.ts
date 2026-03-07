@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Category } from "../models/index.ts";
+import { validateCategorySlug } from "../utils/validation/validation.ts";
 
 const router = Router();
 
@@ -18,8 +19,16 @@ router.get("/", async (req, res) => {
 
 router.get("/:slug", async (req, res) => {
 	try {
-		const slug = req.params.slug;
-		const category = await Category.findOne({ where: { slug: slug } });
+		const { slug } = req.params;
+
+		const slugValidationResult = validateCategorySlug(slug);
+		if (!slugValidationResult.isValid || !slugValidationResult.slug) {
+			return res.status(400).json({
+				message: slugValidationResult.error || "Неверные параметры запроса",
+			});
+		}
+
+		const category = await Category.findOne({ where: { slug: slugValidationResult.slug } });
 		if (!category) {
 			return res.status(404).json({ message: "Категории не существует" });
 		}

@@ -1,6 +1,7 @@
 import { Router, type Request } from "express";
 import { Cart, User } from "../models/index.ts";
 import { type UserAttributes } from "../models/User.ts";
+import { validateUserId } from "../utils/validation/validation.ts";
 
 const router = Router();
 
@@ -10,16 +11,17 @@ type PostRequestBodyType = {
 
 router.post("/yandex", async (req: Request<{}, {}, PostRequestBodyType>, res) => {
 	try {
-		if (!req.body?.user?.psuid) {
-			return res.status(400).json({
-				message: "Не указан Yandex ID пользователя",
-			});
+		const userIdValidationResult = validateUserId(req.body?.user?.psuid);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			return res
+				.status(400)
+				.json({ message: userIdValidationResult.error || "Неверные параметры запроса" });
 		}
 
 		const userData = req.body.user;
 
 		const [user, created] = await User.findOrCreate({
-			where: { psuid: userData.psuid },
+			where: { psuid: userIdValidationResult.userId },
 			defaults: userData,
 		});
 
@@ -49,14 +51,24 @@ router.post("/yandex", async (req: Request<{}, {}, PostRequestBodyType>, res) =>
 	}
 });
 
+type RequestParamsType = {
+	psuid: string | undefined;
+};
 // Простой endpoint для проверки существования пользователя
 // НЕ создает пользователя, только проверяет
-router.get("/checkUser/:psuid", async (req, res) => {
+router.get("/checkUser/:psuid", async (req: Request<RequestParamsType, {}, {}>, res) => {
 	try {
-		const psuid = req.params.psuid; // Это Yandex ID, не путать с нашим id
+		const { psuid } = req.params;
+
+		const userIdValidationResult = validateUserId(psuid);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			return res
+				.status(400)
+				.json({ message: userIdValidationResult.error || "Неверные параметры запроса" });
+		}
 
 		// Ищем по psuid (Yandex ID), а не по id
-		const user = await User.findOne({ where: { psuid } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 
 		if (!user) {
 			return res.status(404).json({
@@ -67,7 +79,6 @@ router.get("/checkUser/:psuid", async (req, res) => {
 
 		res.status(200).json({
 			message: "Пользователь найден",
-			// user: user,
 			user: {
 				id: user.id,
 				psuid: user.psuid,

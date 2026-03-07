@@ -1,6 +1,6 @@
 import type { Category } from "@/shared/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { getCurrentCategory } from "./asyncThunks";
+import { getAllCategories, getCurrentCategory } from "./asyncThunks";
 
 type CategoryStateType = {
 	allCategories: Category[];
@@ -33,6 +33,20 @@ export const categorySlice = createSlice({
 	},
 	extraReducers: builder => {
 		builder
+			// getAllCategories handlers
+			.addCase(getAllCategories.pending, state => {
+				state.loading = true;
+				state.error = null;
+			})
+			.addCase(getAllCategories.fulfilled, (state, action: PayloadAction<Category[]>) => {
+				state.loading = false;
+				state.allCategories = action.payload;
+			})
+			.addCase(getAllCategories.rejected, (state, action) => {
+				state.loading = false;
+				state.error = action.error.message || "Ошибка загрузки категорий";
+			})
+			// getCurrentCategory handlers
 			.addCase(getCurrentCategory.pending, state => {
 				state.loading = true;
 				state.error = null;

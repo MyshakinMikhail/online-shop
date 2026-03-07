@@ -3,7 +3,7 @@ import { type UserAttributes } from "../models/User.ts";
 export const mockUsers: UserAttributes[] = [
 	{
 		role: "admin",
-		psuid: "admin_001",
+		psuid: 1,
 		first_name: "Александр",
 		last_name: "Иванов",
 		sex: "male",
@@ -12,7 +12,7 @@ export const mockUsers: UserAttributes[] = [
 	},
 	{
 		role: "admin",
-		psuid: "manager_001",
+		psuid: 2,
 		first_name: "Мария",
 		last_name: "Петрова",
 		sex: "female",
@@ -21,7 +21,7 @@ export const mockUsers: UserAttributes[] = [
 	},
 	{
 		role: "user",
-		psuid: "user_001",
+		psuid: 3,
 		first_name: "Иван",
 		last_name: "Сидоров",
 		sex: "male",
@@ -30,7 +30,7 @@ export const mockUsers: UserAttributes[] = [
 	},
 	{
 		role: "user",
-		psuid: "user_002",
+		psuid: 4,
 		first_name: "Ольга",
 		last_name: "Кузнецова",
 		sex: "female",
@@ -39,7 +39,7 @@ export const mockUsers: UserAttributes[] = [
 	},
 	{
 		role: "super_admin",
-		psuid: "1553467676",
+		psuid: 1553467676,
 		first_name: "Миша",
 		last_name: "Мышакин",
 		sex: "male",

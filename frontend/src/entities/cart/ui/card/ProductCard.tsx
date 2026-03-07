@@ -23,7 +23,7 @@ export default function CartProductCard({ product, toggleDrawer }: Props) {
 	const dispatch = useDispatch();
 
 	const decrement = () => {
-		if (product.cartQuantity === 1) {
+		if (product.quantity === 1) {
 			dispatch(deleteProduct({ productId: product.id }));
 			return;
 		}
@@ -39,7 +39,6 @@ export default function CartProductCard({ product, toggleDrawer }: Props) {
 			<Image
 				src="https://static.tildacdn.com/stor3435-3861-4835-b432-323134376130/56150826.jpg"
 				width={60}
-				// preview={false}
 				className={classes.image}
 			/>
 
@@ -59,7 +58,7 @@ export default function CartProductCard({ product, toggleDrawer }: Props) {
 
 			<div className={classes.controls}>
 				<QuantityControl
-					count={product.cartQuantity}
+					count={product.quantity}
 					increment={increment}
 					decrement={decrement}
 				/>

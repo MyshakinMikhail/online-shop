@@ -1,9 +1,10 @@
 import { storage } from "@/entities/user/api";
 import { api } from "@/shared/api";
 import type { CreationProductType, Product } from "@/shared/types";
+import type { YandexUserInfo } from "@/shared/types/yandexUserInfo";
 import { isAxiosError } from "axios";
 
-const userInfo = storage.getUserInfo();
+const userInfo: YandexUserInfo = storage.getUserInfo();
 
 export const ProductService = {
 	postProduct: async ({ product }: { product: CreationProductType }) => {

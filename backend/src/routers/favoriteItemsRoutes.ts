@@ -1,5 +1,6 @@
 import { Router, type Request } from "express";
 import { Favorite, User } from "../models/index.ts";
+import { validateProductId, validateUserId } from "../utils/validation/validation.ts";
 
 const router = Router();
 
@@ -15,27 +16,28 @@ router.post("/:userId", async (req: Request<FavoriteParamsType, {}, FavoriteBody
 		const { userId } = req.params;
 		const { productId } = req.body;
 
-		if (isNaN(Number(userId))) {
-			return res
-				.status(400)
-				.json({ message: "Неверные параметры запроса", error: "userId must be a number" });
-		}
-
-		if (!productId) {
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
 			return res.status(400).json({
-				message: "Неверные параметры запроса",
-				error: "productId must be a number",
+				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userId } });
+		const productIdValidationResult = validateProductId(productId);
+		if (!productIdValidationResult.isValid || !productIdValidationResult.productId) {
+			return res.status(400).json({
+				message: productIdValidationResult.error || "Неверные параметры запроса",
+			});
+		}
+
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
 		const [createdProduct, isAdded] = await Favorite.findOrCreate({
-			where: { userId: user.id, productId: productId },
-			defaults: { userId: user.id, productId: productId },
+			where: { userId: user.id, productId: productIdValidationResult.productId },
+			defaults: { userId: user.id, productId: productIdValidationResult.productId },
 		});
 
 		if (!isAdded) {
@@ -52,33 +54,34 @@ router.delete("/:userId", async (req: Request<FavoriteParamsType, {}, FavoriteBo
 		const { userId } = req.params;
 		const { productId } = req.body;
 
-		if (isNaN(Number(userId))) {
-			return res
-				.status(400)
-				.json({ message: "Неверные параметры запроса", error: "userId must be a number" });
-		}
-
-		if (!productId) {
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
 			return res.status(400).json({
-				message: "Неверные параметры запроса",
-				error: "productId must be a number",
+				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userId } });
+		const productIdValidationResult = validateProductId(productId);
+		if (!productIdValidationResult.isValid || !productIdValidationResult.productId) {
+			return res.status(400).json({
+				message: productIdValidationResult.error || "Неверные параметры запроса",
+			});
+		}
+
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
 		const product = await Favorite.findOne({
-			where: { userId: user.id, productId: productId },
+			where: { userId: user.id, productId: productIdValidationResult.productId },
 		});
 
 		if (!product) {
 			return res.status(404).json({ message: "Данного товара уже нет в корзине" });
 		}
 
-		await Favorite.destroy({ where: { userId: user.id, productId: productId } });
+		await Favorite.destroy({ where: { userId: user.id, productId: product.id } });
 		res.status(200).json({ message: "Товар удален из избранного" });
 	} catch (error) {
 		res.status(500).json({ message: "Ошибка удаления избранного товара" });

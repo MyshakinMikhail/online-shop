@@ -1,18 +1,21 @@
 import { Router } from "express";
 import { Cart, CartItem, Product, User } from "../models/index.ts";
+import { validateUserId } from "../utils/index.ts";
 
 const router = Router();
 
 router.get("/:userId", async (req, res) => {
 	try {
 		const { userId } = req.params;
-		if (!userId || isNaN(Number(userId))) {
-			return res
-				.status(400)
-				.json({ message: "Неверные параметры запроса", error: "userId must be a number" });
+
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			return res.status(400).json({
+				message: userIdValidationResult.error || "Неверные параметры запроса",
+			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с таким id не существует" });
 		}
@@ -33,10 +36,6 @@ router.get("/:userId", async (req, res) => {
 			],
 		});
 
-		// if (!cart) {
-		// 	return res.status(200).json({ message: "Корзина пустая" });
-		// }
-
 		res.status(200).json({ cart });
 	} catch (e) {
 		res.status(500).json({ message: "Ошибка получения корзины пользователя на сервере" });
@@ -47,13 +46,14 @@ router.delete("/:userId", async (req, res) => {
 	try {
 		const { userId } = req.params;
 
-		if (!userId || isNaN(Number(userId))) {
-			return res
-				.status(400)
-				.json({ message: "Неверные параметры запроса", error: "userId must be a number" });
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			return res.status(400).json({
+				message: userIdValidationResult.error || "Неверные параметры запроса",
+			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с таким id не существует" });
 		}
@@ -77,6 +77,7 @@ router.delete("/:userId", async (req, res) => {
 		await CartItem.destroy({
 			where: { cartId: cart.id },
 		});
+
 		res.status(200).json({ message: "Товары успешно удалены из корзины" });
 	} catch (e) {
 		res.status(500).json({ message: "Ошибка удаления корзины пользователя на сервере" });

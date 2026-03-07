@@ -1,6 +1,7 @@
 import { Router, type Request } from "express";
 import { Op } from "sequelize";
 import { CartItem, Favorite, OrderItem, Product, User } from "../models/index.ts";
+import { validateUserId } from "../utils/index.ts";
 
 const router = Router();
 
@@ -20,15 +21,24 @@ router.delete("/:userId", async (req, res) => {
 	try {
 		const { userId } = req.params;
 
-		const user = await User.findOne({ where: { psuid: userId } });
-		if (!user) {
-			return res.status(400).json({ message: "Пользователя с данным id не существует" });
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			return res.status(400).json({
+				message: userIdValidationResult.error || "Неверные параметры запроса",
+			});
 		}
+
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		if (!user) {
+			return res.status(404).json({ message: "Пользователя с данным id не существует" });
+		}
+
 		if (user.role !== "admin" && user.role !== "super_admin") {
 			return res
 				.status(403)
 				.json({ message: "Недостаточно прав для совершения данного действия" });
 		}
+
 		await Favorite.destroy({ where: {} });
 		await CartItem.destroy({ where: {} });
 		await OrderItem.destroy({ where: {} });
@@ -45,14 +55,14 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 		const { userId } = req.params;
 		const { page, limit, categoryId, searchQuery, isFavorites } = req.query;
 
-		if (isNaN(Number(userId))) {
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
 			return res.status(400).json({
-				message: "Неверные параметры запроса",
-				error: "userId must be a number",
+				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Данного пользователя не существует" });
 		}

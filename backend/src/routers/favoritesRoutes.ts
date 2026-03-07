@@ -1,5 +1,6 @@
 import { Router, type Request } from "express";
 import { Favorite, Product, User } from "../models/index.ts";
+import { validateUserId } from "../utils/index.ts";
 
 const router = Router();
 
@@ -11,12 +12,14 @@ router.get("/:userId", async (req: Request<FavoritesParamsType>, res) => {
 	try {
 		const { userId } = req.params;
 
-		if (isNaN(Number(userId))) {
-			return res
-				.status(400)
-				.json({ message: "Неверные параметры запроса", error: "userId must be a number" });
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			return res.status(400).json({
+				message: userIdValidationResult.error || "Неверные параметры запроса",
+			});
 		}
-		const user = await User.findOne({ where: { psuid: userId } });
+
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Данного пользователя не существует" });
 		}
@@ -40,13 +43,14 @@ router.delete("/:userId", async (req: Request<FavoritesParamsType>, res) => {
 	try {
 		const { userId } = req.params;
 
-		if (isNaN(Number(userId))) {
-			return res
-				.status(400)
-				.json({ message: "Неверные параметры запроса", error: "userId must be a number" });
+		const userIdValidationResult = validateUserId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			return res.status(400).json({
+				message: userIdValidationResult.error || "Неверные параметры запроса",
+			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
 		if (!user) {
 			return res.status(404).json({ message: "Данного пользователя не существует" });
 		}
