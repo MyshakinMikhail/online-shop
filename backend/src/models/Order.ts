@@ -10,7 +10,9 @@ export interface OrderAttributes {
 	userName: string;
 	email: string;
 	phoneNumber: string;
-	promocode: string | null;
+	promocode: string;
+	isPromocodeActivate: boolean;
+	sale: number;
 	city: string;
 	totalPrice: number;
 	status: OrderStatus;
@@ -24,7 +26,9 @@ class Order extends Model<OrderAttributes, OrderCreationAttributes> implements O
 	declare userName: string;
 	declare email: string;
 	declare phoneNumber: string;
-	declare promocode: string | null;
+	declare promocode: string;
+	declare isPromocodeActivate: boolean;
+	declare sale: number;
 	declare city: string;
 	declare totalPrice: number;
 	declare items: Product[];
@@ -56,6 +60,21 @@ Order.init(
 		},
 		promocode: {
 			type: DataTypes.STRING,
+			allowNull: false,
+		},
+		isPromocodeActivate: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			defaultValue: false,
+		},
+		sale: {
+			type: DataTypes.INTEGER,
+			allowNull: false,
+			defaultValue: 0,
+			validate: {
+				min: 0,
+				max: 100,
+			},
 		},
 		city: {
 			type: DataTypes.STRING,

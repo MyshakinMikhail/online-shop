@@ -18,6 +18,7 @@ export const Form = () => {
 	const [phoneNumber, setPhoneNumber] = useState<string>("");
 	const [promocode, setPromocode] = useState<string>("");
 	const [city, setCity] = useState<string>("");
+
 	const navigate = useNavigate();
 
 	// !!! нужна валидация формы, чтобы нельзя было отправить всякую хрень
@@ -96,15 +97,16 @@ export const Form = () => {
 					/>
 				</Flex>
 				<Flex vertical>
-					<Typography.Title level={5}></Typography.Title>
+					<Typography.Title level={5}>Промокод</Typography.Title>
 					<Flex gap={10}>
 						<Input
 							size="large"
-							placeholder="Промокод"
+							placeholder="Введите промокод"
 							value={promocode}
-							onChange={e => setPromocode(e.target.value)}
+							onChange={e => {
+								setPromocode(e.target.value);
+							}}
 						/>
-						<MyButton label="Активировать" />
 					</Flex>
 				</Flex>
 				<Title level={5}>Доставка</Title>

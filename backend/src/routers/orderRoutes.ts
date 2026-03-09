@@ -1,3 +1,4 @@
+import type { Request } from "express";
 import { Router } from "express";
 import sequelize from "../db.ts";
 import { Cart, CartItem, Order, OrderItem, Product, User } from "../models/index.ts";
@@ -6,7 +7,19 @@ import { validateUserId } from "../utils/index.ts";
 
 const router = Router();
 
-router.post("/:userId", async (req, res) => {
+type ReqParamsType = {
+	userId: number;
+};
+
+type ReqBodyType = {
+	userName: string;
+	email: string;
+	phoneNumber: string;
+	promocode: string;
+	city: string;
+};
+
+router.post("/:userId", async (req: Request<ReqParamsType, {}, ReqBodyType>, res) => {
 	const t = await sequelize.transaction();
 
 	try {
@@ -51,6 +64,10 @@ router.post("/:userId", async (req, res) => {
 		}
 
 		const totalPrice = OrderService.calculateOrderTotal(cart.items);
+		const { finalPrice, isPromocodeActivate, sale } = OrderService.getPriceWithPromocode(
+			totalPrice,
+			promocode
+		);
 
 		if (userName && email && phoneNumber && promocode) {
 			const order = await Order.create(
@@ -60,13 +77,14 @@ router.post("/:userId", async (req, res) => {
 					email: email,
 					phoneNumber: phoneNumber,
 					promocode: promocode,
+					isPromocodeActivate: isPromocodeActivate,
+					sale: sale,
 					city: city,
-					totalPrice: totalPrice,
+					totalPrice: finalPrice,
 					status: "processing",
 				},
 				{ transaction: t }
 			);
-
 			const orderItemsData = cart.items.map(item => ({
 				orderId: order.id,
 				productId: item.productId,
