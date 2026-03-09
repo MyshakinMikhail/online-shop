@@ -24,6 +24,18 @@ export interface ProductCreationAttributesValidationResult {
 	product?: ProductCreationAttributes;
 }
 
+export interface PromocodeValidationResult {
+	isValid: boolean;
+	error?: string;
+	promocode?: string;
+}
+
+export interface PromocodeDiscountValidationResult {
+	isValid: boolean;
+	error?: string;
+	discount?: number;
+}
+
 export const validateUserId = (userId: number | string | undefined): UserIdValidationResult => {
 	if (!userId) {
 		return {
@@ -87,6 +99,62 @@ export const validateCategorySlug = (slug: string | undefined): CategorySlugVali
 		return { isValid: false, error: "slug must be a non-empty string" };
 	}
 	return { isValid: true, slug: trimmedSlug };
+};
+
+export const validatePromocode = (promocode: string | undefined): PromocodeValidationResult => {
+	if (!promocode) {
+		return {
+			isValid: false,
+			error: "promocode is required",
+		};
+	}
+
+	if (typeof promocode !== "string") {
+		return {
+			isValid: false,
+			error: "promocode must be a string",
+		};
+	}
+
+	const normalizedPromocode = promocode.trim()
+	if (normalizedPromocode.length === 0) {
+		return {
+			isValid: false,
+			error: "promocode must be a non-empty string",
+		};
+	}
+
+	return { isValid: true, promocode: normalizedPromocode };
+};
+
+export const validatePromocodeDiscount = (
+	discount: number | string | undefined
+): PromocodeDiscountValidationResult => {
+	if (discount === undefined || discount === null || discount === "") {
+		return { isValid: true, discount: 0 };
+	}
+	if (isNaN(Number(discount))) {
+		return {
+			isValid: false,
+			error: "discount must be a number",
+		};
+	}
+
+	const numericDiscount = Number(discount);
+	if (!Number.isInteger(numericDiscount)) {
+		return {
+			isValid: false,
+			error: "discount must be an integer",
+		};
+	}
+	if (numericDiscount < 0 || numericDiscount > 100) {
+		return {
+			isValid: false,
+			error: "discount must be between 0 and 100",
+		};
+	}
+
+	return { isValid: true, discount: numericDiscount };
 };
 
 export const validateProductCreationAttributes = (

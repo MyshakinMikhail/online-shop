@@ -2,7 +2,7 @@ import type { Request } from "express";
 import { Router } from "express";
 import sequelize from "../db.ts";
 import { Cart, CartItem, Order, OrderItem, Product, User } from "../models/index.ts";
-import { OrderService } from "../services/OrderService.ts";
+import { OrderService } from "../services/OrderService/OrderService.ts";
 import { validateUserId } from "../utils/index.ts";
 
 const router = Router();

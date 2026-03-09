@@ -1,4 +1,4 @@
-import type { Roles } from "../types/index.ts";
+import type { Roles } from "../../types/index.ts";
 
 export const AuthService = {
 	hasAdminRights: (role: Roles) => {

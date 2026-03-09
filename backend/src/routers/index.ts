@@ -10,6 +10,8 @@ import orderItemsRoutes from "./orderItemsRoutes.ts";
 import orderRoutes from "./orderRoutes.ts";
 import productRoutes from "./productRoutes.ts";
 import productsRoutes from "./productsRoutes.ts";
+import promocodeRoutes from "./promocodeRoutes.ts";
+import promocodesRoutes from "./promocodesRoutes.ts";
 
 const router = Router();
 
@@ -25,5 +27,7 @@ router.use("/order", orderRoutes);
 router.use("/order/items", orderItemsRoutes);
 router.use("/favorite/items", favoriteItemsRoutes);
 router.use("/favorites", favoritesRoutes);
+router.use("/promocodes", promocodesRoutes);
+router.use("/promocode", promocodeRoutes);
 
 export default router;

@@ -1,3 +1,8 @@
-import { validateProductId, validateUserId } from "./validation/validation.ts";
+import {
+	validateProductId,
+	validatePromocode,
+	validatePromocodeDiscount,
+	validateUserId,
+} from "./validation/validation.ts";
 
-export { validateProductId, validateUserId };
+export { validateProductId, validatePromocode, validatePromocodeDiscount, validateUserId };
