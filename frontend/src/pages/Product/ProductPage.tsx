@@ -3,7 +3,7 @@ import { addProduct } from "@/entities/cart/model/slice";
 import { FavoriteProductsService } from "@/entities/favorites/api/FavoriteProductsService";
 import { getFavoriteProducts } from "@/entities/favorites/model/asyncThunks";
 import { updateFavorites } from "@/entities/favorites/model/favoriteSlice";
-import { getProductsById } from "@/entities/product/api";
+import { getProductById } from "@/entities/product/api/getProductById";
 import { addFavoriteItem, deleteFavoriteItem } from "@/entities/product/model/productsPageSlice";
 import type { AppDispatch } from "@/shared/lib/store";
 import type { Product } from "@/shared/types";
@@ -48,7 +48,7 @@ export default function ProductPage() {
 
 	useEffect(() => {
 		const fetchProduct = async () => {
-			const product = await getProductsById({ id, setIsLoading, setError });
+			const product = await getProductById({ id, setIsLoading, setError });
 			setProduct(product);
 		};
 

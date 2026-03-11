@@ -34,7 +34,7 @@ router.delete("/:userId", async (req, res) => {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		if (AuthService.hasAdminRights(user.role)) {
+		if (!AuthService.hasAdminRights(user.role)) {
 			return res
 				.status(403)
 				.json({ message: "Недостаточно прав для совершения данного действия" });

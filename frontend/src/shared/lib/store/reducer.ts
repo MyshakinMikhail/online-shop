@@ -1,3 +1,5 @@
+import { adminProductsReducer } from "@/entities/admin/model/adminProductsSlice";
+import { adminPromocodesReducer } from "@/entities/admin/model/adminPromocodesSlice";
 import { cartReducer } from "@/entities/cart/model/slice";
 import { categoryReducer } from "@/entities/categories/model/slice";
 import { favoriteProductsReducer } from "@/entities/favorites/model/favoriteSlice";
@@ -9,4 +11,6 @@ export const rootReducer = combineReducers({
 	productsPage: productsPageReducer,
 	cart: cartReducer,
 	favoriteProducts: favoriteProductsReducer,
+	adminProducts: adminProductsReducer,
+	adminPromocodes: adminPromocodesReducer,
 });

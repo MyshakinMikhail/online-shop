@@ -1,3 +1,4 @@
 import { mockCities } from "./mockCities";
+import { mockPromocodes } from "./mockPromocodes";
 
-export { mockCities };
+export { mockCities, mockPromocodes };

@@ -7,14 +7,14 @@ import type { Dispatch, SetStateAction } from "react";
 type Props = {
 	id: number | null;
 	setIsLoading: Dispatch<SetStateAction<boolean>>;
-	setError: Dispatch<SetStateAction<string | null>>;
+	showError: (errorMessage: string) => void;
 };
 
-export const getProductsById = async ({ id, setIsLoading, setError }: Props) => {
+export const getProductById = async ({ id, setIsLoading, showError }: Props) => {
 	try {
 		setIsLoading(true);
 		if (!id) {
-			setError("id не передан");
+			showError("продукт не получен,id не передан");
 			setIsLoading(false);
 			return;
 		}
@@ -23,8 +23,7 @@ export const getProductsById = async ({ id, setIsLoading, setError }: Props) => 
 		return result.data.product;
 	} catch (error) {
 		if (isAxiosError(error)) {
-			console.log(error.message);
-			setError(error.message);
+			showError(error.response?.data.message);
 		}
 	} finally {
 		setIsLoading(false);

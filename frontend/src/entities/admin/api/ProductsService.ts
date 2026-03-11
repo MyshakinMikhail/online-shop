@@ -15,9 +15,9 @@ export const ProductsService = {
 			return response.data.products;
 		} catch (error) {
 			if (isAxiosError(error)) {
-				console.error(error.message);
+				throw new Error(error.message);
 			}
-			console.error("Неизвестная ошибка при получении продуктов с сервера");
+			throw new Error("Неизвестная ошибка при получении продуктов с сервера");
 		}
 	},
 	deleteProducts: async () => {
@@ -27,7 +27,7 @@ export const ProductsService = {
 			return response.data.message;
 		} catch (error) {
 			if (isAxiosError(error)) {
-				console.error(error.message);
+				throw new Error(error.message);
 			}
 		}
 	},

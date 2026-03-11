@@ -76,7 +76,14 @@ router.post(
 				});
 			}
 
-			if (AuthService.hasAdminRights(user.role)) {
+			const findedProduct = await Product.findOne({ where: { name: product.name } });
+			if (findedProduct) {
+				return res
+					.status(404)
+					.json({ message: "Продукт с таким названием уже существует" });
+			}
+
+			if (!AuthService.hasAdminRights(user.role)) {
 				return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 			}
 			const article = uniqueArticle();
@@ -118,7 +125,7 @@ router.put(
 				});
 			}
 
-			if (AuthService.hasAdminRights(user.role)) {
+			if (!AuthService.hasAdminRights(user.role)) {
 				return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 			}
 
@@ -128,6 +135,16 @@ router.put(
 			if (!findedProduct) {
 				return res.status(404).json({
 					message: "Продукта с таким артикулом нет",
+				});
+			}
+
+			// Проверка на то, что при изменении имени продукта, он не совпадает с другим продуктом
+			const findedProductByName = await Product.findOne({
+				where: { name: productValidationResult.product.name },
+			});
+			if (findedProductByName) {
+				return res.status(404).json({
+					message: "Продукт с таким названием уже существует",
 				});
 			}
 
@@ -165,7 +182,7 @@ router.delete("/:userId/:productId", async (req, res) => {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		if (AuthService.hasAdminRights(user.role)) {
+		if (!AuthService.hasAdminRights(user.role)) {
 			return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 		}
 

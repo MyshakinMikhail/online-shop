@@ -24,7 +24,7 @@ type FieldType = {
 };
 
 export const ProductForm = ({ product, postForm }: Props) => {
-	const [isActive, setIsActive] = useState<boolean>(product?.isActive || true);
+	const [isActive, setIsActive] = useState<boolean>(product?.isActive ?? true);
 	const allCategories = useSelector((state: RootState) => state.category.allCategories);
 	const filteredCategories = allCategories.filter((category: Category) => category.id !== 1);
 

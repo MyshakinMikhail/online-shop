@@ -3,25 +3,30 @@ import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import { Button, Card, Flex, Image, notification, Tag, Typography } from "antd";
 import { isAxiosError } from "axios";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { ProductService } from "../../api/ProductService";
+import { deleteProduct } from "../../model/adminProductsSlice";
 import classes from "./ProductCard.module.css";
 
 const { Text } = Typography;
 
 type Props = {
 	product: Product;
-	onDelete: (id: number) => void;
 };
 
-export default function AdminProductCard({ product, onDelete }: Props) {
+export default function AdminProductCard({ product }: Props) {
 	const navigate = useNavigate();
 	const [error, setError] = useState<string | null>(null);
 	const [api, contextHolder] = notification.useNotification();
+	const dispatch = useDispatch();
 
 	const handleDelete = async () => {
 		try {
-			await onDelete(product.id);
-			notification.destroy();
+			dispatch(deleteProduct({ productId: product.id }));
+			ProductService.deleteProduct(product.id);
+
+			api.destroy();
 		} catch (error) {
 			if (isAxiosError(error)) {
 				setError(error.message);

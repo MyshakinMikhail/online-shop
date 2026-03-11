@@ -1,5 +1,6 @@
 import { mockCategories } from "./categories";
+import { mockPromocodes } from "./promocodes";
 import { mockProducts } from "./products";
 import { mockUsers } from "./users";
 
-export { mockCategories, mockProducts, mockUsers };
+export { mockCategories, mockPromocodes, mockProducts, mockUsers };

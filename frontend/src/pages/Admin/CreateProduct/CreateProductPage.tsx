@@ -16,6 +16,7 @@ export const CreateProductPage = () => {
 	const handleCreateProduct = async ({ productData }: { productData: CreationProductType }) => {
 		try {
 			const createdProduct = await ProductService.postProduct({ product: productData });
+
 			if (createdProduct) {
 				showCreatedProduct();
 				setTimeout(() => {

@@ -1,9 +1,11 @@
-import { ProductService } from "@/entities/admin/api/ProductService";
 import { ProductsService } from "@/entities/admin/api/ProductsService";
-import { AdminProductCard } from "@/entities/admin/ui";
-import type { Product } from "@/shared/types";
+import { deleteAllProducts } from "@/entities/admin/model/adminProductsSlice";
+import { getAllProducts } from "@/entities/admin/model/asyncThunks/getAllProducts";
+import { AdminProductsList } from "@/entities/admin/ui/ProductsList/ProductsList";
+import { type AppDispatch } from "@/shared/lib/store";
 import { Button, Flex, Input, notification, Typography } from "antd";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import classes from "./Products.module.css";
 
@@ -11,38 +13,24 @@ const { Text } = Typography;
 
 export default function Products() {
 	const [searchQuery, setSearchQuery] = useState<string>("");
-	const [products, setProducts] = useState<Product[]>([]);
 	const navigate = useNavigate();
 	const [api, contextHolder] = notification.useNotification();
+	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
-		const getProducts = async () => {
-			const products = await ProductsService.getProducts(searchQuery);
-			setProducts(products);
+		const fetchProducts = async () => {
+			dispatch(getAllProducts({ searchQuery }));
 		};
-
-		getProducts();
-	}, [searchQuery]);
-
-	const handleDeleteProduct = async (productId: number) => {
-		try {
-			await ProductService.deleteProduct(productId);
-
-			setProducts(prev => prev.filter(p => p.id !== productId));
-
-			notification.destroy();
-		} catch (error) {
-			console.error(error);
-		}
-	};
+		fetchProducts();
+	}, [dispatch, searchQuery]);
 
 	const handleDeleteAllProducts = async () => {
 		try {
-			await ProductsService.deleteProducts();
-			setProducts([]);
+			dispatch(deleteAllProducts());
+			ProductsService.deleteProducts();
 			api.destroy();
-		} catch (error) {
-			console.error(error);
+		} catch (e) {
+			console.error(e);
 		}
 	};
 
@@ -84,21 +72,7 @@ export default function Products() {
 				</Button>
 			</Flex>
 
-			{products.length > 0 ? (
-				<Flex gap={20} justify="flex-start" align="center" className={classes.products}>
-					{products.map(product => (
-						<AdminProductCard
-							key={product.id}
-							product={product}
-							onDelete={handleDeleteProduct}
-						/>
-					))}
-				</Flex>
-			) : (
-				<Flex justify="center">
-					<Text>Добавьте первый товар!</Text>
-				</Flex>
-			)}
+			<AdminProductsList />
 		</div>
 	);
 }

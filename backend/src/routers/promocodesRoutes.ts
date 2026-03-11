@@ -1,4 +1,5 @@
 import { Router, type Request } from "express";
+import { Op } from "sequelize";
 import { User } from "../models/index.ts";
 import { Promocode } from "../models/Promocode.ts";
 import { AuthService } from "../services/index.ts";
@@ -9,10 +10,14 @@ const router = Router();
 type RequestParamsType = {
 	userId: number;
 };
+type RequestQueryType = {
+	searchQuery: string;
+};
 
-router.get("/:userId", async (req: Request<RequestParamsType>, res) => {
+router.get("/:userId", async (req: Request<RequestParamsType, {}, {}, RequestQueryType>, res) => {
 	try {
 		const { userId } = req.params;
+		const { searchQuery } = req.query;
 
 		const userIdValidationResult = validateUserId(userId);
 		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
@@ -33,12 +38,21 @@ router.get("/:userId", async (req: Request<RequestParamsType>, res) => {
 				.json({ message: "Недостаточно прав для совершения данного действия" });
 		}
 
-		const promocodes = await Promocode.findAll({ where: {} });
-		return res.status(200).json({ promocodes, message: "Промокоды успешно получены" });
+		const promocodes = await Promocode.findAll({
+			where: {
+				name: { [Op.iLike]: `%${searchQuery}%` },
+			},
+			order: [["name", "ASC"]],
+		});
+
+		return res
+			.status(200)
+			.json({ promocodes: promocodes, message: "Промокоды успешно получены" });
 	} catch (error) {
 		res.status(500).json({ message: `Ошибка получения промокодов: ${error}` });
 	}
 });
+
 router.delete("/:userId", async (req: Request<RequestParamsType>, res) => {
 	try {
 		const { userId } = req.params;
@@ -57,7 +71,9 @@ router.delete("/:userId", async (req: Request<RequestParamsType>, res) => {
 
 		const isAdmin = AuthService.hasAdminRights(user.role);
 		if (!isAdmin) {
-			return res.status(403).json({ message: "Недостаточно прав для совершения данного действия" });
+			return res
+				.status(403)
+				.json({ message: "Недостаточно прав для совершения данного действия" });
 		}
 
 		await Promocode.destroy({ where: {} });

@@ -1,6 +1,7 @@
 import { Flex } from "antd";
 import classes from "./AdminContent.module.css";
 import { Orders, Products, Settings, Users } from "./AdminTabs";
+import Promocodes from "./AdminTabs/Promocodes/Promocodes";
 
 interface AdminContentProps {
 	activeTab: string;
@@ -9,13 +10,15 @@ interface AdminContentProps {
 export default function AdminContent({ activeTab }: AdminContentProps) {
 	const renderContent = () => {
 		switch (activeTab) {
-			case "1":
+			case "products":
 				return <Products />;
-			case "2":
+			case "promocodes":
+				return <Promocodes />;
+			case "orders":
 				return <Orders />;
-			case "3":
+			case "users":
 				return <Users />;
-			case "4":
+			case "settings":
 				return <Settings />;
 			default:
 				return null;

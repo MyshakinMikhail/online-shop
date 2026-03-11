@@ -1,5 +1,6 @@
 // Убираем ненужный импорт Model
 import { seedCategories } from "./categories.ts";
+import { seedPromocodes } from "./promocodes.ts";
 import { seedProducts } from "./products.ts";
 import { seedUsers } from "./users.ts";
 
@@ -10,6 +11,7 @@ export const seedTesting = async (): Promise<void> => {
 		await seedCategories();
 		await seedUsers();
 		await seedProducts();
+		await seedPromocodes();
 
 		console.log("✅ Test data seeded successfully");
 	} catch (error) {
@@ -28,7 +30,8 @@ export const clearAllData = async (): Promise<void> => {
 			TRUNCATE TABLE 
 				products, 
 				users, 
-				categories 
+				categories,
+				promocode
 			RESTART IDENTITY CASCADE;
 		`);
 

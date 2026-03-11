@@ -27,7 +27,7 @@ export interface ProductCreationAttributesValidationResult {
 export interface PromocodeValidationResult {
 	isValid: boolean;
 	error?: string;
-	promocode?: string;
+	name?: string;
 }
 
 export interface PromocodeDiscountValidationResult {
@@ -101,22 +101,22 @@ export const validateCategorySlug = (slug: string | undefined): CategorySlugVali
 	return { isValid: true, slug: trimmedSlug };
 };
 
-export const validatePromocode = (promocode: string | undefined): PromocodeValidationResult => {
-	if (!promocode) {
+export const validatePromocodeName = (name: string | undefined): PromocodeValidationResult => {
+	if (!name) {
 		return {
 			isValid: false,
 			error: "promocode is required",
 		};
 	}
 
-	if (typeof promocode !== "string") {
+	if (typeof name !== "string") {
 		return {
 			isValid: false,
 			error: "promocode must be a string",
 		};
 	}
 
-	const normalizedPromocode = promocode.trim()
+	const normalizedPromocode = name.trim();
 	if (normalizedPromocode.length === 0) {
 		return {
 			isValid: false,
@@ -124,7 +124,7 @@ export const validatePromocode = (promocode: string | undefined): PromocodeValid
 		};
 	}
 
-	return { isValid: true, promocode: normalizedPromocode };
+	return { isValid: true, name: normalizedPromocode };
 };
 
 export const validatePromocodeDiscount = (

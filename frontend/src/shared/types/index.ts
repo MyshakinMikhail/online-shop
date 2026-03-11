@@ -3,6 +3,7 @@ import { type Category } from "./category";
 import { type CreationProductType } from "./creationProductType";
 import { type Product } from "./product";
 import { type ProductCardType } from "./productCardType";
+import { type Promocode } from "./promocode";
 
 export {
 	type CartItemType,
@@ -10,4 +11,5 @@ export {
 	type CreationProductType,
 	type Product,
 	type ProductCardType,
+	type Promocode,
 };

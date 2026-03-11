@@ -3,7 +3,11 @@ import { Router } from "express";
 import { User } from "../models/index.ts";
 import { Promocode } from "../models/Promocode.ts";
 import { AuthService } from "../services/index.ts";
-import { validatePromocode, validatePromocodeDiscount, validateUserId } from "../utils/index.ts";
+import {
+	validatePromocodeDiscount,
+	validatePromocodeName,
+	validateUserId,
+} from "../utils/index.ts";
 
 const router = Router();
 
@@ -11,16 +15,16 @@ type RequestParamsType = {
 	userId: number;
 };
 
-type RequestBodyType = {
-	promocode: string;
-	discount?: number;
-	isActive?: boolean;
+type PostRequestBodyType = {
+	name: string;
+	isActive: boolean;
+	discount: number;
 };
 
-router.post("/:userId", async (req: Request<RequestParamsType, {}, RequestBodyType>, res) => {
+router.post("/:userId", async (req: Request<RequestParamsType, {}, PostRequestBodyType>, res) => {
 	try {
 		const { userId } = req.params;
-		const { promocode, discount } = req.body;
+		const { name, isActive, discount } = req.body;
 
 		const userIdValidationResult = validateUserId(userId);
 		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
@@ -29,12 +33,25 @@ router.post("/:userId", async (req: Request<RequestParamsType, {}, RequestBodyTy
 			});
 		}
 
-		const promocodeValidationResult = validatePromocode(promocode);
-		if (!promocodeValidationResult.isValid || !promocodeValidationResult.promocode) {
+		if (isActive !== undefined && typeof isActive !== "boolean") {
 			return res.status(400).json({
-				message: promocodeValidationResult.error || "Неверные параметры запроса",
+				message: "isActive must be a boolean",
 			});
 		}
+
+		const promocodeNameValidationResult = validatePromocodeName(name);
+		if (!promocodeNameValidationResult.isValid || !promocodeNameValidationResult.name) {
+			return res.status(400).json({
+				message: promocodeNameValidationResult.error || "Неверные параметры запроса",
+			});
+		}
+		const promocode = await Promocode.findOne({
+			where: { name: promocodeNameValidationResult.name },
+		});
+		if (promocode) {
+			return res.status(409).json({ message: "Промокод с данным названием уже существует" });
+		}
+
 		const discountValidationResult = validatePromocodeDiscount(discount);
 		if (!discountValidationResult.isValid || discountValidationResult.discount === undefined) {
 			return res.status(400).json({
@@ -55,28 +72,42 @@ router.post("/:userId", async (req: Request<RequestParamsType, {}, RequestBodyTy
 		}
 
 		const existingPromocode = await Promocode.findOne({
-			where: { promocode: promocodeValidationResult.promocode },
+			where: { name: promocodeNameValidationResult.name },
 		});
 		if (existingPromocode) {
 			return res.status(409).json({ message: "Промокод уже существует" });
 		}
 
 		const createdPromocode = await Promocode.create({
-			promocode: promocodeValidationResult.promocode,
-			isActive: true,
+			name: promocodeNameValidationResult.name,
+			isActive: isActive,
 			discount: discountValidationResult.discount,
 		});
 
-		res.status(201).json({ createdPromocode, message: "Промокод успешно создан" });
+		res.status(201).json({ promocode: createdPromocode, message: "Промокод успешно создан" });
 	} catch (error) {
 		res.status(500).json({ message: `Ошибка создания промокода: ${error}` });
 	}
 });
 
-router.put("/:userId", async (req: Request<RequestParamsType, {}, RequestBodyType>, res) => {
+type PutRequestBodyType = {
+	id: number;
+	name: string;
+	discount: number;
+	isActive: boolean;
+};
+
+router.put("/:userId", async (req: Request<RequestParamsType, {}, PutRequestBodyType>, res) => {
 	try {
 		const { userId } = req.params;
-		const { promocode, discount, isActive } = req.body;
+		const { id, name, discount, isActive } = req.body;
+
+		if (isNaN(id) || id <= 0) {
+			return res.status(400).json({
+				message: "Неверные параметры запроса",
+				error: "id must be a positive number",
+			});
+		}
 
 		const userIdValidationResult = validateUserId(userId);
 		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
@@ -85,11 +116,20 @@ router.put("/:userId", async (req: Request<RequestParamsType, {}, RequestBodyTyp
 			});
 		}
 
-		const promocodeValidationResult = validatePromocode(promocode);
-		if (!promocodeValidationResult.isValid || !promocodeValidationResult.promocode) {
+		const promocodeNameValidationResult = validatePromocodeName(name);
+		if (!promocodeNameValidationResult.isValid || !promocodeNameValidationResult.name) {
 			return res.status(400).json({
-				message: promocodeValidationResult.error || "Неверные параметры запроса",
+				message:
+					promocodeNameValidationResult.error + " Старое имя промокода" ||
+					"Неверные параметры запроса",
 			});
+		}
+
+		const promocodeWithSameName = await Promocode.findOne({
+			where: { name: promocodeNameValidationResult.name },
+		});
+		if (promocodeWithSameName && promocodeWithSameName.id !== Number(id)) {
+			return res.status(409).json({ message: "Промокод с данным названием уже существует" });
 		}
 
 		if (isActive !== undefined && typeof isActive !== "boolean") {
@@ -111,7 +151,7 @@ router.put("/:userId", async (req: Request<RequestParamsType, {}, RequestBodyTyp
 		}
 
 		const existingPromocode = await Promocode.findOne({
-			where: { promocode: promocodeValidationResult.promocode },
+			where: { id: id },
 		});
 		if (!existingPromocode) {
 			return res.status(404).json({ message: "Промокод не найден" });
@@ -124,14 +164,18 @@ router.put("/:userId", async (req: Request<RequestParamsType, {}, RequestBodyTyp
 			});
 		}
 
-		await existingPromocode.update({
-			promocode: promocodeValidationResult.promocode,
-			isActive: isActive ?? existingPromocode.isActive,
-			discount: discountValidationResult.discount,
-		});
+		await existingPromocode.update(
+			{
+				id: id,
+				name: promocodeNameValidationResult.name,
+				isActive: isActive ?? existingPromocode.isActive,
+				discount: discountValidationResult.discount,
+			},
+			{ where: { id: id } }
+		);
 
 		res.status(200).json({
-			updatedPromocode: existingPromocode,
+			promocode: existingPromocode,
 			message: "Промокод успешно обновлен",
 		});
 	} catch (error) {
@@ -139,12 +183,16 @@ router.put("/:userId", async (req: Request<RequestParamsType, {}, RequestBodyTyp
 	}
 });
 
+type DeleteRequestQueryType = {
+	name: string;
+};
+
 router.delete(
 	"/:userId",
-	async (req: Request<RequestParamsType, {}, Pick<RequestBodyType, "promocode">>, res) => {
+	async (req: Request<RequestParamsType, {}, {}, DeleteRequestQueryType>, res) => {
 		try {
 			const { userId } = req.params;
-			const { promocode } = req.body;
+			const { name } = req.query;
 
 			const userIdValidationResult = validateUserId(userId);
 			if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
@@ -153,10 +201,10 @@ router.delete(
 				});
 			}
 
-			const promocodeValidationResult = validatePromocode(promocode);
-			if (!promocodeValidationResult.isValid || !promocodeValidationResult.promocode) {
+			const promocodeNameValidationResult = validatePromocodeName(name);
+			if (!promocodeNameValidationResult.isValid || !promocodeNameValidationResult.name) {
 				return res.status(400).json({
-					message: promocodeValidationResult.error || "Неверные параметры запроса",
+					message: promocodeNameValidationResult.error || "Неверные параметры запроса",
 				});
 			}
 
@@ -173,7 +221,7 @@ router.delete(
 			}
 
 			const existingPromocode = await Promocode.findOne({
-				where: { promocode: promocodeValidationResult.promocode },
+				where: { name: promocodeNameValidationResult.name },
 			});
 			if (!existingPromocode) {
 				return res.status(404).json({ message: "Промокод не найден" });

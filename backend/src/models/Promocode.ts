@@ -3,7 +3,7 @@ import sequelize from "./../db.ts";
 
 export type PromocodeAttributes = {
 	id: number;
-	promocode: string;
+	name: string;
 	isActive: boolean;
 	discount: number;
 };
@@ -15,7 +15,7 @@ export class Promocode
 	implements PromocodeAttributes
 {
 	declare id: number;
-	declare promocode: string;
+	declare name: string;
 	declare isActive: boolean;
 	declare discount: number;
 }
@@ -28,7 +28,7 @@ Promocode.init(
 			allowNull: false,
 			autoIncrement: true,
 		},
-		promocode: {
+		name: {
 			type: DataTypes.STRING,
 			allowNull: false,
 			unique: true,

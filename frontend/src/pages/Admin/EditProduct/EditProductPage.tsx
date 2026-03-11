@@ -1,9 +1,11 @@
 import { ProductService } from "@/entities/admin/api/ProductService";
-import { getProductsById } from "@/entities/product/api";
+import { updateProduct } from "@/entities/admin/model/adminProductsSlice";
+import { getProductById } from "@/entities/product/api/getProductById";
 import type { CreationProductType, Product } from "@/shared/types";
-import { Divider, Flex, notification, Typography } from "antd";
+import { Divider, notification, Typography } from "antd";
 import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Header, ProductForm } from "../components";
 import classes from "./EditProductPage.module.css";
@@ -14,7 +16,8 @@ export default function EditProductPage() {
 	const id = Number(useParams().id) || null;
 	const [product, setProduct] = useState<Product | null>(null);
 	const [isLoading, setIsLoading] = useState<boolean>(false);
-	const [error, setError] = useState<string | null>(null);
+	const dispatch = useDispatch();
+
 	const [api, contextHolder] = notification.useNotification();
 	const navigate = useNavigate();
 
@@ -28,6 +31,8 @@ export default function EditProductPage() {
 			};
 
 			const updatedProduct = await ProductService.updateProduct({ product: productWithId });
+			dispatch(updateProduct({ product: updatedProduct }));
+
 			if (updatedProduct) {
 				showCreatedProduct();
 				setTimeout(() => {
@@ -35,18 +40,28 @@ export default function EditProductPage() {
 				}, 3000);
 			}
 		} catch (error) {
+			console.log("я тут");
 			if (isAxiosError(error)) {
-				setError(error.message);
+				showError(error.response?.data.message);
 			} else {
-				setError("Неизвестная ошибка при обновлении товара на сервер");
+				showError("Неизвестная ошибка при обновлении товара на сервер");
 			}
 		}
 	};
 
 	const showCreatedProduct = () => {
 		api.success({
-			message: "Статус товара",
+			message: "Обновление товара",
 			description: "Товар успешно обновлен на сервере",
+			placement: "top",
+			duration: 3,
+		});
+	};
+
+	const showError = (errorMessage: string) => {
+		api.error({
+			message: "Ошибка обновления товара",
+			description: errorMessage,
 			placement: "top",
 			duration: 3,
 		});
@@ -54,7 +69,7 @@ export default function EditProductPage() {
 
 	useEffect(() => {
 		const fetchProduct = async () => {
-			const product = await getProductsById({ id, setIsLoading, setError });
+			const product = await getProductById({ id, setIsLoading, showError });
 			setProduct(product);
 		};
 		fetchProduct();
@@ -62,15 +77,6 @@ export default function EditProductPage() {
 
 	if (isLoading) {
 		return <Text>Загрузка товара..</Text>;
-	}
-
-	if (error || !product) {
-		return (
-			<Flex>
-				<Text> Ошибка загрузки товара: </Text>
-				<Text> {error}</Text>
-			</Flex>
-		);
 	}
 
 	return (
