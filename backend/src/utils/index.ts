@@ -1,8 +1,7 @@
 import {
-	validateProductId,
+	validateId,
 	validatePromocodeDiscount,
 	validatePromocodeName,
-	validateUserId,
 } from "./validation/validation.ts";
 
-export { validateProductId, validatePromocodeDiscount, validatePromocodeName, validateUserId };
+export { validateId, validatePromocodeDiscount, validatePromocodeName };

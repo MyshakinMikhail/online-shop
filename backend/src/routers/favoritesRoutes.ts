@@ -1,6 +1,6 @@
 import { Router, type Request } from "express";
 import { Favorite, Product, User } from "../models/index.ts";
-import { validateUserId } from "../utils/index.ts";
+import { validateId } from "../utils/index.ts";
 
 const router = Router();
 
@@ -12,14 +12,14 @@ router.get("/:userId", async (req: Request<FavoritesParamsType>, res) => {
 	try {
 		const { userId } = req.params;
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 		if (!user) {
 			return res.status(404).json({ message: "Данного пользователя не существует" });
 		}
@@ -43,14 +43,14 @@ router.delete("/:userId", async (req: Request<FavoritesParamsType>, res) => {
 	try {
 		const { userId } = req.params;
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 		if (!user) {
 			return res.status(404).json({ message: "Данного пользователя не существует" });
 		}

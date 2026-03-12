@@ -1,7 +1,7 @@
 import { Router, type Request } from "express";
 import { Cart, User } from "../models/index.ts";
 import { type UserAttributes } from "../models/User.ts";
-import { validateUserId } from "../utils/validation/validation.ts";
+import { validateId } from "../utils/validation/validation.ts";
 
 const router = Router();
 
@@ -11,8 +11,8 @@ type PostRequestBodyType = {
 
 router.post("/yandex", async (req: Request<{}, {}, PostRequestBodyType>, res) => {
 	try {
-		const userIdValidationResult = validateUserId(req.body?.user?.psuid);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(req.body?.user?.psuid);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res
 				.status(400)
 				.json({ message: userIdValidationResult.error || "Неверные параметры запроса" });
@@ -21,7 +21,7 @@ router.post("/yandex", async (req: Request<{}, {}, PostRequestBodyType>, res) =>
 		const userData = req.body.user;
 
 		const [user, created] = await User.findOrCreate({
-			where: { psuid: userIdValidationResult.userId },
+			where: { psuid: userIdValidationResult.id },
 			defaults: userData,
 		});
 
@@ -60,15 +60,15 @@ router.get("/checkUser/:psuid", async (req: Request<RequestParamsType, {}, {}>, 
 	try {
 		const { psuid } = req.params;
 
-		const userIdValidationResult = validateUserId(psuid);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(psuid);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res
 				.status(400)
 				.json({ message: userIdValidationResult.error || "Неверные параметры запроса" });
 		}
 
 		// Ищем по psuid (Yandex ID), а не по id
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 
 		if (!user) {
 			return res.status(404).json({

@@ -3,7 +3,7 @@ import { Router } from "express";
 import sequelize from "../db.ts";
 import { Cart, CartItem, Order, OrderItem, Product, User } from "../models/index.ts";
 import { OrderService } from "../services/OrderService/OrderService.ts";
-import { validateUserId } from "../utils/index.ts";
+import { validateId } from "../utils/index.ts";
 
 const router = Router();
 
@@ -26,15 +26,15 @@ router.post("/:userId", async (req: Request<ReqParamsType, {}, ReqBodyType>, res
 		const { userId } = req.params;
 		const { userName, email, phoneNumber, promocode, city } = req.body;
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
 		const user = await User.findOne({
-			where: { psuid: userIdValidationResult.userId },
+			where: { psuid: userIdValidationResult.id },
 			transaction: t,
 		});
 		if (!user) {

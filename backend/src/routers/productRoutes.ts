@@ -4,7 +4,7 @@ import { v4 as uniqueArticle } from "uuid";
 import { Favorite, Product, User } from "../models/index.ts";
 import type { ProductAttributes, ProductCreationAttributes } from "../models/Product.ts";
 import { AuthService } from "../services/index.ts";
-import { validateProductId, validateUserId } from "../utils/index.ts";
+import { validateId } from "../utils/index.ts";
 import { validateProductCreationAttributes } from "../utils/validation/validation.ts";
 
 const router = Router();
@@ -13,26 +13,26 @@ router.get("/:userId/:productId", async (req, res) => {
 	try {
 		const { userId, productId } = req.params;
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const productIdValidationResult = validateProductId(productId);
-		if (!productIdValidationResult.isValid || !productIdValidationResult.productId) {
+		const productIdValidationResult = validateId(productId);
+		if (!productIdValidationResult.isValid || !productIdValidationResult.id) {
 			return res.status(400).json({
 				message: productIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 		if (!user) {
 			return res.status(404).json({ message: "Данного пользователя не существует" });
 		}
 
-		const product = await Product.findByPk(productIdValidationResult.productId);
+		const product = await Product.findByPk(productIdValidationResult.id);
 		if (product === null) {
 			return res.status(404).json({
 				message: "Товар не найден",
@@ -57,14 +57,14 @@ router.post(
 			const { userId } = req.params;
 			const { product } = req.body;
 
-			const userIdValidationResult = validateUserId(userId);
-			if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			const userIdValidationResult = validateId(userId);
+			if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 				return res.status(400).json({
 					message: userIdValidationResult.error || "Неверные параметры запроса",
 				});
 			}
 
-			const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+			const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 			if (!user) {
 				return res.status(400).json({ message: "Пользователя с данным id не существует" });
 			}
@@ -106,14 +106,14 @@ router.put(
 			const { userId } = req.params;
 			const { product } = req.body;
 
-			const userIdValidationResult = validateUserId(userId);
-			if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			const userIdValidationResult = validateId(userId);
+			if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 				return res.status(400).json({
 					message: userIdValidationResult.error || "Неверные параметры запроса",
 				});
 			}
 
-			const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+			const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 			if (!user) {
 				return res.status(400).json({ message: "Пользователь с данным id не существует" });
 			}
@@ -163,21 +163,21 @@ router.delete("/:userId/:productId", async (req, res) => {
 	try {
 		const { userId, productId } = req.params;
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const productIdValidationResult = validateProductId(productId);
-		if (!productIdValidationResult.isValid || !productIdValidationResult.productId) {
+		const productIdValidationResult = validateId(productId);
+		if (!productIdValidationResult.isValid || !productIdValidationResult.id) {
 			return res.status(400).json({
 				message: productIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
@@ -187,7 +187,7 @@ router.delete("/:userId/:productId", async (req, res) => {
 		}
 
 		const product = await Product.findOne({
-			where: { id: productIdValidationResult.productId },
+			where: { id: productIdValidationResult.id },
 		});
 		if (!product) {
 			return res.status(404).json({ message: "Продукт не найден" });

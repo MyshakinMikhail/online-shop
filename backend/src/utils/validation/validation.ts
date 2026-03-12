@@ -1,15 +1,9 @@
 import type { ProductCreationAttributes } from "../../models/Product.ts";
 
-export interface UserIdValidationResult {
+export interface IdValidationResult {
 	isValid: boolean;
 	error?: string;
-	userId?: number;
-}
-
-export interface ProductValidationResult {
-	isValid: boolean;
-	error?: string;
-	productId?: number;
+	id?: number;
 }
 
 export interface CategorySlugValidationResult {
@@ -36,55 +30,37 @@ export interface PromocodeDiscountValidationResult {
 	discount?: number;
 }
 
-export const validateUserId = (userId: number | string | undefined): UserIdValidationResult => {
-	if (!userId) {
+export const validateId = (id: number | string | undefined): IdValidationResult => {
+	if (!id) {
 		return {
 			isValid: false,
-			error: "userId обязателен",
+			error: "id обязателен",
 		};
 	}
 
-	if (isNaN(Number(userId))) {
+	if (isNaN(Number(id))) {
 		return {
 			isValid: false,
-			error: "userId должен быть числом",
+			error: "id должен быть числом",
 		};
 	}
 
-	const numericUserId = Number(userId);
-	if (numericUserId <= 0) {
+	const numericId = Number(id);
+	if (numericId <= 0) {
 		return {
 			isValid: false,
-			error: "userId должен быть положительным числом",
+			error: "id должен быть положительным числом",
 		};
 	}
 
-	return { isValid: true, userId: numericUserId };
-};
+	if (!Number.isInteger(numericId)) {
+		return {
+			isValid: false,
+			error: "id должен быть целым числом",
+		};
+	}
 
-export const validateProductId = (
-	productId: number | string | undefined
-): ProductValidationResult => {
-	if (!productId) {
-		return {
-			isValid: false,
-			error: "productId обязателен",
-		};
-	}
-	if (isNaN(Number(productId))) {
-		return {
-			isValid: false,
-			error: "productId должен быть числом",
-		};
-	}
-	const numericProductId = Number(productId);
-	if (numericProductId <= 0) {
-		return {
-			isValid: false,
-			error: "productId должен быть положительным числом",
-		};
-	}
-	return { isValid: true, productId: numericProductId };
+	return { isValid: true, id: numericId };
 };
 
 export const validateCategorySlug = (slug: string | undefined): CategorySlugValidationResult => {
@@ -98,6 +74,7 @@ export const validateCategorySlug = (slug: string | undefined): CategorySlugVali
 	if (trimmedSlug.length === 0) {
 		return { isValid: false, error: "slug не может быть пустой строкой" };
 	}
+
 	return { isValid: true, slug: trimmedSlug };
 };
 
@@ -128,12 +105,12 @@ export const validatePromocodeName = (name: string | undefined): PromocodeValida
 };
 
 export const validatePromocodeDiscount = (
-	discount: number | string | undefined
+	discount: number | undefined
 ): PromocodeDiscountValidationResult => {
-	if (discount === undefined || discount === null || discount === "") {
-		return { isValid: true, discount: 0 };
+	if (discount === undefined || discount === null) {
+		return { isValid: false, error: "Скидка обязательна" };
 	}
-	if (isNaN(Number(discount))) {
+	if (typeof discount !== "number") {
 		return {
 			isValid: false,
 			error: "Скидка должна быть числом",
@@ -161,8 +138,11 @@ export const validateProductCreationAttributes = (
 	product: ProductCreationAttributes | undefined
 ): ProductCreationAttributesValidationResult => {
 	// Проверка наличия объекта
-	if (!product || typeof product !== "object") {
+	if (!product) {
 		return { isValid: false, error: "Объект продукта обязателен" };
+	}
+	if (typeof product !== "object") {
+		return { isValid: false, error: "Продукт должен быть объектом" };
 	}
 
 	// Валидация name (обязательное поле)
@@ -249,7 +229,10 @@ export const validateProductCreationAttributes = (
 		return { isValid: false, error: "Количество товара на складе обязательно" };
 	}
 	if (typeof product.stock !== "number" || isNaN(product.stock)) {
-		return { isValid: false, error: "Количество товара на складе должно быть корректным числом" };
+		return {
+			isValid: false,
+			error: "Количество товара на складе должно быть корректным числом",
+		};
 	}
 	if (product.stock < 0) {
 		return { isValid: false, error: "Количество товара на складе не может быть отрицательным" };

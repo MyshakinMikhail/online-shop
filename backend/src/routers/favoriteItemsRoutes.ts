@@ -1,6 +1,6 @@
 import { Router, type Request } from "express";
 import { Favorite, User } from "../models/index.ts";
-import { validateProductId, validateUserId } from "../utils/validation/validation.ts";
+import { validateId } from "../utils/validation/validation.ts";
 
 const router = Router();
 
@@ -16,28 +16,28 @@ router.post("/:userId", async (req: Request<FavoriteParamsType, {}, FavoriteBody
 		const { userId } = req.params;
 		const { productId } = req.body;
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const productIdValidationResult = validateProductId(productId);
-		if (!productIdValidationResult.isValid || !productIdValidationResult.productId) {
+		const productIdValidationResult = validateId(productId);
+		if (!productIdValidationResult.isValid || !productIdValidationResult.id) {
 			return res.status(400).json({
 				message: productIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
 		const [createdProduct, isAdded] = await Favorite.findOrCreate({
-			where: { userId: user.id, productId: productIdValidationResult.productId },
-			defaults: { userId: user.id, productId: productIdValidationResult.productId },
+			where: { userId: user.id, productId: productIdValidationResult.id },
+			defaults: { userId: user.id, productId: productIdValidationResult.id },
 		});
 
 		if (!isAdded) {
@@ -54,27 +54,27 @@ router.delete("/:userId", async (req: Request<FavoriteParamsType, {}, FavoriteBo
 		const { userId } = req.params;
 		const { productId } = req.body;
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const productIdValidationResult = validateProductId(productId);
-		if (!productIdValidationResult.isValid || !productIdValidationResult.productId) {
+		const productIdValidationResult = validateId(productId);
+		if (!productIdValidationResult.isValid || !productIdValidationResult.id) {
 			return res.status(400).json({
 				message: productIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
 		const product = await Favorite.findOne({
-			where: { userId: user.id, productId: productIdValidationResult.productId },
+			where: { userId: user.id, productId: productIdValidationResult.id },
 		});
 
 		if (!product) {

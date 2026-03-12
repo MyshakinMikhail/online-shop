@@ -4,9 +4,9 @@ import { User } from "../models/index.ts";
 import { Promocode } from "../models/Promocode.ts";
 import { AuthService } from "../services/index.ts";
 import {
+	validateId,
 	validatePromocodeDiscount,
 	validatePromocodeName,
-	validateUserId,
 } from "../utils/index.ts";
 
 const router = Router();
@@ -26,8 +26,8 @@ router.post("/:userId", async (req: Request<RequestParamsType, {}, PostRequestBo
 		const { userId } = req.params;
 		const { name, isActive, discount } = req.body;
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
@@ -59,7 +59,7 @@ router.post("/:userId", async (req: Request<RequestParamsType, {}, PostRequestBo
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
@@ -109,8 +109,8 @@ router.put("/:userId", async (req: Request<RequestParamsType, {}, PutRequestBody
 			});
 		}
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
@@ -136,7 +136,7 @@ router.put("/:userId", async (req: Request<RequestParamsType, {}, PutRequestBody
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
@@ -192,8 +192,8 @@ router.delete(
 			const { userId } = req.params;
 			const { name } = req.query;
 
-			const userIdValidationResult = validateUserId(userId);
-			if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+			const userIdValidationResult = validateId(userId);
+			if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 				return res.status(400).json({
 					message: userIdValidationResult.error || "Неверные параметры запроса",
 				});
@@ -206,7 +206,7 @@ router.delete(
 				});
 			}
 
-			const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+			const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 			if (!user) {
 				return res.status(404).json({ message: "Пользователя с данным id не существует" });
 			}

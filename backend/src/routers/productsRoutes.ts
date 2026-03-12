@@ -2,7 +2,7 @@ import { Router, type Request } from "express";
 import { Op } from "sequelize";
 import { CartItem, Favorite, OrderItem, Product, User } from "../models/index.ts";
 import { AuthService } from "../services/index.ts";
-import { validateUserId } from "../utils/index.ts";
+import { validateId } from "../utils/index.ts";
 
 const router = Router();
 
@@ -22,14 +22,14 @@ router.delete("/:userId", async (req, res) => {
 	try {
 		const { userId } = req.params;
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 		if (!user) {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
@@ -56,14 +56,14 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 		const { userId } = req.params;
 		const { page, limit, categoryId, searchQuery, isFavorites } = req.query;
 
-		const userIdValidationResult = validateUserId(userId);
-		if (!userIdValidationResult.isValid || !userIdValidationResult.userId) {
+		const userIdValidationResult = validateId(userId);
+		if (!userIdValidationResult.isValid || !userIdValidationResult.id) {
 			return res.status(400).json({
 				message: userIdValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const user = await User.findOne({ where: { psuid: userIdValidationResult.userId } });
+		const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 		if (!user) {
 			return res.status(404).json({ message: "Данного пользователя не существует" });
 		}

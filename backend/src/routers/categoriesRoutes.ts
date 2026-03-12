@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { Category } from "../models/index.ts";
+import { CategoryService } from "../services/index.ts";
 import { validateCategorySlug } from "../utils/validation/validation.ts";
 
 const router = Router();
@@ -28,7 +29,7 @@ router.get("/:slug", async (req, res) => {
 			});
 		}
 
-		const category = await Category.findOne({ where: { slug: slugValidationResult.slug } });
+		const category = await CategoryService.findBySlug(slugValidationResult.slug);
 		if (!category) {
 			return res.status(404).json({ message: "Категории не существует" });
 		}
