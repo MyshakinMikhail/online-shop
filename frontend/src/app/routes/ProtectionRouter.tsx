@@ -1,4 +1,5 @@
 import { userService } from "@/entities/user/api";
+import { Spin } from "antd";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -17,7 +18,7 @@ export default function ProtectionRouter() {
 	}, []);
 
 	if (isChecking) {
-		return <div>Loading...</div>;
+		return <Spin />;
 	}
 
 	if (!isAuthenticated) {

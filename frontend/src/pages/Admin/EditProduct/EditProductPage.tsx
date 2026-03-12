@@ -2,14 +2,14 @@ import { ProductService } from "@/entities/admin/api/ProductService";
 import { updateProduct } from "@/entities/admin/model/adminProductsSlice";
 import { getProductById } from "@/entities/product/api/getProductById";
 import type { CreationProductType, Product } from "@/shared/types";
-import { Divider, Flex, Typography } from "antd";
+import { Divider, Flex, Spin, Typography } from "antd";
 import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { Header, ProductForm } from "../components";
-import { useUpdateProductNotification } from "./hooks";
 import classes from "./EditProductPage.module.css";
+import { useUpdateProductNotification } from "./hooks";
 
 const { Text } = Typography;
 
@@ -66,20 +66,16 @@ export default function EditProductPage() {
 		fetchProduct();
 	}, [id, setIsLoading, setError]);
 
-	if (isLoading) {
-		return <Text>Загрузка товара..</Text>;
-	}
-
-	if (error) {
-		return (
-			<Flex>
-				<Text> Ошибка загрузки товара: </Text>
-				<Text> {error}</Text>
-			</Flex>
-		);
-	}
 	return (
 		<div className={classes.page}>
+			{isLoading ? <Spin className={classes.spinner} size="large" /> : null}
+			{error && (
+				<Flex>
+					<Text>Ошибка загрузки товара: </Text>
+					<Text>{error}</Text>
+				</Flex>
+			)}
+
 			{contextHolder}
 			<Header product={product} />
 			<Divider size="small" />

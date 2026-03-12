@@ -3,7 +3,7 @@ import { setLimit, updateCurrPage } from "@/entities/product/model/productsPageS
 import MainProductsList from "@/entities/product/ui/lists/MainProductsList/MainProductsList";
 import type { AppDispatch, RootState } from "@/shared/lib/store";
 import { initStore } from "@/shared/lib/store/init";
-import { Flex, Pagination, Select, Typography } from "antd";
+import { Flex, Pagination, Select, Spin, Typography } from "antd";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import classes from "./ProductsPage.module.css";
@@ -20,21 +20,16 @@ export default function ProductsPage() {
 		initStore();
 	}, []);
 
-	if (isLoading) {
-		return <Flex justify="center">Загрузка...</Flex>;
-	}
-
-	if (error) {
-		return (
-			<div>
-				<Text>Ошибка получения продукта: </Text>
-				<Text>{error}</Text>
-			</div>
-		);
-	}
-
 	return (
 		<div className={classes.container}>
+			{isLoading ? <Spin className={classes.spinner} size="large" /> : null}
+			{error && (
+				<Flex>
+					<Text>Ошибка загрузки товаров: </Text>
+					<Text>{error}</Text>
+				</Flex>
+			)}
+
 			<MainProductsList />
 			<div className={classes.footer}>
 				<Pagination

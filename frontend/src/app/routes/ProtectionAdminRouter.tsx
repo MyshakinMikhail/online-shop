@@ -1,4 +1,5 @@
 import { AdminService } from "@/entities/admin/api/AdminService";
+import { Spin } from "antd";
 import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
@@ -26,7 +27,7 @@ export default function ProtectionAdminRouter() {
 		checkAuth();
 	}, []);
 
-	if (isChecking) return <div>Loading...</div>;
+	if (isChecking) return <Spin />;
 
 	if (!isAdminAuthenticated) return <Navigate to="/" replace />;
 

@@ -10,7 +10,7 @@ import type { AppDispatch, RootState } from "@/shared/lib/store";
 import type { Product } from "@/shared/types";
 import { HeartIcon, MyButton } from "@/shared/ui";
 import { Header } from "@/widgets/Header";
-import { Flex, Typography } from "antd";
+import { Flex, Spin, Typography } from "antd";
 import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -94,21 +94,16 @@ export default function ProductPage() {
 		}
 	};
 
-	if (isLoading) {
-		return <Text>Загрузка товара..</Text>;
-	}
-
-	if (error) {
-		return (
-			<Flex>
-				<Text> Ошибка загрузки товара: </Text>
-				<Text> {error}</Text>
-			</Flex>
-		);
-	}
-
 	return (
 		<div className={classes.page}>
+			{isLoading ? <Spin className={classes.spinner} size="large" /> : null}
+			{error && (
+				<Flex>
+					<Text>Ошибка загрузки товара: </Text>
+					<Text>{error}</Text>
+				</Flex>
+			)}
+
 			{contextHolder}
 			<Header />
 			<Flex className={classes.body}>

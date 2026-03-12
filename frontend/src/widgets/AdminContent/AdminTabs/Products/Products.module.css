@@ -13,3 +13,9 @@
 	font-size: 15px;
 	font-weight: 500;
 }
+
+.spinner {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+}

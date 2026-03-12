@@ -1,21 +1,24 @@
 import { deleteAllProducts } from "@/entities/admin/model/asyncThunks";
 import { getAllProducts } from "@/entities/admin/model/asyncThunks/getAllProducts";
 import { AdminProductsList } from "@/entities/admin/ui/ProductsList/ProductsList";
-import { type AppDispatch } from "@/shared/lib/store";
-import { Button, Flex, Input } from "antd";
+import { type AppDispatch, type RootState } from "@/shared/lib/store";
+import { Button, Flex, Input, Spin, Typography } from "antd";
 import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useDeleteAllProductsNotification } from "./hooks";
 import classes from "./Products.module.css";
 
+const { Text } = Typography;
+
 export default function Products() {
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const navigate = useNavigate();
+	const { isLoading, error } = useSelector((state: RootState) => state.adminProducts);
+	const dispatch = useDispatch<AppDispatch>();
 	const { contextHolder, hideDeleteAllProductsConfirm, showDeleteAllProductsConfirm } =
 		useDeleteAllProductsNotification();
-	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
 		const fetchProducts = async () => {
@@ -53,16 +56,20 @@ export default function Products() {
 				</Button>
 
 				<Button
-					onClick={() =>
-						showDeleteAllProductsConfirm({ handleDeleteAllProducts })
-					}
+					onClick={() => showDeleteAllProductsConfirm({ handleDeleteAllProducts })}
 					variant="solid"
 					color="danger"
 				>
 					Удалить все товары
 				</Button>
 			</Flex>
-
+			{isLoading ? <Spin className={classes.spinner} size="large" /> : null}
+			{error && (
+				<Flex>
+					<Text>Ошибка загрузки товаров: </Text>
+					<Text>{error}</Text>
+				</Flex>
+			)}
 			<AdminProductsList />
 		</div>
 	);
