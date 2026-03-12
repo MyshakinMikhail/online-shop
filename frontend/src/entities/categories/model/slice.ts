@@ -46,7 +46,7 @@ export const categorySlice = createSlice({
 				state.loading = false;
 				state.error = action.error.message || "Ошибка загрузки категорий";
 			})
-			// getCurrentCategory handlers
+
 			.addCase(getCurrentCategory.pending, state => {
 				state.loading = true;
 				state.error = null;

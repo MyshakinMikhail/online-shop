@@ -1,20 +1,20 @@
-import { ProductsService } from "@/entities/admin/api/ProductsService";
-import { deleteAllProducts } from "@/entities/admin/model/adminProductsSlice";
+import { deleteAllProducts } from "@/entities/admin/model/asyncThunks";
 import { getAllProducts } from "@/entities/admin/model/asyncThunks/getAllProducts";
 import { AdminProductsList } from "@/entities/admin/ui/ProductsList/ProductsList";
 import { type AppDispatch } from "@/shared/lib/store";
-import { Button, Flex, Input, notification, Typography } from "antd";
+import { Button, Flex, Input } from "antd";
+import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useDeleteAllProductsNotification } from "./hooks";
 import classes from "./Products.module.css";
-
-const { Text } = Typography;
 
 export default function Products() {
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const navigate = useNavigate();
-	const [api, contextHolder] = notification.useNotification();
+	const { contextHolder, hideDeleteAllProductsConfirm, showDeleteAllProductsConfirm } =
+		useDeleteAllProductsNotification();
 	const dispatch = useDispatch<AppDispatch>();
 
 	useEffect(() => {
@@ -27,29 +27,14 @@ export default function Products() {
 	const handleDeleteAllProducts = async () => {
 		try {
 			dispatch(deleteAllProducts());
-			ProductsService.deleteProducts();
-			api.destroy();
-		} catch (e) {
-			console.error(e);
+			hideDeleteAllProductsConfirm();
+		} catch (error) {
+			if (isAxiosError(error)) {
+				console.error(error.response?.data.message);
+			} else {
+				console.error("Неизвестная ошибка при удалении всех товаров");
+			}
 		}
-	};
-
-	const showDeleteAllConfirm = () => {
-		api.error({
-			message: "Вы уверены, что хотите удалить все товары?",
-			description: (
-				<Flex className={classes.alert}>
-					<Text className={classes.alertText}>
-						Данное действие нельзя будет отменить!
-					</Text>
-					<Button variant="solid" color="danger" onClick={handleDeleteAllProducts}>
-						Удалить все товары
-					</Button>
-				</Flex>
-			),
-			placement: "top",
-			duration: 60,
-		});
 	};
 
 	return (
@@ -67,7 +52,13 @@ export default function Products() {
 					Добавить товар
 				</Button>
 
-				<Button onClick={showDeleteAllConfirm} variant="solid" color="danger">
+				<Button
+					onClick={() =>
+						showDeleteAllProductsConfirm({ handleDeleteAllProducts })
+					}
+					variant="solid"
+					color="danger"
+				>
 					Удалить все товары
 				</Button>
 			</Flex>

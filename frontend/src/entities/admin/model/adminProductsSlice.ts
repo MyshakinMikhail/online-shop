@@ -1,6 +1,6 @@
 import type { CreationProductType, Product } from "@/shared/types";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
-import { getAllProducts } from "./asyncThunks/getAllProducts";
+import { deleteAllProducts, getAllProducts } from "./asyncThunks";
 
 type InitialStateType = {
 	products: Product[];
@@ -19,30 +19,14 @@ const adminProductsSlice = createSlice({
 			state.products.push(newProduct);
 		},
 		updateProduct: (state, action: PayloadAction<{ product: Product }>) => {
-			const findedProduct = state.products.find(
-				currProduct => currProduct.id === action.payload.product.id
+			state.products = state.products.map(currProduct =>
+				currProduct.id === action.payload.product.id ? action.payload.product : currProduct
 			);
-			if (findedProduct) {
-				state.products.map(currProduct =>
-					currProduct.id === action.payload.product.id
-						? action.payload.product
-						: currProduct
-				);
-			}
 		},
 		deleteProduct: (state, action: PayloadAction<{ productId: number }>) => {
-			const findedProduct = state.products.find(
-				currProduct => currProduct.id === action.payload.productId
+			state.products = state.products.filter(
+				currProduct => currProduct.id !== action.payload.productId
 			);
-			if (findedProduct) {
-				state.products = state.products.filter(
-					currProduct => currProduct.id !== action.payload.productId
-				);
-			}
-		},
-
-		deleteAllProducts: state => {
-			state.products = [];
 		},
 	},
 	extraReducers: builder => {
@@ -58,9 +42,21 @@ const adminProductsSlice = createSlice({
 			state.isLoading = false;
 			state.error = action.error.message || "Неизвестная ошибка";
 		});
+
+		builder.addCase(deleteAllProducts.pending, state => {
+			state.isLoading = true;
+			state.error = null;
+		});
+		builder.addCase(deleteAllProducts.fulfilled, state => {
+			state.isLoading = false;
+			state.products = [];
+		});
+		builder.addCase(deleteAllProducts.rejected, (state, action) => {
+			state.isLoading = false;
+			state.error = action.error.message || "Неизвестная ошибка";
+		});
 	},
 });
 
-export const { addProduct, updateProduct, deleteProduct, deleteAllProducts } =
-	adminProductsSlice.actions;
+export const { addProduct, updateProduct, deleteProduct } = adminProductsSlice.actions;
 export const adminProductsReducer = adminProductsSlice.reducer;

@@ -1,4 +1,5 @@
 import { AdminService } from "@/entities/admin/api/AdminService";
+import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
@@ -8,9 +9,19 @@ export default function ProtectionAdminRouter() {
 
 	useEffect(() => {
 		const checkAuth = async () => {
-			const result = await AdminService.checkAdmin();
-			setIsAdminAuthenticated(result);
-			setIsChecking(false);
+			try {
+				const result = await AdminService.checkAdmin();
+				setIsAdminAuthenticated(result);
+			} catch (error) {
+				if (isAxiosError(error)) {
+					console.error(error.response?.data.message);
+				} else {
+					console.error("Неизвестная ошибка при проверке авторизации админа");
+				}
+				return false;
+			} finally {
+				setIsChecking(false);
+			}
 		};
 		checkAuth();
 	}, []);

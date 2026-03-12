@@ -1,19 +1,21 @@
+import { CartServise } from "@/entities/cart/api/CartServise";
 import { getCartProducts } from "@/entities/cart/model/asyncThunks";
-import { addProduct } from "@/entities/cart/model/slice";
+import { addCartProduct, incrementCartProductQuantity } from "@/entities/cart/model/slice";
 import { FavoriteProductsService } from "@/entities/favorites/api/FavoriteProductsService";
 import { getFavoriteProducts } from "@/entities/favorites/model/asyncThunks";
 import { updateFavorites } from "@/entities/favorites/model/favoriteSlice";
 import { getProductById } from "@/entities/product/api/getProductById";
 import { addFavoriteItem, deleteFavoriteItem } from "@/entities/product/model/productsPageSlice";
-import type { AppDispatch } from "@/shared/lib/store";
+import type { AppDispatch, RootState } from "@/shared/lib/store";
 import type { Product } from "@/shared/types";
 import { HeartIcon, MyButton } from "@/shared/ui";
 import { Header } from "@/widgets/Header";
-import { Flex, notification, Typography } from "antd";
-import type { NotificationPlacement } from "antd/es/notification/interface";
+import { Flex, Typography } from "antd";
+import { isAxiosError } from "axios";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useProductNotifications } from "./hooks";
 import classes from "./ProductPage.module.css";
 
 const { Title, Text } = Typography;
@@ -24,27 +26,13 @@ export default function ProductPage() {
 	const [error, setError] = useState<null | string>(null);
 	const dispatch = useDispatch<AppDispatch>();
 	const [product, setProduct] = useState<Product | null>(null);
-
-	const [api, contextHolder] = notification.useNotification();
-	const openFavoritesNotification = (placement: NotificationPlacement, newStatus: boolean) => {
-		api.success({
-			message: `Обновление избранных товаров`,
-			description: newStatus
-				? "Товар успешно добавлен в избранное"
-				: "Товар удален из избранного",
-			placement,
-			duration: 3,
-		});
-	};
-
-	const openCartNotification = (placement: NotificationPlacement) => {
-		api.success({
-			message: "Обновление корзины",
-			description: `"${product?.name}" добавлен в корзину`,
-			placement,
-			duration: 3,
-		});
-	};
+	const { products } = useSelector((state: RootState) => state.cart);
+	const {
+		contextHolder,
+		showAddFavoriteProductNotification,
+		showDeleteFavoriteProductNotification,
+		showUpdateCartNotification,
+	} = useProductNotifications();
 
 	useEffect(() => {
 		const fetchProduct = async () => {
@@ -57,26 +45,53 @@ export default function ProductPage() {
 		dispatch(getFavoriteProducts());
 	}, [id]);
 
-	const handleAddInCart = () => {
-		if (product) {
-			dispatch(addProduct(product));
-			openCartNotification("top");
+	const handleAddInCart = async () => {
+		try {
+			if (product) {
+				if (products.find(cartProduct => cartProduct.id === product.id)) {
+					await CartServise.updateQuantity(product.id, true);
+					dispatch(incrementCartProductQuantity({ productId: product.id }));
+				} else {
+					await CartServise.addProduct(product.id);
+					dispatch(addCartProduct(product));
+				}
+				showUpdateCartNotification(product.name);
+			}
+		} catch (error) {
+			if (isAxiosError(error)) {
+				setError(error.response?.data.message);
+			} else {
+				setError("Неизвестная ошибка при добавлении товара в корзину");
+			}
 		}
 	};
 
 	const handleIconClick = async () => {
-		if (product && !product?.isFavorite) {
-			dispatch(addFavoriteItem(product.id));
-			dispatch(updateFavorites({ product }));
-			FavoriteProductsService.addFavoriteProduct(product.id);
-			setProduct(prevProduct => (prevProduct ? { ...prevProduct, isFavorite: true } : null));
-		} else if (product) {
-			dispatch(deleteFavoriteItem(product.id));
-			dispatch(updateFavorites({ product }));
-			FavoriteProductsService.deleteFavoriteProduct(product.id);
-			setProduct(prevProduct => (prevProduct ? { ...prevProduct, isFavorite: false } : null));
+		try {
+			if (product && !product?.isFavorite) {
+				dispatch(addFavoriteItem(product.id));
+				dispatch(updateFavorites({ product }));
+				FavoriteProductsService.addFavoriteProduct(product.id);
+				setProduct(prevProduct =>
+					prevProduct ? { ...prevProduct, isFavorite: true } : null
+				);
+				showAddFavoriteProductNotification();
+			} else if (product) {
+				dispatch(deleteFavoriteItem(product.id));
+				dispatch(updateFavorites({ product }));
+				FavoriteProductsService.deleteFavoriteProduct(product.id);
+				setProduct(prevProduct =>
+					prevProduct ? { ...prevProduct, isFavorite: false } : null
+				);
+				showDeleteFavoriteProductNotification();
+			}
+		} catch (error) {
+			if (isAxiosError(error)) {
+				setError(error.response?.data.message);
+			} else {
+				setError("Неизвестная ошибка при добавлении товара в избранное");
+			}
 		}
-		openFavoritesNotification("top", !product?.isFavorite);
 	};
 
 	if (isLoading) {

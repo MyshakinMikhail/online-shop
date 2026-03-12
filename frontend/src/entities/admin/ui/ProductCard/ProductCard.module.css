@@ -49,15 +49,3 @@
 .footer {
 	margin-top: auto;
 }
-
-.alert {
-	display: flex;
-	flex-direction: column;
-	justify-content: flex-start;
-	gap: 10px;
-}
-
-.alertText {
-	font-size: 15px;
-	font-weight: 500;
-}

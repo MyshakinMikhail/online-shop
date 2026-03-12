@@ -3,11 +3,11 @@ import { updateFavorites } from "@/entities/favorites/model/favoriteSlice";
 import { addFavoriteItem, deleteFavoriteItem } from "@/entities/product/model/productsPageSlice";
 import type { Product } from "@/shared/types";
 import { HeartIcon } from "@/shared/ui";
-import { notification } from "antd";
-import type { NotificationPlacement } from "antd/es/notification/interface";
+import { isAxiosError } from "axios";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import classes from "./MainProductCard.module.css";
+import { useFavoriteNotification } from "./hooks";
 
 type Props = {
 	product: Product;
@@ -16,33 +16,35 @@ type Props = {
 export default function MainProductCard({ product }: Props) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
-
-	const [api, contextHolder] = notification.useNotification();
-	const openNotification = (placement: NotificationPlacement, newStatus: boolean) => {
-		api.success({
-			message: `Уведомление о статусе товара`,
-			description: newStatus
-				? "Товар успешно добавлен в избранное"
-				: "Товар удален из избранного",
-			placement,
-			duration: 3,
-		});
-	};
+	const {
+		contextHolder,
+		showAddFavoriteProductNotification,
+		showDeleteFavoriteProductNotification,
+	} = useFavoriteNotification();
 
 	const handlePictureClick = () => {
 		navigate(`/product/${product.id}`);
 	};
 
 	const handleIconClick = () => {
-		openNotification("top", !product.isFavorite);
-		if (!product.isFavorite) {
-			dispatch(addFavoriteItem(product.id));
-			FavoriteProductsService.addFavoriteProduct(product.id);
-		} else {
-			dispatch(deleteFavoriteItem(product.id));
-			FavoriteProductsService.deleteFavoriteProduct(product.id);
+		try {
+			if (!product.isFavorite) {
+				dispatch(addFavoriteItem(product.id));
+				FavoriteProductsService.addFavoriteProduct(product.id);
+				showAddFavoriteProductNotification();
+			} else {
+				dispatch(deleteFavoriteItem(product.id));
+				FavoriteProductsService.deleteFavoriteProduct(product.id);
+				showDeleteFavoriteProductNotification();
+			}
+			dispatch(updateFavorites({ product }));
+		} catch (error) {
+			if (isAxiosError(error)) {
+				console.error(error.response?.data.message);
+			} else {
+				console.error("Неизвестная ошика при добавлении товара в избранное");
+			}
 		}
-		dispatch(updateFavorites({ product }));
 	};
 
 	return (

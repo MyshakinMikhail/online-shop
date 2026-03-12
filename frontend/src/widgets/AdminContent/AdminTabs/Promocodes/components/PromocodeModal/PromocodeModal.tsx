@@ -1,11 +1,12 @@
 import { PromocodeService } from "@/entities/admin/api/PromocodeService";
 import { addPromocode, updatePromocode } from "@/entities/admin/model/adminPromocodesSlice";
 import type { Promocode } from "@/shared/types";
-import { Card, Form, Input, InputNumber, Modal, notification, Select, Typography } from "antd";
+import { Card, Form, Input, InputNumber, Modal, Select, Typography } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { isAxiosError } from "axios";
 import { useEffect, type Dispatch, type SetStateAction } from "react";
 import { useDispatch } from "react-redux";
+import { usePromocodeNotification } from "./hooks";
 import classes from "./PromocodeModal.module.css";
 
 const { Title } = Typography;
@@ -24,7 +25,8 @@ type FieldType = {
 
 export const PromocodeModal = ({ promocode, isModalOpen, setIsModalOpen }: Props) => {
 	const [form] = useForm<FieldType>();
-	const [api, contextHolder] = notification.useNotification();
+	const { contextHolder, showPromocodeErrorNotification, showPromocodeSuccessNotification } =
+		usePromocodeNotification();
 	const dispatch = useDispatch();
 
 	const handleCancel = async () => {
@@ -38,24 +40,6 @@ export const PromocodeModal = ({ promocode, isModalOpen, setIsModalOpen }: Props
 		} else {
 			form.resetFields();
 		}
-	};
-
-	const showError = (errorMessage: string) => {
-		api.error({
-			message: "Ошибка добавления/обновления промокода",
-			description: errorMessage,
-			placement: "top",
-			duration: 3,
-		});
-	};
-
-	const showSuccess = (successMessage: string) => {
-		api.success({
-			message: "Промокод успешно добавлен/обновлен",
-			description: successMessage,
-			placement: "top",
-			duration: 3,
-		});
 	};
 
 	useEffect(() => {
@@ -72,26 +56,30 @@ export const PromocodeModal = ({ promocode, isModalOpen, setIsModalOpen }: Props
 			try {
 				await PromocodeService.updatePromocode({ id: promocode.id, ...promocodeFields });
 				dispatch(updatePromocode({ promocode: { id: promocode.id, ...promocodeFields } }));
-				showSuccess("Промокод успешно обновлен");
+				showPromocodeSuccessNotification("Промокод успешно обновлен");
 				handleCancel();
 			} catch (error) {
 				if (isAxiosError(error)) {
-					showError(error.response?.data.message);
+					showPromocodeErrorNotification(error.response?.data.message);
 				} else {
-					showError("Неизвестная ошибка при обновлении промокода на сервер");
+					showPromocodeErrorNotification(
+						"Неизвестная ошибка при обновлении промокода на сервер"
+					);
 				}
 			}
 		} else {
 			try {
 				const newPromocode = await PromocodeService.addPromocode(promocodeFields);
 				dispatch(addPromocode({ promocode: newPromocode }));
-				showSuccess("Промокод успешно добавлен");
+				showPromocodeSuccessNotification("Промокод успешно добавлен");
 				handleCancel();
 			} catch (error) {
 				if (isAxiosError(error)) {
-					showError(error.response?.data.message);
+					showPromocodeErrorNotification(error.response?.data.message);
 				} else {
-					showError("Неизвестная ошибка при добавлении промокода на сервер");
+					showPromocodeErrorNotification(
+						"Неизвестная ошибка при добавлении промокода на сервер"
+					);
 				}
 			}
 		}

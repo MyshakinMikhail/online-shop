@@ -1,6 +1,7 @@
 import { deleteFavoriteItem } from "@/entities/product/model/productsPageSlice";
 import type { Product } from "@/shared/types";
 import { Button, Col, Image, Row, Typography } from "antd";
+import { isAxiosError } from "axios";
 import { CircleX } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -19,10 +20,19 @@ export default function FavoriteProductCard({ product, toggleDrawer }: Props) {
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 
-	const handleClick = () => {
-		dispatch(deleteFavoriteItem(product.id));
-		FavoriteProductsService.deleteFavoriteProduct(product.id);
-		dispatch(updateFavorites({ product }));
+	const handleClick = async () => {
+		try {
+			dispatch(deleteFavoriteItem(product.id));
+			FavoriteProductsService.deleteFavoriteProduct(product.id);
+			dispatch(updateFavorites({ product }));
+		} catch (error) {
+			if (isAxiosError(error)) {
+				// !!! сделать глобальный компонент для отображения ошибок
+				console.error(error.response?.data.message);
+			} else {
+				console.error("Неизвестная ошика при удалении товара из избранного");
+			}
+		}
 	};
 
 	return (

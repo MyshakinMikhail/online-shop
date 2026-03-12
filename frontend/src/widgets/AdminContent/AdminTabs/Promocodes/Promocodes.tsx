@@ -1,6 +1,4 @@
-import { PromocodesService } from "@/entities/admin/api/PromocodesService";
-import { deleteAllPromocodes } from "@/entities/admin/model/adminPromocodesSlice";
-import { getAllPromocodes } from "@/entities/admin/model/asyncThunks/getAllPromocodes";
+import { deleteAllPromocodes, getAllPromocodes } from "@/entities/admin/model/asyncThunks";
 import type { AppDispatch, RootState } from "@/shared/lib/store";
 import { Button, Flex, Input } from "antd";
 import { isAxiosError } from "axios";
@@ -30,12 +28,12 @@ export default function Promocodes() {
 	const handleDeleteAllPromo = () => {
 		try {
 			dispatch(deleteAllPromocodes());
-			PromocodesService.deleteAllPromocodes();
 		} catch (e) {
 			if (isAxiosError(e)) {
-				console.error(e.message);
+				console.error(e.response?.data.message);
+			} else {
+				console.error("Неизвестная ошибка при удалении всех промокодов");
 			}
-			console.error(`Неизвестная ошибка при удалении всех промокодов: ${e}`);
 		}
 	};
 

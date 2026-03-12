@@ -3,11 +3,11 @@ import { api } from "@/shared/api";
 import { mockCities } from "@/shared/mocks";
 import type { YandexUserInfo } from "@/shared/types/yandexUserInfo";
 import { MyButton } from "@/shared/ui";
-import { Flex, Input, notification, Select, Typography } from "antd";
-import type { NotificationPlacement } from "antd/es/notification/interface";
+import { Flex, Input, Select, Typography } from "antd";
 import { isAxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useOrderNotification } from "./hooks";
 import classes from "./Form.module.css";
 
 const { Title } = Typography;
@@ -20,27 +20,10 @@ export const Form = () => {
 	const [city, setCity] = useState<string>("");
 
 	const navigate = useNavigate();
+	const { contextHolder, showCreateOrderErrorNotification, showCreateOrderSuccessNotification } =
+		useOrderNotification();
 
 	// !!! нужна валидация формы, чтобы нельзя было отправить всякую хрень
-
-	const [alert, contextHolder] = notification.useNotification();
-	const openFavoritesNotification = (placement: NotificationPlacement, error: string | null) => {
-		if (!error) {
-			alert.success({
-				message: `Статус`,
-				description: "Заказ успешно создан",
-				placement,
-				duration: 3,
-			});
-		} else {
-			alert.error({
-				message: `Статус`,
-				description: `Ошибка создания заказа: ${error} `,
-				placement,
-				duration: 3,
-			});
-		}
-	};
 
 	const handleSendOrder = async () => {
 		try {
@@ -52,13 +35,13 @@ export const Form = () => {
 				promocode: promocode,
 				city: city,
 			});
-			openFavoritesNotification("top", null);
+			showCreateOrderSuccessNotification();
 			setTimeout(() => {
 				navigate("/");
 			}, 3000);
 		} catch (error) {
 			if (isAxiosError(error)) {
-				openFavoritesNotification("top", error.message);
+				showCreateOrderErrorNotification(error.message);
 				console.log(error);
 			} else {
 				console.error("Неизвестная ошибка при создании заказа");

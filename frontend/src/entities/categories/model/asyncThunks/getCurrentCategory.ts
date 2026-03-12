@@ -1,14 +1,26 @@
 import { api } from "@/shared/api";
+import type { Category } from "@/shared/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isAxiosError } from "axios";
 
-export const getCurrentCategory = createAsyncThunk(
+type RejectValue = {
+	status?: number;
+	message: string;
+	data?: string;
+};
+
+type Returned = {
+	allCategories: Category[];
+	currCategory: Category;
+};
+
+export const getCurrentCategory = createAsyncThunk<Returned, void, { rejectValue: RejectValue }>(
 	"category/getByClug",
 	async (_, { rejectWithValue }) => {
 		try {
 			const slug = window.location.pathname.split("/").pop() || "all";
 			if (!slug) {
-				return rejectWithValue({ message: "slug must be a string" });
+				return rejectWithValue({ message: "slug не передан" });
 			}
 			const currCategoryResponse = await api.get(`/categories/${slug}`);
 			const allCategoriesResponse = await api.get("/categories/");
@@ -17,19 +29,16 @@ export const getCurrentCategory = createAsyncThunk(
 				currCategory: currCategoryResponse.data.category,
 			};
 		} catch (error) {
-			console.log("Ошибка получения категории по slug");
 			if (isAxiosError(error)) {
-				const serverResponse =
-					error.response?.data?.message ||
-					error.response?.data?.error ||
-					"Неизвестная ошибка";
 				return rejectWithValue({
-					message: serverResponse,
-					status: error.status,
+					message: error.response?.data.message,
+					status: error.response?.status,
 					data: error.response?.data,
 				});
 			}
-			return rejectWithValue({ message: "Ошибка сети или неизвестная ошибка" });
+			return rejectWithValue({
+				message: "Неизвестная ошибка при получении текущей категории",
+			});
 		}
 	}
 );

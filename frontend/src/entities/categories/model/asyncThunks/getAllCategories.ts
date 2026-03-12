@@ -1,26 +1,29 @@
+import type { Category } from "@/shared/types";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { isAxiosError } from "axios";
 import { CategoriesServise } from "../../api/CategoiesService";
 
-export const getAllCategories = createAsyncThunk(
+type RejectValue = {
+	status?: number;
+	message: string;
+	data?: unknown;
+};
+
+export const getAllCategories = createAsyncThunk<Category[], void, { rejectValue: RejectValue }>(
 	"categories/getAllCategories",
 	async (_, { rejectWithValue }) => {
 		try {
-			return await CategoriesServise.getCategories();
+			const categories = await CategoriesServise.getCategories();
+			return categories;
 		} catch (error) {
-			console.log("Ошибка получения категории по slug");
 			if (isAxiosError(error)) {
-				const serverResponse =
-					error.response?.data?.message ||
-					error.response?.data?.error ||
-					"Неизвестная ошибка";
 				return rejectWithValue({
-					message: serverResponse,
-					status: error.status,
+					message: error.response?.data.message,
+					status: error.response?.status,
 					data: error.response?.data,
 				});
 			}
-			return rejectWithValue({ message: "Ошибка сети или неизвестная ошибка" });
+			return rejectWithValue({ message: "Неизвестная ошибка при получении категорий" });
 		}
 	}
 );

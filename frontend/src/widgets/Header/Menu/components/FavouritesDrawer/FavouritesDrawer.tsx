@@ -5,6 +5,7 @@ import { deleteAllFavoriteItems } from "@/entities/product/model/productsPageSli
 import type { RootState } from "@/shared/lib/store";
 import { MenuIcon, MyButton } from "@/shared/ui";
 import { Drawer, Flex } from "antd";
+import { isAxiosError } from "axios";
 import { Heart } from "lucide-react";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,10 +19,18 @@ export default function FavoritesDrawer() {
 		setOpen(open => !open);
 	};
 
-	const handleDelete = () => {
-		FavoriteProductsService.deleteAllFavoriteProducts();
-		dispatch(deleteAllFavoriteItems());
-		dispatch(deleteAllFavorites());
+	const handleDelete = async () => {
+		try {
+			FavoriteProductsService.deleteAllFavoriteProducts();
+			dispatch(deleteAllFavoriteItems());
+			dispatch(deleteAllFavorites());
+		} catch (error) {
+			if (isAxiosError(error)) {
+				console.error(error.response?.data.message);
+			} else {
+				console.error("Неизвестная ошика при удалении всех товаров из избранного");
+			}
+		}
 	};
 
 	return (

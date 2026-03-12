@@ -1,3 +1,4 @@
+import { useNotification } from "./useNotification";
 import { useSearch } from "./useSearch";
 
-export { useSearch };
+export { useNotification, useSearch };

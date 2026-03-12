@@ -1,6 +1,7 @@
 import type { Promocode } from "@/shared/types";
 import type { CreationPromocode } from "@/shared/types/promocode";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { deleteAllPromocodes } from "./asyncThunks/deleteAllPromocodes";
 import { getAllPromocodes } from "./asyncThunks/getAllPromocodes";
 
 type InitialStateType = {
@@ -24,31 +25,14 @@ const adminPromocodeSlice = createSlice({
 			}
 		},
 		updatePromocode: (state, action: PayloadAction<{ promocode: Promocode }>) => {
-			const findedPromocode = state.promocodes.find(
-				currPromo => currPromo.id === action.payload.promocode.id
+			state.promocodes = state.promocodes.map(currPromo =>
+				currPromo.id === action.payload.promocode.id ? action.payload.promocode : currPromo
 			);
-
-			if (findedPromocode) {
-				state.promocodes = state.promocodes.map(currPromo =>
-					currPromo.id === action.payload.promocode.id
-						? action.payload.promocode
-						: currPromo
-				);
-			}
 		},
 		deletePromocode: (state, action: PayloadAction<{ promocodeId: number }>) => {
-			const findedPromocode = state.promocodes.find(
-				currPromo => currPromo.id === action.payload.promocodeId
+			state.promocodes = state.promocodes.filter(
+				currPromo => currPromo.id !== action.payload.promocodeId
 			);
-			if (findedPromocode) {
-				state.promocodes = state.promocodes.filter(
-					currPromo => currPromo.id !== action.payload.promocodeId
-				);
-			}
-		},
-
-		deleteAllPromocodes: state => {
-			state.promocodes = [];
 		},
 	},
 	extraReducers: builder => {
@@ -64,9 +48,21 @@ const adminPromocodeSlice = createSlice({
 			state.isLoading = false;
 			state.error = action.error.message || "Неизвестная ошибка";
 		});
+
+		builder.addCase(deleteAllPromocodes.pending, state => {
+			state.isLoading = true;
+			state.error = null;
+		});
+		builder.addCase(deleteAllPromocodes.fulfilled, state => {
+			state.isLoading = false;
+			state.promocodes = [];
+		});
+		builder.addCase(deleteAllPromocodes.rejected, (state, action) => {
+			state.isLoading = false;
+			state.error = action.error.message || "Неизвестная ошибка";
+		});
 	},
 });
 
-export const { addPromocode, updatePromocode, deletePromocode, deleteAllPromocodes } =
-	adminPromocodeSlice.actions;
+export const { addPromocode, updatePromocode, deletePromocode } = adminPromocodeSlice.actions;
 export const adminPromocodesReducer = adminPromocodeSlice.reducer;

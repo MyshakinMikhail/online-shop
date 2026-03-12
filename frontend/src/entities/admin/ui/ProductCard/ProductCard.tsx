@@ -1,6 +1,6 @@
 import type { Product } from "@/shared/types";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
-import { Button, Card, Flex, Image, notification, Tag, Typography } from "antd";
+import { Button, Card, Flex, Image, Tag, Typography } from "antd";
 import { isAxiosError } from "axios";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { ProductService } from "../../api/ProductService";
 import { deleteProduct } from "../../model/adminProductsSlice";
 import classes from "./ProductCard.module.css";
+import { useDeleteProductNotification } from "./hooks";
 
 const { Text } = Typography;
 
@@ -17,16 +18,14 @@ type Props = {
 
 export default function AdminProductCard({ product }: Props) {
 	const navigate = useNavigate();
-	const [error, setError] = useState<string | null>(null);
-	const [api, contextHolder] = notification.useNotification();
 	const dispatch = useDispatch();
+	const { contextHolder, showDeleteProductConfirm } = useDeleteProductNotification();
+	const [error, setError] = useState<string | null>(null);
 
 	const handleDelete = async () => {
 		try {
+			await ProductService.deleteProduct(product.id);
 			dispatch(deleteProduct({ productId: product.id }));
-			ProductService.deleteProduct(product.id);
-
-			api.destroy();
 		} catch (error) {
 			if (isAxiosError(error)) {
 				setError(error.message);
@@ -34,24 +33,6 @@ export default function AdminProductCard({ product }: Props) {
 				setError("Неизвестная ошибка при удалении товара");
 			}
 		}
-	};
-
-	const showDeletedProduct = () => {
-		api.error({
-			message: "Вы уверены, что хотите удалить товар?",
-			description: (
-				<Flex className={classes.alert}>
-					<Text className={classes.alertText}>
-						Данное действие нельзя будет отменить!
-					</Text>
-					<Button variant="solid" color="danger" onClick={handleDelete}>
-						Удалить товар {product.name}
-					</Button>
-				</Flex>
-			),
-			placement: "top",
-			duration: 60,
-		});
 	};
 
 	const handleEdit = () => {
@@ -92,7 +73,16 @@ export default function AdminProductCard({ product }: Props) {
 							Редактировать
 						</Button>
 
-						<Button danger icon={<DeleteOutlined />} onClick={showDeletedProduct}>
+						<Button
+							danger
+							icon={<DeleteOutlined />}
+							onClick={() =>
+								showDeleteProductConfirm({
+									handleDelete,
+									productName: product.name,
+								})
+							}
+						>
 							Удалить
 						</Button>
 					</Flex>

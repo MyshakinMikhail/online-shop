@@ -1,8 +1,9 @@
 import type { CreationProductType } from "@/shared/types";
-import { Divider, Flex, notification, Typography } from "antd";
+import { Divider, Flex, Typography } from "antd";
 import { isAxiosError } from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCreateProductNotification } from "./hooks";
 import { Header, ProductForm } from "../components";
 import { ProductService } from "./../../../entities/admin/api/ProductService";
 import classes from "./CreateProductPage.module.css";
@@ -12,13 +13,14 @@ const { Text } = Typography;
 export const CreateProductPage = () => {
 	const navigate = useNavigate();
 	const [error, setError] = useState<string | null>(null);
+	const { contextHolder, showCreatedProductNotification } = useCreateProductNotification();
 
 	const handleCreateProduct = async ({ productData }: { productData: CreationProductType }) => {
 		try {
 			const createdProduct = await ProductService.postProduct({ product: productData });
 
 			if (createdProduct) {
-				showCreatedProduct();
+				showCreatedProductNotification();
 				setTimeout(() => {
 					navigate("/admin/main");
 				}, 3000);
@@ -30,17 +32,6 @@ export const CreateProductPage = () => {
 				setError("Неизвестная ошибка при добавлении товара на сервер");
 			}
 		}
-	};
-
-	const [api, contextHolder] = notification.useNotification();
-
-	const showCreatedProduct = () => {
-		api.success({
-			message: "Статус товара",
-			description: "Товар успешно добавлен на сервер",
-			placement: "top",
-			duration: 3,
-		});
 	};
 
 	if (error) {
