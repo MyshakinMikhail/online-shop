@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { validateCategorySlug, validateId, validateProductCreationAttributes, validatePromocodeDiscount, validatePromocodeName } from "./validation";
+import {
+	validateCategorySlug,
+	validateId,
+	validateProductCreationAttributes,
+	validatePromocodeDiscount,
+	validatePromocodeName,
+} from "./validation";
 
 describe("validateId", () => {
 	it("should return error if userId is undefined", () => {
@@ -22,7 +28,7 @@ describe("validateId", () => {
 		const result = validateId(5);
 		expect(result.isValid).toBe(true);
 		expect(result.id).toBe(5);
-	})
+	});
 });
 
 describe("validateCategorySlug", () => {
@@ -53,51 +59,51 @@ describe("validatePromocodeName", () => {
 		const result = validatePromocodeName(undefined);
 		expect(result.error).toBe("Название промокода обязательно");
 		expect(result.isValid).toBe(false);
-	})
+	});
 	it("should return error if name is not a string", () => {
 		const result = validatePromocodeName(123);
 		expect(result.isValid).toBe(false);
 		expect(result.error).toBe("Название промокода должно быть строкой");
-	})
+	});
 	it("should return error if name is empty after trim", () => {
 		const result = validatePromocodeName("   ");
 		expect(result.isValid).toBe(false);
 		expect(result.error).toBe("Название промокода не может быть пустой строкой");
-	})
+	});
 	it("should return success", () => {
 		const result = validatePromocodeName("WELCOME10");
 		expect(result.isValid).toBe(true);
 		expect(result.name).toBe("WELCOME10");
-	})
-})
+	});
+});
 
 describe("valifatePromocodeDiscount", () => {
 	it("should return error if discount is undefinded", () => {
 		const result = validatePromocodeDiscount(undefined);
 		expect(result.error).toBe("Скидка обязательна");
 		expect(result.isValid).toBe(false);
-	})
+	});
 	it("shouls return error if discount not a number", () => {
 		const result = validatePromocodeDiscount("100");
 		expect(result.isValid).toBe(false);
 		expect(result.error).toBe("Скидка должна быть числом");
-	})
+	});
 	it("should return error if discount out of range", () => {
 		const result = validatePromocodeDiscount(101);
 		expect(result.isValid).toBe(false);
 		expect(result.error).toBe("Скидка должна быть в диапазоне от 0 до 100");
-	})
+	});
 	it("should return error if discount not an integer", () => {
 		const result = validatePromocodeDiscount(-1);
 		expect(result.isValid).toBe(false);
 		expect(result.error).toBe("Скидка должна быть в диапазоне от 0 до 100");
-	})
+	});
 	it("should return success", () => {
 		const result = validatePromocodeDiscount(50);
 		expect(result.isValid).toBe(true);
 		expect(result.discount).toBe(50);
-	})
-})
+	});
+});
 
 describe("validateProductCreationAttributes", () => {
 	const validProduct = {
@@ -164,7 +170,7 @@ describe("validateProductCreationAttributes", () => {
 			expect(result.isValid).toBe(false);
 			expect(result.error).toBe("Название продукта не должно превышать 200 символов");
 		});
-		
+
 		it("should return success", () => {
 			const result = validateProductCreationAttributes({
 				...validProduct,
@@ -177,7 +183,10 @@ describe("validateProductCreationAttributes", () => {
 
 	describe("description", () => {
 		it("should return error if description is undefined", () => {
-			const result = validateProductCreationAttributes({ ...validProduct, description: undefined });
+			const result = validateProductCreationAttributes({
+				...validProduct,
+				description: undefined,
+			});
 			expect(result.isValid).toBe(false);
 			expect(result.error).toBe("Описание продукта обязательно и должно быть строкой");
 		});
@@ -188,7 +197,10 @@ describe("validateProductCreationAttributes", () => {
 		});
 
 		it("should return error if description is empty", () => {
-			const result = validateProductCreationAttributes({ ...validProduct, description: "   " });
+			const result = validateProductCreationAttributes({
+				...validProduct,
+				description: "   ",
+			});
 			expect(result.isValid).toBe(false);
 			expect(result.error).toBe("Описание продукта не может быть пустым");
 		});
@@ -222,7 +234,6 @@ describe("validateProductCreationAttributes", () => {
 				description: "Хорошая базовая футболка из плотного хлопка",
 			});
 		});
-
 	});
 
 	describe("sizes", () => {
@@ -232,7 +243,10 @@ describe("validateProductCreationAttributes", () => {
 			expect(result.error).toBe("Размеры продукта обязательны и должны быть массивом");
 		});
 		it("should return error if sizes is not array", () => {
-			const result = validateProductCreationAttributes({ ...validProduct, sizes: "[1, 2, 3]"});
+			const result = validateProductCreationAttributes({
+				...validProduct,
+				sizes: "[1, 2, 3]",
+			});
 			expect(result.isValid).toBe(false);
 			expect(result.error).toBe("Размеры продукта обязательны и должны быть массивом");
 		});
@@ -327,7 +341,10 @@ describe("validateProductCreationAttributes", () => {
 
 	describe("categoryId", () => {
 		it("should return error if categoryId is undefined", () => {
-			const result = validateProductCreationAttributes({ ...validProduct, categoryId: undefined });
+			const result = validateProductCreationAttributes({
+				...validProduct,
+				categoryId: undefined,
+			});
 			expect(result.isValid).toBe(false);
 			expect(result.error).toBe("categoryId обязателен");
 		});
@@ -397,7 +414,10 @@ describe("validateProductCreationAttributes", () => {
 
 	describe("isActive", () => {
 		it("should return error if isActive is undefined", () => {
-			const result = validateProductCreationAttributes({ ...validProduct, isActive: undefined });
+			const result = validateProductCreationAttributes({
+				...validProduct,
+				isActive: undefined,
+			});
 			expect(result.isValid).toBe(false);
 			expect(result.error).toBe("isActive обязателен");
 		});
@@ -430,4 +450,3 @@ describe("validateProductCreationAttributes", () => {
 		expect(result.product).toEqual(validProduct);
 	});
 });
-

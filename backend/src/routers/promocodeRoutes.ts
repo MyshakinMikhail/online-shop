@@ -3,11 +3,7 @@ import { Router } from "express";
 import { User } from "../models/index.ts";
 import { Promocode } from "../models/Promocode.ts";
 import { AuthService } from "../services/index.ts";
-import {
-	validateId,
-	validatePromocodeDiscount,
-	validatePromocodeName,
-} from "../utils/index.ts";
+import { validateId, validatePromocodeDiscount, validatePromocodeName } from "../utils/index.ts";
 
 const router = Router();
 

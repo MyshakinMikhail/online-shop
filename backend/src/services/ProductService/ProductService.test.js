@@ -16,7 +16,7 @@ describe("ProductService", () => {
 		beforeEach(() => {
 			vi.clearAllMocks();
 		});
-	
+
 		it("returns created product when model resolves successfully", async () => {
 			const product = {
 				name: "Test Product",
@@ -27,14 +27,14 @@ describe("ProductService", () => {
 				categoryId: 1,
 				stock: 10,
 				isActive: true,
-			}
-			
-			const createdProduct = {id: 1, ...product};
+			};
+
+			const createdProduct = { id: 1, ...product };
 
 			Product.create.mockResolvedValue(createdProduct);
-	
+
 			const result = await ProductService.createProduct(product);
-	
+
 			expect(Product.create).toHaveBeenCalledWith(product);
 			expect(result).toEqual(createdProduct);
 		});
@@ -49,9 +49,9 @@ describe("ProductService", () => {
 				categoryId: 1,
 				stock: 10,
 				isActive: true,
-			}
+			};
 
-			Product.create.mockResolvedValue(null)
+			Product.create.mockResolvedValue(null);
 			const result = await ProductService.createProduct(product);
 
 			expect(Product.create).toHaveBeenCalledWith(product);
@@ -60,9 +60,9 @@ describe("ProductService", () => {
 	});
 
 	describe("updateProduct", () => {
-		beforeEach(()=>{
+		beforeEach(() => {
 			vi.clearAllMocks();
-		})
+		});
 
 		it("returns affectedCount when model resolves successfully", async () => {
 			const product = {
@@ -77,17 +77,17 @@ describe("ProductService", () => {
 				isActive: true,
 				image_url: "https://example.com/image.jpg",
 				images: ["https://example.com/image.jpg", "https://example.com/image2.jpg"],
-			}
-			
+			};
+
 			Product.update.mockResolvedValue([1]);
 
-			const [ affectedCount ] = await ProductService.updateProduct(product);
+			const [affectedCount] = await ProductService.updateProduct(product);
 
-			expect(Product.update).toHaveBeenCalledWith(product, {where: {id: product.id}});
+			expect(Product.update).toHaveBeenCalledWith(product, { where: { id: product.id } });
 			expect(affectedCount).toEqual(1);
 		});
 
-		it ("returns null when model returns null", async() => {
+		it("returns null when model returns null", async () => {
 			const product = {
 				id: 1,
 				name: "Test Product",
@@ -100,52 +100,50 @@ describe("ProductService", () => {
 				isActive: true,
 				image_url: "https://example.com/image.jpg",
 				images: ["https://example.com/image.jpg", "https://example.com/image2.jpg"],
-			}
+			};
 
 			Product.update.mockResolvedValue(null);
 
-			const result = await ProductService.updateProduct(product)
-			expect(Product.update).toHaveBeenCalled()
-			expect(result).toEqual(null)
-
-		})
-	})
+			const result = await ProductService.updateProduct(product);
+			expect(Product.update).toHaveBeenCalled();
+			expect(result).toEqual(null);
+		});
+	});
 
 	describe("deleteProduct", () => {
 		beforeEach(() => {
-			vi.clearAllMocks()
-		})
+			vi.clearAllMocks();
+		});
 
-		it("returns number of affected rows when model resolves successfully", async() => {
+		it("returns number of affected rows when model resolves successfully", async () => {
 			const id = 1;
 
 			Product.destroy.mockResolvedValue(1);
 
 			const result = await ProductService.deleteProduct(id);
 
-			expect(Product.destroy).toHaveBeenCalledWith({where: {id}})
-			expect(result).toBe(1)
-			
-		})
+			expect(Product.destroy).toHaveBeenCalledWith({ where: { id } });
+			expect(result).toBe(1);
+		});
 
-		it("returns error when validation is not success", async() => {
+		it("returns error when validation is not success", async () => {
 			const id = 1;
-			
-			Product.destroy.mockResolvedValue(null)
 
-			const result = await ProductService.deleteProduct(id)
+			Product.destroy.mockResolvedValue(null);
+
+			const result = await ProductService.deleteProduct(id);
 
 			expect(Product.destroy).toHaveBeenCalled();
-			expect(result).toEqual(null)
-		})
-	})
-	
+			expect(result).toEqual(null);
+		});
+	});
+
 	describe("getProduct", () => {
 		beforeEach(() => {
-			vi.clearAllMocks()
-		})
+			vi.clearAllMocks();
+		});
 
-		it("returns product when model resolves successfully", async() => {
+		it("returns product when model resolves successfully", async () => {
 			const id = 1;
 
 			const returnedProduct = {
@@ -160,26 +158,25 @@ describe("ProductService", () => {
 				isActive: true,
 				image_url: "https://example.com/image.jpg",
 				images: ["https://example.com/image.jpg", "https://example.com/image2.jpg"],
-			}
+			};
 
-
-			Product.findByPk.mockResolvedValue(returnedProduct)
-
-			const result = await ProductService.getProduct(id)
-
-			expect(Product.findByPk).toHaveBeenCalledWith(id)
-			expect(result).toBe(returnedProduct)
-		})
-
-		it("returns null when model returns null", async() => {
-			const id = 1;
-
-			Product.findByPk.mockResolvedValue(null)
+			Product.findByPk.mockResolvedValue(returnedProduct);
 
 			const result = await ProductService.getProduct(id);
 
-			expect(Product.findByPk).toHaveBeenCalled()
-			expect(result).toEqual(null)
-		})
-	})
+			expect(Product.findByPk).toHaveBeenCalledWith(id);
+			expect(result).toBe(returnedProduct);
+		});
+
+		it("returns null when model returns null", async () => {
+			const id = 1;
+
+			Product.findByPk.mockResolvedValue(null);
+
+			const result = await ProductService.getProduct(id);
+
+			expect(Product.findByPk).toHaveBeenCalled();
+			expect(result).toEqual(null);
+		});
+	});
 });
