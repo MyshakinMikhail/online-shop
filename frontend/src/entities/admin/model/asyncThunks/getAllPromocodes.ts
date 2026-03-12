@@ -25,7 +25,6 @@ export const getAllPromocodes = createAsyncThunk<ResultType, Props, { rejectValu
 		try {
 			const userInfo: YandexUserInfo = storage.getUserInfo();
 			const result = await api.get(`/promocodes/${userInfo.id}`, { params: { searchQuery } });
-			console.log(result.data);
 			return result.data;
 		} catch (error) {
 			if (isAxiosError(error)) {

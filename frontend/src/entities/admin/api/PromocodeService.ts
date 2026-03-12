@@ -8,7 +8,8 @@ const userInfo: YandexUserInfo = storage.getUserInfo();
 
 export const PromocodeService = {
 	addPromocode: async (promocode: CreationPromocode) => {
-		await api.post(`/promocode/${userInfo.id}`, { ...promocode });
+		const response = await api.post(`/promocode/${userInfo.id}`, { ...promocode });
+		return response.data.promocode;
 	},
 
 	updatePromocode: async (promocode: Promocode) => {

@@ -119,18 +119,16 @@ router.put("/:userId", async (req: Request<RequestParamsType, {}, PutRequestBody
 		const promocodeNameValidationResult = validatePromocodeName(name);
 		if (!promocodeNameValidationResult.isValid || !promocodeNameValidationResult.name) {
 			return res.status(400).json({
-				message:
-					promocodeNameValidationResult.error + " Старое имя промокода" ||
-					"Неверные параметры запроса",
+				message: promocodeNameValidationResult.error || "Неверные параметры запроса",
 			});
 		}
 
-		const promocodeWithSameName = await Promocode.findOne({
-			where: { name: promocodeNameValidationResult.name },
-		});
-		if (promocodeWithSameName && promocodeWithSameName.id !== Number(id)) {
-			return res.status(409).json({ message: "Промокод с данным названием уже существует" });
-		}
+		// const promocodeWithSameName = await Promocode.findOne({
+		// 	where: { name: promocodeNameValidationResult.name },
+		// });
+		// if (promocodeWithSameName && promocodeWithSameName.id !== Number(id)) {
+		// 	return res.status(409).json({ message: "Промокод с данным названием уже существует" });
+		// }
 
 		if (isActive !== undefined && typeof isActive !== "boolean") {
 			return res.status(400).json({

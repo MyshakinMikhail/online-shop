@@ -40,14 +40,14 @@ export const validateUserId = (userId: number | string | undefined): UserIdValid
 	if (!userId) {
 		return {
 			isValid: false,
-			error: "userId is required",
+			error: "userId обязателен",
 		};
 	}
 
 	if (isNaN(Number(userId))) {
 		return {
 			isValid: false,
-			error: "userId must be a number",
+			error: "userId должен быть числом",
 		};
 	}
 
@@ -55,7 +55,7 @@ export const validateUserId = (userId: number | string | undefined): UserIdValid
 	if (numericUserId <= 0) {
 		return {
 			isValid: false,
-			error: "userId must be a positive number",
+			error: "userId должен быть положительным числом",
 		};
 	}
 
@@ -68,20 +68,20 @@ export const validateProductId = (
 	if (!productId) {
 		return {
 			isValid: false,
-			error: "productId is required",
+			error: "productId обязателен",
 		};
 	}
 	if (isNaN(Number(productId))) {
 		return {
 			isValid: false,
-			error: "productId must be a number",
+			error: "productId должен быть числом",
 		};
 	}
 	const numericProductId = Number(productId);
 	if (numericProductId <= 0) {
 		return {
 			isValid: false,
-			error: "productId must be a positive number",
+			error: "productId должен быть положительным числом",
 		};
 	}
 	return { isValid: true, productId: numericProductId };
@@ -89,14 +89,14 @@ export const validateProductId = (
 
 export const validateCategorySlug = (slug: string | undefined): CategorySlugValidationResult => {
 	if (!slug) {
-		return { isValid: false, error: "slug is required" };
+		return { isValid: false, error: "slug обязателен" };
 	}
 	if (typeof slug !== "string") {
-		return { isValid: false, error: "slug must be a string" };
+		return { isValid: false, error: "slug должен быть строкой" };
 	}
 	const trimmedSlug = slug.trim();
 	if (trimmedSlug.length === 0) {
-		return { isValid: false, error: "slug must be a non-empty string" };
+		return { isValid: false, error: "slug не может быть пустой строкой" };
 	}
 	return { isValid: true, slug: trimmedSlug };
 };
@@ -105,14 +105,14 @@ export const validatePromocodeName = (name: string | undefined): PromocodeValida
 	if (!name) {
 		return {
 			isValid: false,
-			error: "promocode is required",
+			error: "Название промокода обязательно",
 		};
 	}
 
 	if (typeof name !== "string") {
 		return {
 			isValid: false,
-			error: "promocode must be a string",
+			error: "Название промокода должно быть строкой",
 		};
 	}
 
@@ -120,7 +120,7 @@ export const validatePromocodeName = (name: string | undefined): PromocodeValida
 	if (normalizedPromocode.length === 0) {
 		return {
 			isValid: false,
-			error: "promocode must be a non-empty string",
+			error: "Название промокода не может быть пустой строкой",
 		};
 	}
 
@@ -136,7 +136,7 @@ export const validatePromocodeDiscount = (
 	if (isNaN(Number(discount))) {
 		return {
 			isValid: false,
-			error: "discount must be a number",
+			error: "Скидка должна быть числом",
 		};
 	}
 
@@ -144,13 +144,13 @@ export const validatePromocodeDiscount = (
 	if (!Number.isInteger(numericDiscount)) {
 		return {
 			isValid: false,
-			error: "discount must be an integer",
+			error: "Скидка должна быть целым числом",
 		};
 	}
 	if (numericDiscount < 0 || numericDiscount > 100) {
 		return {
 			isValid: false,
-			error: "discount must be between 0 and 100",
+			error: "Скидка должна быть в диапазоне от 0 до 100",
 		};
 	}
 
@@ -162,108 +162,108 @@ export const validateProductCreationAttributes = (
 ): ProductCreationAttributesValidationResult => {
 	// Проверка наличия объекта
 	if (!product || typeof product !== "object") {
-		return { isValid: false, error: "product is required" };
+		return { isValid: false, error: "Объект продукта обязателен" };
 	}
 
 	// Валидация name (обязательное поле)
 	if (!product.name || typeof product.name !== "string") {
-		return { isValid: false, error: "product name is required and must be a string" };
+		return { isValid: false, error: "Название продукта обязательно и должно быть строкой" };
 	}
 	const trimmedName = product.name.trim();
 	if (trimmedName.length === 0) {
-		return { isValid: false, error: "product name cannot be empty" };
+		return { isValid: false, error: "Название продукта не может быть пустым" };
 	}
 	if (trimmedName.length < 3) {
-		return { isValid: false, error: "product name must be at least 3 characters long" };
+		return { isValid: false, error: "Название продукта должно содержать минимум 3 символа" };
 	}
 	if (trimmedName.length > 200) {
-		return { isValid: false, error: "product name must not exceed 200 characters" };
+		return { isValid: false, error: "Название продукта не должно превышать 200 символов" };
 	}
 
 	// Валидация description (обязательное поле)
 	if (!product.description || typeof product.description !== "string") {
-		return { isValid: false, error: "product description is required and must be a string" };
+		return { isValid: false, error: "Описание продукта обязательно и должно быть строкой" };
 	}
 	const trimmedDescription = product.description.trim();
 	if (trimmedDescription.length === 0) {
-		return { isValid: false, error: "product description cannot be empty" };
+		return { isValid: false, error: "Описание продукта не может быть пустым" };
 	}
 	if (trimmedDescription.length < 10) {
-		return { isValid: false, error: "product description must be at least 10 characters long" };
+		return { isValid: false, error: "Описание продукта должно содержать минимум 10 символов" };
 	}
 	if (trimmedDescription.length > 5000) {
-		return { isValid: false, error: "product description must not exceed 5000 characters" };
+		return { isValid: false, error: "Описание продукта не должно превышать 5000 символов" };
 	}
 
 	// Валидация sizes (обязательное поле, массив)
 	if (!product.sizes || !Array.isArray(product.sizes)) {
-		return { isValid: false, error: "product sizes is required and must be an array" };
+		return { isValid: false, error: "Размеры продукта обязательны и должны быть массивом" };
 	}
 	if (product.sizes.length === 0) {
-		return { isValid: false, error: "product must have at least one size" };
+		return { isValid: false, error: "У продукта должен быть хотя бы один размер" };
 	}
 	// Проверяем, что все элементы массива - строки
 	const invalidSizes = product.sizes.some(
 		(currSize: string) => typeof currSize !== "string" || currSize.trim().length === 0
 	);
 	if (invalidSizes) {
-		return { isValid: false, error: "all sizes must be non-empty strings" };
+		return { isValid: false, error: "Все размеры должны быть непустыми строками" };
 	}
 
 	// Валидация article (обязательное поле)
 	if (typeof product.article !== "string") {
-		return { isValid: false, error: "product article is required and must be a string" };
+		return { isValid: false, error: "Артикул продукта обязателен и должен быть строкой" };
 	}
 	// может быть пустым, артикул генерится на бэке
 
 	// Валидация price (обязательное поле, положительное число)
 	if (product.price === undefined || product.price === null) {
-		return { isValid: false, error: "product price is required" };
+		return { isValid: false, error: "Цена продукта обязательна" };
 	}
 	if (typeof product.price !== "number" || isNaN(product.price)) {
-		return { isValid: false, error: "product price must be a valid number" };
+		return { isValid: false, error: "Цена продукта должна быть корректным числом" };
 	}
 	if (product.price <= 0) {
-		return { isValid: false, error: "product price must be a positive number" };
+		return { isValid: false, error: "Цена продукта должна быть положительным числом" };
 	}
 	if (!Number.isInteger(product.price)) {
-		return { isValid: false, error: "product price must be an integer" };
+		return { isValid: false, error: "Цена продукта должна быть целым числом" };
 	}
 
 	// Валидация categoryId (обязательное поле, положительное целое число)
 	if (product.categoryId === undefined || product.categoryId === null) {
-		return { isValid: false, error: "product categoryId is required" };
+		return { isValid: false, error: "categoryId обязателен" };
 	}
 	if (typeof product.categoryId !== "number" || isNaN(product.categoryId)) {
-		return { isValid: false, error: "product categoryId must be a valid number" };
+		return { isValid: false, error: "categoryId должен быть корректным числом" };
 	}
 	if (product.categoryId <= 0) {
-		return { isValid: false, error: "product categoryId must be a positive number" };
+		return { isValid: false, error: "categoryId должен быть положительным числом" };
 	}
 	if (!Number.isInteger(product.categoryId)) {
-		return { isValid: false, error: "product categoryId must be an integer" };
+		return { isValid: false, error: "categoryId должен быть целым числом" };
 	}
 
 	// Валидация stock (обязательное поле, неотрицательное целое число)
 	if (product.stock === undefined || product.stock === null) {
-		return { isValid: false, error: "product stock is required" };
+		return { isValid: false, error: "Количество товара на складе обязательно" };
 	}
 	if (typeof product.stock !== "number" || isNaN(product.stock)) {
-		return { isValid: false, error: "product stock must be a valid number" };
+		return { isValid: false, error: "Количество товара на складе должно быть корректным числом" };
 	}
 	if (product.stock < 0) {
-		return { isValid: false, error: "product stock cannot be negative" };
+		return { isValid: false, error: "Количество товара на складе не может быть отрицательным" };
 	}
 	if (!Number.isInteger(product.stock)) {
-		return { isValid: false, error: "product stock must be an integer" };
+		return { isValid: false, error: "Количество товара на складе должно быть целым числом" };
 	}
 
 	// Валидация isActive (обязательное поле, boolean)
 	if (product.isActive === undefined || product.isActive === null) {
-		return { isValid: false, error: "product isActive is required" };
+		return { isValid: false, error: "isActive обязателен" };
 	}
 	if (typeof product.isActive !== "boolean") {
-		return { isValid: false, error: "product isActive must be a boolean" };
+		return { isValid: false, error: "isActive должен быть булевым значением" };
 	}
 
 	// Все проверки пройдены

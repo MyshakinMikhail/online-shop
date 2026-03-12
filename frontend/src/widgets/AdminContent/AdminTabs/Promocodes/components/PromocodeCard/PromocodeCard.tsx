@@ -26,8 +26,6 @@ export default function PromocodeCard({ promocode }: Props) {
 		setIsModalOpen(true);
 	};
 
-	console.log(promocode.discount);
-
 	return (
 		<>
 			<Flex className={classes.card}>

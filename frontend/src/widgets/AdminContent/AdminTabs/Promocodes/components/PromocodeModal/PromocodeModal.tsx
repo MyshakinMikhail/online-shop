@@ -67,7 +67,7 @@ export const PromocodeModal = ({ promocode, isModalOpen, setIsModalOpen }: Props
 	}, [form, promocode]);
 
 	const handlePostForm = async () => {
-		const promocodeFields = await form.validateFields();
+		const promocodeFields = form.getFieldsValue();
 		if (promocode) {
 			try {
 				await PromocodeService.updatePromocode({ id: promocode.id, ...promocodeFields });
@@ -76,7 +76,6 @@ export const PromocodeModal = ({ promocode, isModalOpen, setIsModalOpen }: Props
 				handleCancel();
 			} catch (error) {
 				if (isAxiosError(error)) {
-					console.log(error);
 					showError(error.response?.data.message);
 				} else {
 					showError("Неизвестная ошибка при обновлении промокода на сервер");
@@ -84,13 +83,12 @@ export const PromocodeModal = ({ promocode, isModalOpen, setIsModalOpen }: Props
 			}
 		} else {
 			try {
-				await PromocodeService.addPromocode(promocodeFields);
-				dispatch(addPromocode({ promocode: promocodeFields }));
+				const newPromocode = await PromocodeService.addPromocode(promocodeFields);
+				dispatch(addPromocode({ promocode: newPromocode }));
 				showSuccess("Промокод успешно добавлен");
 				handleCancel();
 			} catch (error) {
 				if (isAxiosError(error)) {
-					console.log(error);
 					showError(error.response?.data.message);
 				} else {
 					showError("Неизвестная ошибка при добавлении промокода на сервер");
