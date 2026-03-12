@@ -1,4 +1,4 @@
-import type { ProductCreationAttributes } from "../../models/Product.ts";
+import type { ProductAttributes, ProductCreationAttributes } from "../../models/Product.ts";
 
 export interface IdValidationResult {
 	isValid: boolean;
@@ -16,6 +16,12 @@ export interface ProductCreationAttributesValidationResult {
 	isValid: boolean;
 	error?: string;
 	product?: ProductCreationAttributes;
+}
+
+export interface ProductAttributesValidationResult {
+	isValid: boolean;
+	error?: string;
+	product?: ProductAttributes;
 }
 
 export interface PromocodeValidationResult {
@@ -251,4 +257,39 @@ export const validateProductCreationAttributes = (
 
 	// Все проверки пройдены
 	return { isValid: true, product };
+};
+
+export const validateProductUpdateAttributes = (
+	product: ProductAttributes | undefined
+): ProductAttributesValidationResult => {
+	// Проверка наличия объекта
+	const validationResult = validateProductCreationAttributes(product);
+	if (!validationResult.isValid || !validationResult.product) {
+		return { isValid: false, error: validationResult.error };
+	}
+
+	const idValidationResult = validateId(product?.id ?? undefined);
+	if (!idValidationResult.isValid || !idValidationResult.id) {
+		return { isValid: false, error: idValidationResult.error };
+	}
+
+	if (product?.image_url && typeof product?.image_url !== "string") {
+		return { isValid: false, error: "image_url должен быть строкой" };
+	}
+
+	if (product?.images) {
+		if (!Array.isArray(product.images)) {
+			return { isValid: false, error: "images должен быть массивом строк" };
+		}
+
+		const invalidImages = product.images.some(
+			(currImage: string) => typeof currImage !== "string" || currImage.trim().length === 0
+		);
+
+		if (invalidImages) {
+			return { isValid: false, error: "Все изображения должны быть непустыми строками" };
+		}
+	}
+
+	return { isValid: true, product: { ...validationResult.product, id: idValidationResult.id } };
 };

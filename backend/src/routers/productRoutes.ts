@@ -4,8 +4,12 @@ import { v4 as uniqueArticle } from "uuid";
 import { Favorite, Product, User } from "../models/index.ts";
 import type { ProductAttributes, ProductCreationAttributes } from "../models/Product.ts";
 import { AuthService } from "../services/index.ts";
+import { ProductService } from "../services/ProductService/ProductService.ts";
 import { validateId } from "../utils/index.ts";
-import { validateProductCreationAttributes } from "../utils/validation/validation.ts";
+import {
+	validateProductCreationAttributes,
+	validateProductUpdateAttributes,
+} from "../utils/validation/validation.ts";
 
 const router = Router();
 
@@ -32,7 +36,8 @@ router.get("/:userId/:productId", async (req, res) => {
 			return res.status(404).json({ message: "Данного пользователя не существует" });
 		}
 
-		const product = await Product.findByPk(productIdValidationResult.id);
+		const product = await ProductService.getProduct(productIdValidationResult.id);
+		// const product = await Product.findByPk(productIdValidationResult.id);
 		if (product === null) {
 			return res.status(404).json({
 				message: "Товар не найден",
@@ -86,11 +91,11 @@ router.post(
 			if (!AuthService.hasAdminRights(user.role)) {
 				return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 			}
+
 			const article = uniqueArticle();
-			const createdProduct = await Product.create({
-				...productValidationResult.product,
-				article: article,
-			});
+			const finalProduct = { ...product, article };
+
+			const createdProduct = await ProductService.createProduct(finalProduct);
 
 			res.status(201).json({ createdProduct });
 		} catch (e) {
@@ -118,7 +123,7 @@ router.put(
 				return res.status(400).json({ message: "Пользователь с данным id не существует" });
 			}
 
-			const productValidationResult = validateProductCreationAttributes(product);
+			const productValidationResult = validateProductUpdateAttributes(product);
 			if (!productValidationResult.isValid || !productValidationResult.product) {
 				return res.status(400).json({
 					message: productValidationResult.error || "Неверные параметры запроса",
@@ -137,20 +142,17 @@ router.put(
 					message: "Продукта с таким артикулом нет",
 				});
 			}
-
 			// Проверка на то, что при изменении имени продукта, он не совпадает с другим продуктом
 			const findedProductByName = await Product.findOne({
 				where: { name: productValidationResult.product.name },
 			});
-			if (findedProductByName) {
+			if (findedProductByName && findedProductByName.id !== product.id) {
 				return res.status(404).json({
 					message: "Продукт с таким названием уже существует",
 				});
 			}
 
-			await Product.update(productValidationResult.product, {
-				where: { article: productValidationResult.product.article },
-			});
+			await ProductService.updateProduct(productValidationResult.product);
 
 			res.status(200).json({ updatedProduct: product, message: "Продукт обновлен" });
 		} catch (e) {
@@ -189,11 +191,12 @@ router.delete("/:userId/:productId", async (req, res) => {
 		const product = await Product.findOne({
 			where: { id: productIdValidationResult.id },
 		});
+
 		if (!product) {
 			return res.status(404).json({ message: "Продукт не найден" });
 		}
 
-		await Product.destroy({ where: { id: product.id } });
+		await ProductService.deleteProduct(product.id);
 		res.status(200).json({ message: "Продукт успешно удален" });
 	} catch (e) {
 		res.status(500).json({ message: "Ошибка удаления продукта на сервере" });
