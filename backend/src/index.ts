@@ -27,6 +27,8 @@ const start = async () => {
 		await sequelize.authenticate();
 		await sequelize.sync();
 
+		// model -> service -> controller -> router ( архитектура слоев бэка )
+
 		// await seeders.reseed();
 
 		// await seeders.seedTesting();
