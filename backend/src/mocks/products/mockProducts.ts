@@ -1,4 +1,4 @@
-import { type ProductAttributes } from "../models/Product.ts";
+import { type ProductAttributes } from "../../models/Product.ts";
 
 export const mockProducts: Omit<ProductAttributes, "id">[] = [
 	// ================== ФУТБОЛКИ (15) ==================

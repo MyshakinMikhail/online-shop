@@ -1,5 +1,6 @@
 import { type Request, Router } from "express";
-import { Cart, CartItem, Product, User } from "../models/index.ts";
+import { Cart, CartItem, User } from "../models/index.ts";
+import { ProductService } from "../services/ProductService/ProductService.ts";
 import { validateId } from "../utils/index.ts";
 
 const router = Router();
@@ -28,7 +29,7 @@ router.post("/:userId", async (req, res) => {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		const product = await Product.findByPk(productIdValidationResult.id);
+		const product = await ProductService.getProduct(productIdValidationResult.id);
 		if (!product) {
 			return res.status(404).json({ message: "Товара с данным id не существует" });
 		}
@@ -90,7 +91,7 @@ router.put("/:userId", async (req: Request<UpdateCartParams, {}, UpdateCartBody>
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		const product = await Product.findByPk(productIdValidationResult.id);
+		const product = await ProductService.getProduct(productIdValidationResult.id);
 		if (!product) {
 			return res.status(404).json({ message: "Товара с данным id не существует" });
 		}
@@ -170,7 +171,7 @@ router.delete("/:userId", async (req, res) => {
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		const product = await Product.findByPk(productIdValidationResult.id);
+		const product = await ProductService.getProduct(productIdValidationResult.id);
 		if (!product) {
 			return res.status(404).json({ message: "Товара с данным id не существует" });
 		}

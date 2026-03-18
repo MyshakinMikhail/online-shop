@@ -1,7 +1,7 @@
 import { Router, type Request } from "express";
-import { Op } from "sequelize";
-import { CartItem, Favorite, OrderItem, Product, User } from "../models/index.ts";
-import { AuthService } from "../services/index.ts";
+import { CartItem, OrderItem, User } from "../models/index.ts";
+import { AuthService, FavoriteService } from "../services/index.ts";
+import { ProductService } from "../services/ProductService/ProductService.ts";
 import { validateId } from "../utils/index.ts";
 
 const router = Router();
@@ -40,10 +40,10 @@ router.delete("/:userId", async (req, res) => {
 				.json({ message: "Недостаточно прав для совершения данного действия" });
 		}
 
-		await Favorite.destroy({ where: {} });
+		await FavoriteService.deleteAllFavorites();
 		await CartItem.destroy({ where: {} });
 		await OrderItem.destroy({ where: {} });
-		await Product.destroy({ where: {} });
+		await ProductService.deleteAllProducts();
 
 		res.status(200).json({ message: "Все продукты успешно удалнены" });
 	} catch (error) {
@@ -68,18 +68,15 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 			return res.status(404).json({ message: "Данного пользователя не существует" });
 		}
 
-		if (searchQuery != null) {
-			const products = await Product.findAll({
-				where: {
-					[Op.or]: [
-						{
-							name: { [Op.iLike]: `%${searchQuery}%` },
-							...(user?.role === "user" && { isActive: true }),
-						},
-					],
-				},
-				order: [["name", "ASC"]],
-			});
+		const normalizedSearchQuery =
+			typeof searchQuery === "string"
+				? searchQuery
+				: Array.isArray(searchQuery) && typeof searchQuery[0] === "string"
+					? searchQuery[0]
+					: undefined;
+
+		if (normalizedSearchQuery != null) {
+			const products = await ProductService.searchProductsByName(normalizedSearchQuery);
 
 			return res.status(200).json({
 				products: products,
@@ -87,13 +84,10 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 			});
 		}
 
-		const favoriteProducts = await Favorite.findAll({ where: { userId: user.id } });
+		const favoriteProducts = await FavoriteService.getAllUserFavorites(user.id);
 
 		if (isFavorites) {
-			const favorites = await Favorite.findAll({
-				where: { userId: user.id },
-				include: [{ model: Product, as: "product" }],
-			});
+			const favorites = await FavoriteService.getAllFavoritesWithProducts(user.id);
 
 			const products = favorites.map(fav => {
 				const productData = fav.product?.get({ plain: true });
@@ -129,11 +123,13 @@ router.get("/:userId", async (req: Request<RequestParamsType, {}, RequestQueryTy
 				? { isActive: true }
 				: { isActive: true, categoryId: Number(categoryId) };
 
-		const { count, rows } = await Product.findAndCountAll({
-			where: whereClause,
-			limit: Number(limit) || 16,
-			offset: ((Number(page) || 1) - 1) * (Number(limit) || 16),
-			order: [["name", "ASC"]],
+		const normalizedLimit = Number(limit) || 16;
+		const normalizedPage = Number(page) || 1;
+
+		const { count, rows } = await ProductService.getActiveProductsPage({
+			page: normalizedPage,
+			limit: normalizedLimit,
+			whereClause: whereClause,
 		});
 
 		const products = rows.map(row => {

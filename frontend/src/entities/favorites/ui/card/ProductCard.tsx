@@ -22,8 +22,8 @@ export default function FavoriteProductCard({ product, toggleDrawer }: Props) {
 
 	const handleClick = async () => {
 		try {
-			dispatch(deleteFavoriteItem(product.id));
 			FavoriteProductsService.deleteFavoriteProduct(product.id);
+			dispatch(deleteFavoriteItem(product.id));
 			dispatch(updateFavorites({ product }));
 		} catch (error) {
 			if (isAxiosError(error)) {

@@ -1,10 +1,9 @@
 import type { Request } from "express";
 import { Router } from "express";
 import { v4 as uniqueArticle } from "uuid";
-import { Favorite, Product, User } from "../models/index.ts";
+import { User } from "../models/index.ts";
 import type { ProductAttributes, ProductCreationAttributes } from "../models/Product.ts";
-import { AuthService } from "../services/index.ts";
-import { ProductService } from "../services/ProductService/ProductService.ts";
+import { AuthService, FavoriteService, ProductService } from "../services/index.ts";
 import { validateId } from "../utils/index.ts";
 import {
 	validateProductCreationAttributes,
@@ -37,7 +36,6 @@ router.get("/:userId/:productId", async (req, res) => {
 		}
 
 		const product = await ProductService.getProduct(productIdValidationResult.id);
-		// const product = await Product.findByPk(productIdValidationResult.id);
 		if (product === null) {
 			return res.status(404).json({
 				message: "Товар не найден",
@@ -45,9 +43,7 @@ router.get("/:userId/:productId", async (req, res) => {
 			});
 		}
 
-		const isFavorite = await Favorite.findOne({
-			where: { userId: user.id, productId: product.id },
-		});
+		const isFavorite = await FavoriteService.getFavorite(user.id, product.id);
 
 		res.status(200).json({ product: { ...product.toJSON(), isFavorite: Boolean(isFavorite) } });
 	} catch (e) {
@@ -81,7 +77,7 @@ router.post(
 				});
 			}
 
-			const findedProduct = await Product.findOne({ where: { name: product.name } });
+			const findedProduct = await ProductService.getProductByName(product.name);
 			if (findedProduct) {
 				return res
 					.status(404)
@@ -134,18 +130,18 @@ router.put(
 				return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 			}
 
-			const findedProduct = await Product.findOne({
-				where: { article: productValidationResult.product.article },
-			});
+			const findedProduct = await ProductService.getProductByArticle(
+				productValidationResult.product.article
+			);
 			if (!findedProduct) {
 				return res.status(404).json({
 					message: "Продукта с таким артикулом нет",
 				});
 			}
 			// Проверка на то, что при изменении имени продукта, он не совпадает с другим продуктом
-			const findedProductByName = await Product.findOne({
-				where: { name: productValidationResult.product.name },
-			});
+			const findedProductByName = await ProductService.getProductByName(
+				productValidationResult.product.name
+			);
 			if (findedProductByName && findedProductByName.id !== product.id) {
 				return res.status(404).json({
 					message: "Продукт с таким названием уже существует",
@@ -188,9 +184,7 @@ router.delete("/:userId/:productId", async (req, res) => {
 			return res.status(403).json({ message: "Недостаточно прав для данного действия" });
 		}
 
-		const product = await Product.findOne({
-			where: { id: productIdValidationResult.id },
-		});
+		const product = await ProductService.getProduct(productIdValidationResult.id);
 
 		if (!product) {
 			return res.status(404).json({ message: "Продукт не найден" });

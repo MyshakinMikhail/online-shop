@@ -1,7 +1,7 @@
 import Cart from "./Cart.ts";
 import CartItem from "./CartItem.ts";
 import Category from "./Category.ts";
-import Favorite from "./Favorite.ts";
+import { Favorite } from "./Favorite.ts";
 import Order from "./Order.ts";
 import OrderItem from "./OrderItem.ts";
 import { Product } from "./Product.ts";

@@ -10,7 +10,7 @@ export interface FavoriteAttributes {
 
 type FavoriteCreatedAttributes = Optional<FavoriteAttributes, "id">;
 
-class Favorite
+export class Favorite
 	extends Model<FavoriteAttributes, FavoriteCreatedAttributes>
 	implements FavoriteAttributes
 {
@@ -42,5 +42,3 @@ Favorite.init(
 		modelName: "Favorites",
 	}
 );
-
-export default Favorite;

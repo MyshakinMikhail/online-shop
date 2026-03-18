@@ -1,5 +1,6 @@
 import { Router, type Request } from "express";
-import { Favorite, User } from "../models/index.ts";
+import { User } from "../models/index.ts";
+import { FavoriteService } from "../services/index.ts";
 import { validateId } from "../utils/validation/validation.ts";
 
 const router = Router();
@@ -35,10 +36,10 @@ router.post("/:userId", async (req: Request<FavoriteParamsType, {}, FavoriteBody
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		const [createdProduct, isAdded] = await Favorite.findOrCreate({
-			where: { userId: user.id, productId: productIdValidationResult.id },
-			defaults: { userId: user.id, productId: productIdValidationResult.id },
-		});
+		const isAdded = await FavoriteService.findOrCreateFavorite(
+			user.id,
+			productIdValidationResult.id
+		);
 
 		if (!isAdded) {
 			return res.status(200).json({ message: "Продукт уже в избранном" });
@@ -73,15 +74,13 @@ router.delete("/:userId", async (req: Request<FavoriteParamsType, {}, FavoriteBo
 			return res.status(404).json({ message: "Пользователя с данным id не существует" });
 		}
 
-		const product = await Favorite.findOne({
-			where: { userId: user.id, productId: productIdValidationResult.id },
-		});
+		const product = await FavoriteService.getFavorite(user.id, productId);
 
 		if (!product) {
 			return res.status(404).json({ message: "Данного товара уже нет в корзине" });
 		}
 
-		await Favorite.destroy({ where: { userId: user.id, productId: product.id } });
+		await FavoriteService.deleteFavorite(user.id, productId);
 		res.status(200).json({ message: "Товар удален из избранного" });
 	} catch (error) {
 		res.status(500).json({ message: "Ошибка удаления избранного товара" });
