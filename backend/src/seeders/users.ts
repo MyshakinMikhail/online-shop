@@ -1,5 +1,5 @@
 // src/seeders/002-users.ts
-import { mockUsers } from "../mocks/users.ts";
+import { mockUsers } from "../mocks/users/mockUsers.ts";
 import Cart from "../models/Cart.ts";
 import type { UserAttributes } from "../models/User.ts";
 import { User } from "../models/User.ts";

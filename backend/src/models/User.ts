@@ -1,6 +1,6 @@
 import type { Optional } from "sequelize";
 import { DataTypes, Model } from "sequelize";
-import sequelize from "../db.ts";
+import { sequelize } from "../db/index.ts";
 
 export type UserSex = "male" | "female" | "other";
 export type UserRole = "super_admin" | "admin" | "user";
@@ -16,7 +16,7 @@ export interface UserAttributes {
 	is_buying_smth: boolean;
 }
 
-type UserCreationAttributes = Optional<UserAttributes, "id" | "role">;
+export type UserCreationAttributes = Optional<UserAttributes, "id" | "role">;
 
 export class User extends Model<UserAttributes, UserCreationAttributes> implements UserAttributes {
 	declare id: number;

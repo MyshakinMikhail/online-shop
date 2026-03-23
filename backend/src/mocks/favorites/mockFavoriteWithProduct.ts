@@ -1,4 +1,4 @@
-export const mockFavorites = [
+export const mockFavoritesWithProduct = [
 	{
 		id: 1,
 		userId: 1,

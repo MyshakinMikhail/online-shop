@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Favorite, Product } from "../../models/index.ts";
-import { mockFavorite, mockFavorites } from "./../../mocks/favorites/index.ts";
+import { mockFavorite, mockFavorites, mockFavoritesWithProduct } from "./../../mocks/favorites/index.ts";
 import { FavoriteService } from "./FavoriteService.ts";
 
 vi.mock("../../models/index.ts", () => ({
@@ -117,7 +117,7 @@ describe("FavoriteService", () => {
 		it("returns favorites with products", async () => {
 			const userId = 1;
 
-			const favorites = mockFavorites
+			const favorites = mockFavoritesWithProduct;
 
 			Favorite.findAll.mockResolvedValue(favorites);
 
@@ -140,7 +140,7 @@ describe("FavoriteService", () => {
 		it("returns all user favorites", async () => {
 			const userId = 1;
 
-			const favorites = mockFavorites.map((favorite) => ({...favorite, userId}))
+			const favorites = mockFavorites.map(favorite => ({ ...favorite, userId }));
 
 			Favorite.findAll.mockResolvedValue(favorites);
 

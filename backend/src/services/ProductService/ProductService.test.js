@@ -1,7 +1,10 @@
 import { Op } from "sequelize";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Product } from "../../models/index.ts";
-import { mockArticle, mockProduct, mockProductName, mockProducts } from './../../mocks/products/index.ts';
+import {
+	mockProduct,
+	mockProducts
+} from "./../../mocks/products/index.ts";
 import { ProductService } from "./ProductService";
 
 vi.mock("../../models/index.ts", () => ({
@@ -12,7 +15,7 @@ vi.mock("../../models/index.ts", () => ({
 		findByPk: vi.fn(),
 		findOne: vi.fn(),
 		findAll: vi.fn(),
-		findAndCountAll: vi.fn()
+		findAndCountAll: vi.fn(),
 	},
 }));
 
@@ -24,7 +27,7 @@ describe("ProductService", () => {
 
 		it("returns product when model resolves successfully", async () => {
 			const id = 1;
-			const returnedProduct = mockProduct
+			const returnedProduct = mockProduct;
 
 			Product.findByPk.mockResolvedValue(returnedProduct);
 
@@ -45,68 +48,68 @@ describe("ProductService", () => {
 		});
 	});
 
-	describe("getProductByName", () =>{
+	describe("getProductByName", () => {
 		beforeEach(() => {
-			vi.clearAllMocks()
-		})
+			vi.clearAllMocks();
+		});
 
-		it("return product when model resolved successfully", async() => {
-			const productName = mockProductName
-			const returnedProduct = mockProduct
+		it("return product when model resolved successfully", async () => {
+			const productName = "Test Product";
+			const returnedProduct = mockProduct;
 
-			Product.findOne.mockResolvedValue(returnedProduct)
-
-			const result = await ProductService.getProductByName(productName);
-
-			expect(Product.findOne).toHaveBeenCalledWith({where: {name: productName}})
-			expect(result).toBe(returnedProduct)
-		})
-
-		it ("return null when model returns null", async() => {
-			const productName = mockProductName
-
-			Product.findOne.mockResolvedValue(null)
+			Product.findOne.mockResolvedValue(returnedProduct);
 
 			const result = await ProductService.getProductByName(productName);
 
-			expect(Product.findOne).toHaveBeenCalledWith({where: {name: productName}})
-			expect(result).toBe(null)
-		})
-	})
+			expect(Product.findOne).toHaveBeenCalledWith({ where: { name: productName } });
+			expect(result).toBe(returnedProduct);
+		});
+
+		it("return null when model returns null", async () => {
+			const productName = "Test Product";
+
+			Product.findOne.mockResolvedValue(null);
+
+			const result = await ProductService.getProductByName(productName);
+
+			expect(Product.findOne).toHaveBeenCalledWith({ where: { name: productName } });
+			expect(result).toBe(null);
+		});
+	});
 
 	describe("getProductByArticle", () => {
 		beforeEach(() => {
 			vi.clearAllMocks();
-		})
+		});
 
-		it("returns product when model resolved successfuly", async() => {
-			const product = mockProduct
-			const article = mockArticle
+		it("returns product when model resolved successfuly", async () => {
+			const product = mockProduct;
+			const article = "Test article";
 
-			Product.findOne.mockResolvedValue(product)
+			Product.findOne.mockResolvedValue(product);
 
-			const result = await ProductService.getProductByArticle(article)
+			const result = await ProductService.getProductByArticle(article);
 
-			expect(Product.findOne).toHaveBeenCalledWith({where: {article}})
-			expect(result).toBe(product)
-		})
+			expect(Product.findOne).toHaveBeenCalledWith({ where: { article } });
+			expect(result).toBe(product);
+		});
 
-		it ("returns null when model returns null", async() => {
-			const article = mockArticle
+		it("returns null when model returns null", async () => {
+			const article = "Test article";
 
-			Product.findOne.mockResolvedValue(null)
+			Product.findOne.mockResolvedValue(null);
 
-			const result = await ProductService.getProductByArticle(article)
+			const result = await ProductService.getProductByArticle(article);
 
-			expect(Product.findOne).toHaveBeenCalledWith({where: {article}})
-			expect(result).toBe(null)
-		})
-	})
+			expect(Product.findOne).toHaveBeenCalledWith({ where: { article } });
+			expect(result).toBe(null);
+		});
+	});
 
 	describe("searchProductsByName", () => {
 		beforeEach(() => {
 			vi.clearAllMocks();
-		})
+		});
 
 		it("returns products when model works correctly", async () => {
 			const searchParam = "Футболка";
@@ -149,50 +152,50 @@ describe("ProductService", () => {
 			});
 			expect(result).toEqual([]);
 		});
-	})
+	});
 
 	describe("getActiveProductsPage", () => {
 		beforeEach(() => {
-			vi.clearAllMocks()
-		})
+			vi.clearAllMocks();
+		});
 
-		it("returns active products when model works correctly", async() => {
+		it("returns active products when model works correctly", async () => {
 			const page = 1;
 			const limit = 25;
-			const whereClause = {isActive: true, categoryId: 1}
+			const whereClause = { isActive: true, categoryId: 1 };
 
 			const returned = { count: mockProducts.length, rows: mockProducts };
-			Product.findAndCountAll.mockResolvedValue(returned)
+			Product.findAndCountAll.mockResolvedValue(returned);
 
-			const result = await ProductService.getActiveProductsPage({page, limit, whereClause});
+			const result = await ProductService.getActiveProductsPage({ page, limit, whereClause });
 
 			expect(Product.findAndCountAll).toHaveBeenCalledWith({
 				where: whereClause,
 				limit,
 				offset: (page - 1) * limit,
 				order: [["name", "ASC"]],
-			})
-			expect(result).toBe(returned)
-		})
+			});
+			expect(result).toBe(returned);
+		});
 
-		it("returns empty result when model returns empty result", async() => {
+		it("returns empty result when model returns empty result", async () => {
 			const page = 1;
 			const limit = 25;
-			const whereClause = {isActive: true, categoryId: 1}
+			const whereClause = { isActive: true, categoryId: 1 };
 
 			const returned = { count: 0, rows: [] };
-			Product.findAndCountAll.mockResolvedValue(returned)
+			Product.findAndCountAll.mockResolvedValue(returned);
 
-			const result = await ProductService.getActiveProductsPage({page, limit, whereClause});
+			const result = await ProductService.getActiveProductsPage({ page, limit, whereClause });
 			expect(Product.findAndCountAll).toHaveBeenCalledWith({
 				where: whereClause,
 				limit,
 				offset: (page - 1) * limit,
 				order: [["name", "ASC"]],
-			})
-			expect(result).toBe(returned)
-		})
-	})
+			});
+			expect(result).toBe(returned);
+		});
+	});
 
 	describe("createProduct", () => {
 		beforeEach(() => {
@@ -200,7 +203,7 @@ describe("ProductService", () => {
 		});
 
 		it("returns created product when model resolves successfully", async () => {
-			const product = mockProduct
+			const product = mockProduct;
 
 			const createdProduct = { id: 1, ...product };
 
@@ -213,7 +216,7 @@ describe("ProductService", () => {
 		});
 
 		it("returns null when model returns null", async () => {
-			const product = mockProduct
+			const product = mockProduct;
 
 			Product.create.mockResolvedValue(null);
 			const result = await ProductService.createProduct(product);
@@ -229,7 +232,7 @@ describe("ProductService", () => {
 		});
 
 		it("returns affectedCount when model resolves successfully", async () => {
-			const product = mockProduct
+			const product = mockProduct;
 
 			Product.update.mockResolvedValue([1]);
 
@@ -240,7 +243,7 @@ describe("ProductService", () => {
 		});
 
 		it("returns null when model returns null", async () => {
-			const product = mockProduct
+			const product = mockProduct;
 
 			Product.update.mockResolvedValue(null);
 
@@ -280,29 +283,27 @@ describe("ProductService", () => {
 
 	describe("deleteAllProducts", () => {
 		beforeEach(() => {
-			vi.clearAllMocks()
-		})
+			vi.clearAllMocks();
+		});
 
-		it("returns count of removed rows when model works correctly", async() => {
-			const products = mockProducts
+		it("returns count of removed rows when model works correctly", async () => {
+			const products = mockProducts;
 
 			Product.destroy.mockResolvedValue(products.length);
 
 			const result = await ProductService.deleteAllProducts();
 
-			expect(Product.destroy).toHaveBeenCalledWith({where: {}})
-			expect(result).toBe(products.length)
-		})
+			expect(Product.destroy).toHaveBeenCalledWith({ where: {} });
+			expect(result).toBe(products.length);
+		});
 
-		it("returns null when model returns null", async() => {
-			Product.destroy.mockResolvedValue(null)
+		it("returns null when model returns null", async () => {
+			Product.destroy.mockResolvedValue(null);
 
 			const result = await ProductService.deleteAllProducts();
 
-			expect(Product.destroy).toHaveBeenCalledWith({where: {}})
-			expect(result).toBe(null)
-		})
-	})
-
-	
+			expect(Product.destroy).toHaveBeenCalledWith({ where: {} });
+			expect(result).toBe(null);
+		});
+	});
 });

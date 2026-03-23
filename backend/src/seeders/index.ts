@@ -1,7 +1,8 @@
 // Убираем ненужный импорт Model
+import { sequelize } from "../db/index.ts";
 import { seedCategories } from "./categories.ts";
-import { seedPromocodes } from "./promocodes.ts";
 import { seedProducts } from "./products.ts";
+import { seedPromocodes } from "./promocodes.ts";
 import { seedUsers } from "./users.ts";
 
 export const seedTesting = async (): Promise<void> => {
@@ -23,8 +24,6 @@ export const seedTesting = async (): Promise<void> => {
 export const clearAllData = async (): Promise<void> => {
 	try {
 		console.log("🗑️ Clearing all data (optimized)...");
-
-		const sequelize = (await import("../db.ts")).default;
 
 		await sequelize.query(`
 			TRUNCATE TABLE 

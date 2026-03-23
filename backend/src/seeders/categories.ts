@@ -1,9 +1,10 @@
-import { mockCategories } from "../mocks/categories.ts";
+import { mockCategories } from "../mocks/categories/mockCategories.ts";
 import type { CategoryAttributes } from "../models/Category.ts";
 import Category from "../models/Category.ts";
 
 export const seedCategories = async (): Promise<void> => {
 	try {
+		// категории не должны быть мокаными, они должны создаваться в админке
 		const categories: CategoryAttributes[] = mockCategories;
 
 		// Используем findOrCreate для идемпотентности

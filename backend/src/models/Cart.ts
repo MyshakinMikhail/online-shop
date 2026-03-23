@@ -1,5 +1,5 @@
 import { DataTypes, Model, type Optional } from "sequelize";
-import sequelize from "./../db.ts";
+import { sequelize } from "../db/index.ts";
 import CartItem from "./CartItem.ts";
 
 export interface CartAttributes {

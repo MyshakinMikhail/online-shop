@@ -1,5 +1,6 @@
 import { DataTypes, Model, type Optional } from "sequelize";
-import sequelize from "./../db.ts";
+import { sequelize } from "../db/index.ts";
+
 import { Product } from "./Product.ts";
 
 type OrderStatus = "pending" | "processing" | "ready to give" | "delivered" | "cancelled"; // "paid" после "pending"

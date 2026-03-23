@@ -1,4 +1,5 @@
-import { mockFavorite } from "./mockFavorite";
-import { mockFavorites } from "./mockFavoriteWithProduct";
+import { mockFavorites } from "./mockFavorites";
+import { mockFavoritesForCreate } from "./mockFavoritesForCreate";
+import { mockFavoritesWithProduct } from "./mockFavoriteWithProduct";
 
-export { mockFavorite, mockFavorites };
+export { mockFavorites, mockFavoritesForCreate, mockFavoritesWithProduct };

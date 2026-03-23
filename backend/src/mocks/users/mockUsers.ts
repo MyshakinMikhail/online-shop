@@ -1,4 +1,4 @@
-import { type UserAttributes } from "../models/User.ts";
+import { type UserAttributes } from "../../models/User.ts";
 
 export const mockUsers: UserAttributes[] = [
 	{
@@ -11,22 +11,22 @@ export const mockUsers: UserAttributes[] = [
 		is_buying_smth: false,
 	},
 	{
-		role: "admin",
-		psuid: 2,
-		first_name: "Мария",
-		last_name: "Петрова",
-		sex: "female",
-		default_email: "manager@example.com",
-		is_buying_smth: false,
-	},
-	{
 		role: "user",
-		psuid: 3,
+		psuid: 2,
 		first_name: "Иван",
 		last_name: "Сидоров",
 		sex: "male",
 		default_email: "ivan@example.com",
 		is_buying_smth: true,
+	},
+	{
+		role: "admin",
+		psuid: 3,
+		first_name: "Мария",
+		last_name: "Петрова",
+		sex: "female",
+		default_email: "manager@example.com",
+		is_buying_smth: false,
 	},
 	{
 		role: "user",

@@ -47,7 +47,7 @@ export const productController = {
 				product: { ...product.toJSON(), isFavorite: Boolean(isFavorite) },
 			});
 		} catch (e) {
-			res.status(500).json({ message: `Ошибка получения продукта по id: ${e}` });
+			res.status(500).json({ message: `Ошибка получения продукта по id на сервере: ${e}` });
 		}
 	},
 	addProduct: async (
@@ -67,7 +67,7 @@ export const productController = {
 
 			const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 			if (!user) {
-				return res.status(400).json({ message: "Пользователя с данным id не существует" });
+				return res.status(404).json({ message: "Пользователя с данным id не существует" });
 			}
 
 			const productValidationResult = validateProductCreationAttributes(product);
@@ -80,7 +80,7 @@ export const productController = {
 			const findedProduct = await ProductService.getProductByName(product.name);
 			if (findedProduct) {
 				return res
-					.status(404)
+					.status(409)
 					.json({ message: "Продукт с таким названием уже существует" });
 			}
 
@@ -91,7 +91,7 @@ export const productController = {
 			const article = uniqueArticle();
 			const finalProduct = { ...product, article };
 
-			const createdProduct = await ProductService.createProduct(finalProduct);
+			const createdProduct = (await ProductService.createProduct(finalProduct)).toJSON();
 
 			res.status(201).json({ createdProduct });
 		} catch (e) {
@@ -115,7 +115,7 @@ export const productController = {
 
 			const user = await User.findOne({ where: { psuid: userIdValidationResult.id } });
 			if (!user) {
-				return res.status(400).json({ message: "Пользователь с данным id не существует" });
+				return res.status(404).json({ message: "Пользователя с данным id не существует" });
 			}
 
 			const productValidationResult = validateProductUpdateAttributes(product);

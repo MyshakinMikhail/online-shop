@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import { User } from "../models/index.ts";
-import { FavoriteService } from "../services/index.ts";
+import { FavoriteService, ProductService } from "../services/index.ts";
 import { validateId } from "../utils/validation/validation.ts";
 
 type FavoriteParamsType = {
@@ -80,10 +80,15 @@ export const favoriteItemsController = {
 				return res.status(404).json({ message: "Пользователя с данным id не существует" });
 			}
 
-			const product = await FavoriteService.getFavorite(user.id, productId);
-
+			const product = await ProductService.getProduct(productId);
 			if (!product) {
-				return res.status(404).json({ message: "Данного товара уже нет в корзине" });
+				return res.status(404).json({ message: "Продукта с данным id не существует" });
+			}
+
+			const favoriteProduct = await FavoriteService.getFavorite(user.id, productId);
+
+			if (!favoriteProduct) {
+				return res.status(404).json({ message: "Данного товара уже нет в избранном" });
 			}
 
 			await FavoriteService.deleteFavorite(user.id, productId);

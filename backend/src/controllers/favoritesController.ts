@@ -47,11 +47,6 @@ export const favoritesController = {
 				return res.status(404).json({ message: "Данного пользователя не существует" });
 			}
 
-			const products = await FavoriteService.getAllUserFavorites(user.id);
-			if (!products.length) {
-				return res.status(404).json({ message: "Корзина уже пустая" });
-			}
-
 			await FavoriteService.deleteAllUserFavorites(user.id);
 			res.status(200).json({ message: "Все избранные товары успешно очищены" });
 		} catch (error) {

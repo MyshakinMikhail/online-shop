@@ -1,5 +1,5 @@
 import type { Request, Response } from "express";
-import sequelize from "../db.ts";
+import { sequelize } from "../db/index.ts";
 import { Cart, CartItem, Order, OrderItem, Product, User } from "../models/index.ts";
 import { OrderService } from "../services/OrderService/OrderService.ts";
 import { validateId } from "../utils/index.ts";

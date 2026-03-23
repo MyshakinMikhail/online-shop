@@ -1,5 +1,6 @@
 import { DataTypes, Model, type Optional } from "sequelize";
-import sequelize from "./../db.ts";
+import { sequelize } from "../db/index.ts";
+
 
 export type PromocodeAttributes = {
 	id: number;
