@@ -235,7 +235,6 @@ describe("Product API", () => {
 			}
 
 			const updatedProduct = { ...product.toJSON(), name: "Updated Product" };
-			console.log(updatedProduct, "я в ахуе");
 
 			const res = await request(app)
 				.put(`/api/product/${adminId}`)
@@ -353,12 +352,12 @@ describe("Product API", () => {
 		});
 
 		it("Ошибка, продукт с данным id не найден", async () => {
-			const notCorrectProductId = 2;
+			const notCorrectProductId = 10;
 			const res = await request(app).delete(
-				`/api/product/${user.psuid}/${notCorrectProductId}`
+				`/api/product/${admin.psuid}/${notCorrectProductId}`
 			);
-			expect(res.status).toBe(403);
-			expect(res.body.message).toBe("Недостаточно прав для данного действия");
+			expect(res.status).toBe(404);
+			expect(res.body.message).toBe("Продукт не найден");
 
 			const notDeletedProduct = await Product.findByPk(createdProduct.id);
 			expect(notDeletedProduct).not.toBeNull();

@@ -26,15 +26,38 @@ beforeEach(async () => {
 	for (let product of products) {
 		await Product.create(product);
 	}
+
+	for (let favorite of favorites) {
+		await Favorite.create(favorite);
+	}
 });
 
 describe("Favorites API", () => {
 	describe("GET favorites/:userId", () => {
-		it("Возвращает избранные товары для пользователя", async () => {
-			for (let favorite of favorites) {
-				await Favorite.create(favorite);
-			}
+		it("Ошибка получения избранных товаров, не валидный userId", async () => {
+			const notValidUserPsuid = -3;
+			const res = await request(app).get(`/api/favorites/${notValidUserPsuid}`);
 
+			expect(res.status).toBe(400);
+			expect(res.body.message).toBe("id должен быть положительным числом");
+		});
+
+		it("Ошибка получения избранных товаров, пользователя с данным id не существует", async () => {
+			const notCorrectedUser = 2;
+			const res = await request(app).get(`/api/favorites/${notCorrectedUser}`);
+
+			expect(res.status).toBe(404);
+			expect(res.body.message).toBe("Данного пользователя не существует");
+		});
+
+		it("Ошибка получения избранных товаров, пользователя с данным id не существует", async () => {
+			const notCorrectedUser = 2;
+			const res = await request(app).get(`/api/favorites/${notCorrectedUser}`);
+
+			expect(res.status).toBe(404);
+			expect(res.body.message).toBe("Данного пользователя не существует");
+		});
+		it("Успешно возвращает избранные товары для пользователя", async () => {
 			const res = await request(app).get(`/api/favorites/${user.psuid}`);
 
 			expect(res.status).toBe(200);
@@ -48,26 +71,26 @@ describe("Favorites API", () => {
 			const favoriteIds = favorites.map(f => f.productId);
 			expect(productIds).toEqual(favoriteIds);
 		});
-
-		it("Возвращает пустой массив избранных товары, когда избранных нет", async () => {
-			const res = await request(app).get(`/api/favorites/${user.psuid}`);
-
-			expect(res.status).toBe(200);
-			expect(res.body.products).not.toBeNull();
-			expect(Array.isArray(res.body.products)).toBe(true);
-
-			const products = await Favorite.findAll({ where: { userId: user.psuid } });
-			expect(products.length).toBe(0);
-			expect(products).toEqual([]);
-		});
 	});
 
 	describe("DELETE favorites/:userId", () => {
-		it("Удаляет все избранные товары пользователя", async () => {
-			for (let favorite of favorites) {
-				await Favorite.create(favorite);
-			}
+		it("Ошибка удаления избранных, не валидный userId", async () => {
+			const notValidUserPsuid = 2.3;
+			const res = await request(app).delete(`/api/favorites/${notValidUserPsuid}`);
 
+			expect(res.status).toBe(400);
+			expect(res.body.message).toBe("id должен быть целым числом");
+		});
+
+		it("Ошибка удаления избранных, пользователя с данным userId не существует", async () => {
+			const notCorrectUserPsuid = 2;
+			const res = await request(app).delete(`/api/favorites/${notCorrectUserPsuid}`);
+
+			expect(res.status).toBe(404);
+			expect(res.body.message).toBe("Данного пользователя не существует");
+		});
+
+		it("Успешно удаляет все избранные товары пользователя", async () => {
 			// проверка, что избранные продукты реально существовали и были впоследствии удалены
 			const currUserFavoriteProducts = await Favorite.findAll({
 				where: { userId: user.psuid },

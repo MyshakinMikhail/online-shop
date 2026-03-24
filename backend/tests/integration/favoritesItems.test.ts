@@ -39,6 +39,7 @@ describe("Favorite items API", () => {
 				.post(`/api/favorite/items/${notValidUserPsuid}`)
 				.send({ productId: createdProducts[0].id });
 			expect(res.status).toBe(400);
+			expect(res.body.message).toBe("id должен быть числом");
 		});
 
 		it("Ошибка добавления товара в избранное, невалидный productId", async () => {
@@ -47,6 +48,7 @@ describe("Favorite items API", () => {
 				.post(`/api/favorite/items/${userId}`)
 				.send({ productId: notValidProductId });
 			expect(res.status).toBe(400);
+			expect(res.body.message).toBe("id должен быть положительным числом");
 		});
 
 		it("Ошибка добавления товара в избранное, пользователя с данным id не существует", async () => {
