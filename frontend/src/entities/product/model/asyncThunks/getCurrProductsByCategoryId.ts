@@ -31,6 +31,7 @@ export const getCurrProductsByCategoryId = createAsyncThunk<
 	async ({ currPage = 1, limit = 16, categoryId = 1 }: Props, { rejectWithValue }) => {
 		try {
 			const userInfo: YandexUserInfo = storage.getUserInfo();
+			console.log("page", currPage, "limit", limit, "categoryId", categoryId);
 			const result = await api.get(`/products/${userInfo.id}`, {
 				params: {
 					page: currPage,
@@ -38,6 +39,8 @@ export const getCurrProductsByCategoryId = createAsyncThunk<
 					categoryId: categoryId,
 				},
 			});
+
+			console.log("products", result.data.products, "totalPages", result.data.count);
 			return {
 				products: result.data.products,
 				totalPages: result.data.count,
