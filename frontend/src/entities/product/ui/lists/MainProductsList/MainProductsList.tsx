@@ -5,12 +5,12 @@ import { MainProductCard } from "../../cards";
 import classes from "./MainProductsList.module.css";
 
 export default function MainProductsList() {
-	const { items } = useSelector((state: RootState) => state.productsPage.currProducts);
+	const { items, limit } = useSelector((state: RootState) => state.productsPage.currProducts);
 
 	return (
 		<div className={classes.list}>
 			{items?.length === 0 && <div>Товары отсутствуют</div>}
-			{items?.map((product: Product) => (
+			{items?.slice(0, limit).map((product: Product) => (
 				<MainProductCard key={product.article} product={product} />
 			))}
 		</div>
