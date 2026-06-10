@@ -1,0 +1,4 @@
+interface:
+  display_name: "Online Shop API Contract Sync"
+  short_description: "Synchronize API contracts with frontend and backend code."
+  default_prompt: "Use this skill when changing or reviewing API contracts in the online shop project."
