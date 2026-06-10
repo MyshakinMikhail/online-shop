@@ -1,278 +1,845 @@
-основной функционал магазина:
+# API_CONTRACTS.md
 
-1) авторизация ( yandex auth )
-2) поиск товаров на текущей странице выбранной категории ( все товары, футболки, худи, лонгсливы, штаны )
-3) глобальный поиск товара ( поиск по всему ассортименту )
-4) добавление товара в избранное
-5) покупка товара или группы товаров ( реализовать страницу покупки без самой транзакции )
-6) просмотр избранного
-7) просмотр корзины
+Актуальные API-контракты интернет-магазина одежды по состоянию кода в `backend/src`.
 
-модели:
+Backend по умолчанию доступен по адресу:
 
-1) user:
-  * id?: number ( уникальный идентификатор в БД )
-  * psuid: string ( уникальный id сгенерированный яндексом )
-  * first_name?: string
-  * last_name?: string
-  * sex?: string ( пол: "male" | "female" | "other" )
-  * default_email?: string
-  * is_buying_smth?: boolean ( флаг процесса покупки )
+```text
+http://localhost:3000/api
+```
 
-2) product:
-  * id: number ( уникальный идентификатор )
-  * name: string ( название )
-  * description: string ( описание )
-  * sizes: string[] ( массив доступных размеров, например: ["S", "M", "L", "XL"] )
-  * article: string ( артикул, уникальный )
-  * price: number ( цена в рублях )
-  * category: "all" | "tShirts" | "hoodies" | "longSleeves" | "trousers" ( категория товара )
-  * stock: number ( общее количество товара в ассортименте )
-  * image_url?: string ( URL главного изображения товара )
-  * images?: string[] ( массив URL дополнительных изображений )
-  * isActive: boolean ( активен ли товар для продажи )
+Frontend использует этот base URL в `frontend/src/shared/api/axios.ts`.
 
-3) favourite_item:
-  * id: number ( уникальный идентификатор записи в избранном )
-  * user_id: number ( ID пользователя )
-  * product_id: number ( ID товара )
+## Общие правила
 
+- В URL-параметрах `:userId` фактически передается Yandex ID пользователя (`psuid`), а не внутренний `users.id`.
+- Backend валидирует все id через `validateId`: значение обязательно, должно быть положительным целым числом.
+- Пользователь ищется по `User.psuid`. Внутренний `User.id` используется уже после поиска, например для корзины, избранного и заказов.
+- Bearer/JWT авторизация в текущем backend не реализована. Права проверяются через найденного пользователя и его `role`.
+- Админские операции доступны ролям `admin` и `super_admin` через `AuthService.hasAdminRights`.
+- Типовая ошибка валидации: HTTP `400` и `{ message: string }`.
+- Если пользователь не найден: HTTP `404` и `{ message: string }`.
+- При недостатке прав: HTTP `403` и `{ message: string }`.
+- При серверной ошибке: HTTP `500` и `{ message: string }`.
 
-4) cart_item:
-  * id: number ( уникальный идентификатор записи в корзине )
-  * user_id: number ( ID пользователя )
-  * product_id: number ( ID товара )
-  * quantity: number ( количество товара в корзине, минимум 1 )
+## Модели
 
+### User
 
-5) order:
-  * id: number ( уникальный идентификатор заказа )
-  * user_id: number ( ID пользователя )
-  * items: order_item[] ( массив товаров в заказе )
-  * total_price: number ( общая стоимость заказа )
-  * status: "pending" | "processing" | "completed" | "cancelled" ( статус заказа )
+Источник: `backend/src/models/User.ts`.
 
+```ts
+type UserRole = "super_admin" | "admin" | "user";
+type UserSex = "male" | "female" | "other";
 
-6) order_item:
-  * id: number ( уникальный идентификатор )
-  * order_id: number ( ID заказа )
-  * product_id: number ( ID товара )
-  * product: Product ( информация о товаре на момент заказа )
-  * quantity: number ( количество )
-  * price: number ( цена на момент заказа )
+type User = {
+  id: number;
+  role: UserRole;
+  psuid: number;
+  first_name: string;
+  last_name: string;
+  sex: UserSex;
+  default_email: string;
+  is_buying_smth: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+```
 
+Таблица: `users`.
 
-основные контракты API:
+### Category
 
-1) Авторизация:
-    # POST /api/auth/yandex ( + )
-     Request Body: { psuid: string, first_name: string, ... }
-     Response: { code: 200, message: "Пользователь успешно создан" }
-     Описание: Добавление нового пользователя в бд
+Источник: `backend/src/models/Category.ts`.
 
-   * GET /api/auth/me ( пока не нужно )
-     Headers: { Authorization: "Bearer <access_token>" }
-     Response: { user: User }
-     Описание: Получить информацию о текущем пользователе
+```ts
+type Category = {
+  id: number;
+  name: string;
+  slug: string;
+};
+```
 
-   * POST /api/auth/refresh ( пока не нужно )
-     Request Body: { refresh_token: string }
-     Response: { access_token: string, refresh_token: string }
-     Описание: Обновить access_token
+Таблица: `categories`. `timestamps: false`.
 
-2) Товары:
-    # GET /api/products ( + )
-     Query Params: { category?: "all" | "tShirts" | "hoodies" | "longSleeves" | "trousers"}
-     Response: { products: Product[], total: number}
-     Описание: Получить список всех товаров с фильтрацией по категории.
+### Product
 
-    # GET /api/products/:id ( + )
-     Params: {id: number};
-     Response: { product: Product } ( если авторизован, содержит is_favourite: boolean )
-     Описание: Получить информацию о конкретном товаре по ID
+Источник: `backend/src/models/Product.ts`.
 
+```ts
+type Product = {
+  id: number;
+  name: string;
+  description: string;
+  sizes: string[];
+  article: string;
+  price: number;
+  categoryId: number;
+  stock: number;
+  image_url?: string | null;
+  images?: string[] | null;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+};
+```
 
-3) Избранное:
-     # GET /api/favourites ( + )
-     Request Body: {user_id: User} 
-     Response: { favourites: FavoriteItem[] }
-     Описание: Получить список избранных товаров пользователя
+В ответах списка и карточки товара может добавляться:
 
-     # POST /api/favourites ( + )
-     Request Body: { user_id: number, product_id: number }
-     Response: { favourite: FavoriteItem }
-     Описание: Добавить товар в избранное
+```ts
+type ProductWithFavorite = Product & {
+  isFavorite: boolean;
+};
+```
 
-     # DELETE /api/favourites/:product_id ( + )
-     Request Body: { psuid: number }
-     Response: { success: boolean }
-     Описание: Удалить товар из избранного
+Таблица: `products`.
 
-4) Корзина:
-   * GET /api/cart
-     Headers: { Authorization: "Bearer <access_token>" }
-     Response: { cart: CartItem[] }
-     Описание: Получить корзину пользователя
+Важно: в текущем коде нет отдельных таблиц `product_sizes` и `product_images`; размеры и изображения хранятся в полях `sizes` и `images`.
 
-   * POST /api/cart
-     Headers: { Authorization: "Bearer <access_token>" }
-     Request Body: { product_id: number, quantity?: number }
-     Response: { cart_item: CartItem }
-     Описание: Добавить товар в корзину (или увеличить количество, если уже есть)
+### Cart
 
-   * PATCH /api/cart/:item_id
-     Headers: { Authorization: "Bearer <access_token>" }
-     Request Body: { quantity: number }
-     Response: { cart_item: CartItem }
-     Описание: Изменить количество товара в корзине
+Источник: `backend/src/models/Cart.ts`.
 
-   * DELETE /api/cart/:item_id
-     Headers: { Authorization: "Bearer <access_token>" }
-     Response: { success: boolean }
-     Описание: Удалить товар из корзины
+```ts
+type Cart = {
+  id: number;
+  userId: number;
+  items?: CartItemWithProduct[];
+  createdAt: string;
+  updatedAt: string;
+};
+```
 
-   * DELETE /api/cart
-     Headers: { Authorization: "Bearer <access_token>" }
-     Response: { success: boolean }
-     Описание: Очистить всю корзину
+Таблица: `carts`.
 
-5) Заказы:
-   * POST /api/orders
-     Headers: { Authorization: "Bearer <access_token>" }
-     Request Body: { items: [{ product_id: number, quantity: number }] }
-     Response: { order: Order }
-     Описание: Создать заказ из товаров в корзине (корзина очищается после создания заказа)
+### CartItem
 
-   * GET /api/orders
-     Headers: { Authorization: "Bearer <access_token>" }
-     Response: { orders: Order[] }
-     Описание: Получить список всех заказов пользователя
+Источник: `backend/src/models/CartItem.ts`.
 
-   * GET /api/orders/:id
-     Headers: { Authorization: "Bearer <access_token>" }
-     Response: { order: Order }
-     Описание: Получить информацию о конкретном заказе
-  
+```ts
+type CartItem = {
+  id: number;
+  cartId: number;
+  productId: number;
+  quantity: number;
+  createdAt: string;
+  updatedAt: string;
+};
 
-admin main page
+type CartItemWithProduct = CartItem & {
+  product: Product;
+};
+```
 
-super-admin
-  * назначать админов
-  * все, что и admin
-  
-admin
-  * добавлять товары
-  * редактировать товары
-  * удалять товары
-  * все, что и user
+Таблица: `cartItem`.
 
-user
-  * смотреть товары
-  * добавлять в избранное
-  * оформлять заказ
+### Favorite
 
-p.s для админов отдельные ручки ( недоступные обычным пользователям )
+Источник: `backend/src/models/Favorite.ts`.
 
+```ts
+type Favorite = {
+  id: number;
+  userId: number;
+  productId: number;
+  createdAt: string;
+  updatedAt: string;
+};
 
+type FavoriteWithProduct = Favorite & {
+  product: Product;
+};
+```
 
-таблицы для бд:
+Таблица: `favorites`.
 
-1) user:
-   * id: SERIAL PRIMARY KEY ( автоинкремент )
-   * psuid: VARCHAR(255) UNIQUE NOT NULL ( уникальный id сгенерированный яндексом )
-   * access_token: TEXT ( JWT токен доступа, может быть NULL если не авторизован )
-   * refresh_token: TEXT ( токен для обновления, может быть NULL )
-   * first_name: VARCHAR(255)
-   * last_name: VARCHAR(255)
-   * sex: VARCHAR(50) CHECK (sex IN ('male', 'female', 'other')) ( пол )
-   * default_email: VARCHAR(255)
-   * is_buying_smth: BOOLEAN DEFAULT FALSE ( флаг процесса покупки )
-   * created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * updated_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * INDEX idx_user_psuid (psuid) ( индекс для быстрого поиска по psuid )
+### Order
 
-2) products:
-   * id: SERIAL PRIMARY KEY ( автоинкремент )
-   * name: VARCHAR(255) NOT NULL ( название )
-   * description: TEXT ( описание )
-   * article: VARCHAR(100) UNIQUE NOT NULL ( артикул, уникальный )
-   * price: DECIMAL(10, 2) NOT NULL CHECK (price > 0) ( цена в рублях, должна быть положительной )
-   * category: VARCHAR(100) NOT NULL CHECK (category IN ('all', 'tShirts', 'hoodies', 'longSleeves', 'trousers')) ( категория товара )
-   * stock: INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0) ( общее количество товара, не может быть отрицательным )
-   * image_url: VARCHAR(500) ( URL главного изображения товара )
-   * isActive: BOOLEAN DEFAULT TRUE ( активен ли товар для продажи )
-   * created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * updated_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * INDEX idx_products_category (category) ( индекс для фильтрации по категории )
-   * INDEX idx_products_article (article) ( индекс для поиска по артикулу )
-   * INDEX idx_products_active (isActive) ( индекс для фильтрации активных товаров )
-   * FULLTEXT INDEX idx_products_search (name, description) ( полнотекстовый поиск по названию и описанию )
+Источник: `backend/src/models/Order.ts`.
 
-3) product_sizes:
-   * id: SERIAL PRIMARY KEY
-   * product_id: INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE
-   * size: VARCHAR(50) NOT NULL ( размер: S, M, L, XL, XXL и т.д. )
-   * stock: INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0) ( количество товара конкретного размера )
-   * created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * UNIQUE(product_id, size) ( один размер может быть только один раз для товара )
-   * INDEX idx_product_sizes_product (product_id) ( индекс для быстрого поиска размеров товара )
+```ts
+type OrderStatus = "pending" | "processing" | "shipped" | "delivered" | "cancelled";
 
-4) product_images:
-   * id: SERIAL PRIMARY KEY
-   * product_id: INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE
-   * image_url: VARCHAR(500) NOT NULL ( URL изображения )
-   * order_index: INTEGER DEFAULT 0 ( порядок отображения изображений )
-   * created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * INDEX idx_product_images_product (product_id) ( индекс для быстрого поиска изображений товара )
+type Order = {
+  id: number;
+  userId: number;
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  promocode: string;
+  isPromocodeActivate: boolean;
+  sale: number;
+  city: string;
+  totalPrice: number;
+  status: OrderStatus;
+  createdAt: string;
+  updatedAt: string;
+};
+```
 
-5) user_favourites:
-   * id: SERIAL PRIMARY KEY
-   * user_id: INTEGER NOT NULL REFERENCES user(id) ON DELETE CASCADE
-   * product_id: INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE
-   * created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * UNIQUE(user_id, product_id) ( один товар может быть в избранном только один раз )
-   * INDEX idx_favourites_user (user_id) ( индекс для быстрого поиска избранного пользователя )
-   * INDEX idx_favourites_product (product_id) ( индекс для обратных запросов )
+Таблица: `orders`.
 
-6) user_cart:
-   * id: SERIAL PRIMARY KEY
-   * user_id: INTEGER NOT NULL REFERENCES user(id) ON DELETE CASCADE
-   * product_id: INTEGER NOT NULL REFERENCES products(id) ON DELETE CASCADE
-   * quantity: INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0) ( количество товара в корзине, минимум 1 )
-   * created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * updated_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * UNIQUE(user_id, product_id) ( один товар в корзине пользователя только один раз, количество меняется через quantity )
-   * INDEX idx_cart_user (user_id) ( индекс для быстрого поиска корзины пользователя )
-   * INDEX idx_cart_product (product_id) ( индекс для обратных запросов )
+### OrderItem
 
-7) orders:
-   * id: SERIAL PRIMARY KEY
-   * user_id: INTEGER NOT NULL REFERENCES user(id) ON DELETE RESTRICT ( нельзя удалить пользователя с заказами )
-   * total_price: DECIMAL(10, 2) NOT NULL CHECK (total_price > 0) ( общая стоимость заказа )
-   * status: VARCHAR(50) NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'processing', 'completed', 'cancelled')) ( статус заказа )
-   * created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * updated_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * INDEX idx_orders_user (user_id) ( индекс для поиска заказов пользователя )
-   * INDEX idx_orders_status (status) ( индекс для фильтрации по статусу )
+Источник: `backend/src/models/OrderItem.ts`.
 
-8) order_items:
-   * id: SERIAL PRIMARY KEY
-   * order_id: INTEGER NOT NULL REFERENCES orders(id) ON DELETE CASCADE
-   * product_id: INTEGER NOT NULL REFERENCES products(id) ON DELETE RESTRICT ( нельзя удалить товар, который есть в заказе )
-   * quantity: INTEGER NOT NULL CHECK (quantity > 0) ( количество товара в заказе )
-   * price: DECIMAL(10, 2) NOT NULL CHECK (price > 0) ( цена товара на момент заказа, сохраняется для истории )
-   * product_name: VARCHAR(255) NOT NULL ( название товара на момент заказа )
-   * product_article: VARCHAR(100) NOT NULL ( артикул на момент заказа )
-   * created_at: TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-   * INDEX idx_order_items_order (order_id) ( индекс для поиска товаров заказа )
+```ts
+type OrderItem = {
+  id: number;
+  orderId: number;
+  productId: number;
+  quantity: number;
+  priceAtPurchase: number;
+  createdAt: string;
+  updatedAt: string;
+};
+```
 
+Таблица: `orderItem`.
 
-примечания к структуре БД:
+### Promocode
 
-1) Размеры товаров вынесены в отдельную таблицу product_sizes для поддержки нескольких размеров одного товара
-2) Изображения товаров вынесены в отдельную таблицу product_images для поддержки нескольких изображений
-3) Все цены хранятся в DECIMAL(10, 2) для точности расчетов
-4) Добавлены CHECK ограничения для валидации данных на уровне БД
-5) Добавлены индексы для оптимизации частых запросов
-6) В таблице order_items сохраняются данные товара на момент заказа (price, name, article) для истории
-7) Используется ON DELETE CASCADE для зависимых данных (избранное, корзина) и ON DELETE RESTRICT для критичных (заказы)
+Источник: `backend/src/models/Promocode.ts`.
+
+```ts
+type Promocode = {
+  id: number;
+  name: string;
+  isActive: boolean;
+  discount: number;
+  createdAt: string;
+  updatedAt: string;
+};
+```
+
+Таблица: `promocode`.
+
+## Auth
+
+### POST `/api/auth/yandex`
+
+Создает пользователя, если его еще нет. При создании также создает корзину.
+
+Request body:
+
+```ts
+{
+  user: {
+    psuid: number;
+    first_name: string;
+    last_name: string;
+    sex: "male" | "female" | "other";
+    default_email: string;
+    is_buying_smth: boolean;
+    role?: "super_admin" | "admin" | "user";
+  };
+}
+```
+
+Успешные ответы:
+
+```ts
+// 201
+{
+  message: string;
+  created: true;
+  user: User;
+}
+
+// 200, если пользователь уже есть
+{
+  message: string;
+  created: false;
+}
+```
+
+### GET `/api/auth/checkUser/:psuid`
+
+Проверяет наличие пользователя по Yandex ID.
+
+Response:
+
+```ts
+// 200
+{
+  message: string;
+  user: User;
+  found: true;
+}
+
+// 404
+{
+  message: string;
+  found: false;
+}
+```
+
+## Categories
+
+### GET `/api/categories`
+
+Возвращает все категории.
+
+Response:
+
+```ts
+{
+  categories: Category[];
+}
+```
+
+### GET `/api/categories/:slug`
+
+Возвращает категорию по `slug`.
+
+Response:
+
+```ts
+{
+  category: Category;
+}
+```
+
+## Products
+
+### GET `/api/products/:userId`
+
+Возвращает список товаров для пользователя. `:userId` - Yandex `psuid`.
+
+Query params:
+
+```ts
+{
+  page?: number;        // default: 1
+  limit?: number;       // default: 16
+  categoryId?: number;  // обязательный для обычного списка; 1 означает все активные товары
+  searchQuery?: string; // если передан, используется поиск по имени
+  isFavorites?: boolean;
+}
+```
+
+Ответ при `searchQuery`:
+
+```ts
+{
+  products: Product[];
+  message: string;
+}
+```
+
+Ответ при `isFavorites=true`:
+
+```ts
+{
+  products: Product[];
+  message: string;
+}
+```
+
+Обычный ответ:
+
+```ts
+{
+  products: ProductWithFavorite[];
+  count: number;
+}
+```
+
+Особенности:
+
+- Для обычного списка `categoryId` должен приводиться к числу, иначе backend вернет `400`.
+- Возвращаются только активные товары (`isActive: true`), кроме админского поведения, которое зависит от текущей реализации сервиса.
+
+### DELETE `/api/products/:userId`
+
+Админская операция. Удаляет все товары, а также связанные записи избранного, корзин и order items.
+
+Response:
+
+```ts
+{
+  message: string;
+}
+```
+
+## Product
+
+### GET `/api/product/:userId/:productId`
+
+Возвращает товар по id и признак избранного для пользователя.
+
+Response:
+
+```ts
+{
+  product: ProductWithFavorite;
+}
+```
+
+### POST `/api/product/:userId`
+
+Админская операция. Создает товар. `article` в request body валидируется как строка, но итоговый артикул генерируется на backend через `uuid`.
+
+Request body:
+
+```ts
+{
+  product: {
+    name: string;        // 3..200 символов
+    description: string; // 10..5000 символов
+    sizes: string[];
+    article: string;
+    price: number;       // положительное целое
+    categoryId: number;  // положительное целое
+    stock: number;       // целое >= 0
+    image_url?: string | null;
+    images?: string[] | null;
+    isActive: boolean;
+  };
+}
+```
+
+Response:
+
+```ts
+// 201
+{
+  createdProduct: Product;
+}
+```
+
+### PUT `/api/product/:userId`
+
+Админская операция. Обновляет товар по `product.id` и `product.article`.
+
+Request body:
+
+```ts
+{
+  product: Product;
+}
+```
+
+Response:
+
+```ts
+{
+  updatedProduct: Product;
+  message: string;
+}
+```
+
+### DELETE `/api/product/:userId/:productId`
+
+Админская операция. Удаляет один товар.
+
+Response:
+
+```ts
+{
+  message: string;
+}
+```
+
+## Favorites
+
+### GET `/api/favorites/:userId`
+
+Возвращает избранные записи пользователя с вложенными товарами.
+
+Response:
+
+```ts
+{
+  products: FavoriteWithProduct[];
+}
+```
+
+### DELETE `/api/favorites/:userId`
+
+Удаляет все избранные товары пользователя.
+
+Response:
+
+```ts
+{
+  message: string;
+}
+```
+
+### POST `/api/favorite/items/:userId`
+
+Добавляет товар в избранное.
+
+Request body:
+
+```ts
+{
+  productId: number;
+}
+```
+
+Responses:
+
+```ts
+// 201
+{
+  message: string;
+}
+
+// 200, если товар уже был в избранном
+{
+  message: string;
+}
+```
+
+### DELETE `/api/favorite/items/:userId`
+
+Удаляет товар из избранного.
+
+Request body:
+
+```ts
+{
+  productId: number;
+}
+```
+
+Response:
+
+```ts
+{
+  message: string;
+}
+```
+
+## Cart
+
+### GET `/api/cart/:userId`
+
+Возвращает корзину пользователя с товарами.
+
+Response:
+
+```ts
+{
+  message: string;
+  cart: Cart & {
+    items: CartItemWithProduct[];
+  };
+}
+```
+
+### DELETE `/api/cart/:userId`
+
+Очищает корзину пользователя.
+
+Response:
+
+```ts
+{
+  message: string;
+  isDeleted: boolean;
+}
+```
+
+Если корзина уже пустая, backend возвращает `404` и `isDeleted: false`.
+
+### POST `/api/cart/items/:userId`
+
+Добавляет товар в корзину с `quantity: 1`.
+
+Request body:
+
+```ts
+{
+  productId: number;
+}
+```
+
+Response:
+
+```ts
+// 201
+{
+  message: string;
+  cartItem: CartItem;
+}
+```
+
+Если товар уже есть в корзине, текущий backend возвращает `404` с `{ message: string }`.
+
+### PUT `/api/cart/items/:userId`
+
+Увеличивает или уменьшает количество товара в корзине.
+
+Request body:
+
+```ts
+{
+  productId: number;
+  isIncrement: boolean;
+}
+```
+
+Responses:
+
+```ts
+// количество изменено
+{
+  message: string;
+  quantity: number;
+}
+
+// при уменьшении до 0 товар удаляется, quantity не возвращается
+{
+  message: string;
+}
+```
+
+### DELETE `/api/cart/items/:userId`
+
+Удаляет один товар из корзины.
+
+Request body:
+
+```ts
+{
+  productId: number;
+}
+```
+
+Response:
+
+```ts
+{
+  message: string;
+  isDeleted: boolean;
+}
+```
+
+## Orders
+
+### POST `/api/order/:userId`
+
+Создает заказ из текущей корзины пользователя и очищает корзину.
+
+Request body:
+
+```ts
+{
+  userName: string;
+  email: string;
+  phoneNumber: string;
+  promocode: string;
+  city: string;
+}
+```
+
+Response:
+
+```ts
+{
+  message: string;
+  orderId: number;
+}
+```
+
+Особенности текущей реализации:
+
+- Заказ создается только если `userName`, `email`, `phoneNumber` и `promocode` truthy.
+- `city` записывается в заказ, но в условии обязательных полей явно не проверяется.
+- `totalPrice` считается по товарам корзины через `OrderService.calculateOrderTotal`.
+- Промокод применяется через `OrderService.getPriceWithPromocode`.
+- Новый заказ получает статус `"processing"`.
+- В `orderItem` сохраняются `orderId`, `productId`, `quantity`, `priceAtPurchase`.
+- GET endpoints для заказов в текущих роутерах не реализованы.
+
+## Admin
+
+### GET `/api/admin/checkAdmin/:userId`
+
+Проверяет, что пользователь не имеет роль `user`.
+
+Response:
+
+```ts
+// 200
+{
+  message: string;
+}
+```
+
+Если роль `user`, backend возвращает `403`.
+
+## Promocodes
+
+### GET `/api/promocodes/:userId`
+
+Админская операция. Возвращает промокоды, отфильтрованные по имени.
+
+Query params:
+
+```ts
+{
+  searchQuery?: string;
+}
+```
+
+Response:
+
+```ts
+{
+  promocodes: Promocode[];
+  message: string;
+}
+```
+
+Текущая реализация использует `Op.iLike` с `%${searchQuery}%`. Если `searchQuery` не передан, значение становится `undefined`.
+
+### DELETE `/api/promocodes/:userId`
+
+Админская операция. Должна удалять все промокоды.
+
+Текущее состояние кода:
+
+- В `promocodesRoutes.ts` DELETE ошибочно привязан к `promocodesController.getAllPromocodes`, а не к `deleteAllPromocodes`.
+- Фактический DELETE `/api/promocodes/:userId` сейчас ведет себя как получение списка и ожидает query `searchQuery`.
+
+Ожидаемый response после исправления роутера:
+
+```ts
+{
+  message: string;
+}
+```
+
+### POST `/api/promocode/:userId`
+
+Админская операция. Создает промокод.
+
+Request body:
+
+```ts
+{
+  name: string;
+  isActive: boolean;
+  discount: number; // целое 0..100
+}
+```
+
+Response:
+
+```ts
+// 201
+{
+  promocode: Promocode;
+  message: string;
+}
+```
+
+### PUT `/api/promocode/:userId`
+
+Админская операция. Обновляет промокод по `id`.
+
+Request body:
+
+```ts
+{
+  id: number;
+  name: string;
+  discount: number; // целое 0..100
+  isActive: boolean;
+}
+```
+
+Response:
+
+```ts
+{
+  promocode: Promocode;
+  message: string;
+}
+```
+
+### DELETE `/api/promocode/:userId`
+
+Админская операция. Удаляет промокод по имени.
+
+Query params:
+
+```ts
+{
+  name: string;
+}
+```
+
+Response:
+
+```ts
+{
+  message: string;
+}
+```
+
+## Реализованные маршруты
+
+Сводка из `backend/src/routers/index.ts`:
+
+```text
+POST   /api/auth/yandex
+GET    /api/auth/checkUser/:psuid
+
+GET    /api/admin/checkAdmin/:userId
+
+GET    /api/categories
+GET    /api/categories/:slug
+
+GET    /api/products/:userId
+DELETE /api/products/:userId
+
+GET    /api/product/:userId/:productId
+POST   /api/product/:userId
+PUT    /api/product/:userId
+DELETE /api/product/:userId/:productId
+
+GET    /api/favorites/:userId
+DELETE /api/favorites/:userId
+POST   /api/favorite/items/:userId
+DELETE /api/favorite/items/:userId
+
+GET    /api/cart/:userId
+DELETE /api/cart/:userId
+POST   /api/cart/items/:userId
+PUT    /api/cart/items/:userId
+DELETE /api/cart/items/:userId
+
+POST   /api/order/:userId
+
+GET    /api/promocodes/:userId
+DELETE /api/promocodes/:userId
+POST   /api/promocode/:userId
+PUT    /api/promocode/:userId
+DELETE /api/promocode/:userId
+```
+
+## Роли
+
+```ts
+type UserRole = "super_admin" | "admin" | "user";
+```
+
+- `user`: просмотр товаров, избранное, корзина, оформление заказа.
+- `admin`: все пользовательские действия плюс создание, редактирование и удаление товаров и промокодов.
+- `super_admin`: в текущем коде имеет те же backend-права, что и `admin`.
+
+Назначение админов отдельным endpoint в текущем backend не реализовано.
+
+## Известные расхождения и технический долг
+
+- `GET /api/products/:userId` требует `categoryId` для обычного списка, хотя тип query помечает его optional.
+- `DELETE /api/promocodes/:userId` в роутере привязан к неправильному контроллеру.
+- В `orderController.createOrder` транзакция не всегда явно rollback-ается перед ранними `400/404` ответами.
+- В модели `Order.ts` TypeScript union содержит `"ready to give"`, а Sequelize ENUM содержит `"shipped"`. Фактическая БД-модель принимает `"shipped"`.
+- В старом контракте были `GET /api/orders` и `GET /api/orders/:id`, но в текущем коде они не реализованы.
+- В старом контракте были JWT endpoints `/api/auth/me` и `/api/auth/refresh`, но в текущем коде они не реализованы.
