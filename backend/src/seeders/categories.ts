@@ -1,6 +1,5 @@
 import { mockCategories } from "../mocks/categories/mockCategories.ts";
-import type { CategoryAttributes } from "../models/Category.ts";
-import Category from "../models/Category.ts";
+import Category, { type CategoryAttributes } from "../models/Category.ts";
 
 export const seedCategories = async (): Promise<void> => {
 	try {

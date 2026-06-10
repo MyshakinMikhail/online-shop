@@ -3,29 +3,29 @@ import { Cart, User } from "../models/index.ts";
 import { type UserAttributes } from "../models/User.ts";
 import { validateId } from "../utils/validation/validation.ts";
 
-type DoAuthRequestBodyType = {
+interface DoAuthRequestBodyType {
 	user: UserAttributes;
-};
+}
 
-type DoAuthResponseType = {
+interface DoAuthResponseType {
 	message: string;
 	created: boolean;
 	user?: UserAttributes;
-};
+}
 
-type IsAithRequestParamsType = {
+interface IsAithRequestParamsType {
 	psuid: string | undefined;
-};
+}
 
-type IsAithResponseType = {
+interface IsAithResponseType {
 	message: string;
 	user?: UserAttributes;
 	found: boolean;
-};
+}
 
 export const authController = {
 	doAuth: async (
-		req: Request<{}, {}, DoAuthRequestBodyType>,
+		req: Request<unknown, unknown, DoAuthRequestBodyType>,
 		res: Response<DoAuthResponseType>
 	) => {
 		try {
@@ -59,7 +59,7 @@ export const authController = {
 
 			return res.status(created ? 201 : 200).json({
 				message: created ? "Пользователь успешно создан" : "Данные пользователя обновлены",
-				user: user,
+				user,
 				created,
 			});
 		} catch (error) {
@@ -73,7 +73,7 @@ export const authController = {
 	},
 
 	isAuth: async (
-		req: Request<IsAithRequestParamsType, {}, {}>,
+		req: Request<IsAithRequestParamsType, unknown, unknown>,
 		res: Response<IsAithResponseType>
 	) => {
 		try {
@@ -99,7 +99,7 @@ export const authController = {
 
 			res.status(200).json({
 				message: "Пользователь найден",
-				user: user,
+				user,
 				found: true,
 			});
 		} catch (error) {

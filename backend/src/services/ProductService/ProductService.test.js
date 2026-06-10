@@ -1,10 +1,7 @@
 import { Op } from "sequelize";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Product } from "../../models/index.ts";
-import {
-	mockProduct,
-	mockProducts
-} from "./../../mocks/products/index.ts";
+import { mockProduct, mockProducts } from "./../../mocks/products/index.ts";
 import { ProductService } from "./ProductService";
 
 vi.mock("../../models/index.ts", () => ({

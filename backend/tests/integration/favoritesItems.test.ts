@@ -20,7 +20,7 @@ beforeEach(async () => {
 
 	const createdUser = await User.create(user);
 	await Category.create(category);
-	for (let product of mockProducts.slice(0, 2)) {
+	for (const product of mockProducts.slice(0, 2)) {
 		const createdProduct: ProductAttributes = await Product.create(product);
 		createdProducts.push(createdProduct);
 	}

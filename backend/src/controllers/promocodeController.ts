@@ -4,30 +4,30 @@ import { Promocode } from "../models/Promocode.ts";
 import { AuthService } from "../services/index.ts";
 import { validateId, validatePromocodeDiscount, validatePromocodeName } from "../utils/index.ts";
 
-type RequestParamsType = {
+interface RequestParamsType {
 	userId: number;
-};
+}
 
-type PostRequestBodyType = {
+interface PostRequestBodyType {
 	name: string;
 	isActive: boolean;
 	discount: number;
-};
+}
 
-type PutRequestBodyType = {
+interface PutRequestBodyType {
 	id: number;
 	name: string;
 	discount: number;
 	isActive: boolean;
-};
+}
 
-type DeleteRequestQueryType = {
+interface DeleteRequestQueryType {
 	name: string;
-};
+}
 
 export const promocodeController = {
 	addPromocode: async (
-		req: Request<RequestParamsType, {}, PostRequestBodyType>,
+		req: Request<RequestParamsType, unknown, PostRequestBodyType>,
 		res: Response
 	) => {
 		try {
@@ -93,7 +93,7 @@ export const promocodeController = {
 
 			const createdPromocode = await Promocode.create({
 				name: promocodeNameValidationResult.name,
-				isActive: isActive,
+				isActive,
 				discount: discountValidationResult.discount,
 			});
 
@@ -106,7 +106,7 @@ export const promocodeController = {
 		}
 	},
 	updatePromocode: async (
-		req: Request<RequestParamsType, {}, PutRequestBodyType>,
+		req: Request<RequestParamsType, unknown, PutRequestBodyType>,
 		res: Response
 	) => {
 		try {
@@ -160,7 +160,7 @@ export const promocodeController = {
 			}
 
 			const existingPromocode = await Promocode.findOne({
-				where: { id: id },
+				where: { id },
 			});
 			if (!existingPromocode) {
 				return res.status(404).json({ message: "Промокод не найден" });
@@ -178,12 +178,12 @@ export const promocodeController = {
 
 			await existingPromocode.update(
 				{
-					id: id,
+					id,
 					name: promocodeNameValidationResult.name,
 					isActive: isActive ?? existingPromocode.isActive,
 					discount: discountValidationResult.discount,
 				},
-				{ where: { id: id } }
+				{ where: { id } }
 			);
 
 			res.status(200).json({
@@ -195,7 +195,7 @@ export const promocodeController = {
 		}
 	},
 	deletePromocode: async (
-		req: Request<RequestParamsType, {}, {}, DeleteRequestQueryType>,
+		req: Request<RequestParamsType, unknown, unknown, DeleteRequestQueryType>,
 		res: Response
 	) => {
 		try {

@@ -231,7 +231,7 @@ describe("Product API", () => {
 		it("Успешно обновляет продукт (только админ)", async () => {
 			const product = await Product.findOne({ where: { name: "Test Product" } });
 			if (!product) {
-				if (!product) throw new Error("Тестовый продукт не найден");
+				throw new Error("Тестовый продукт не найден");
 			}
 
 			const updatedProduct = { ...product.toJSON(), name: "Updated Product" };

@@ -1,12 +1,9 @@
-import { Op } from "sequelize";
+import { Op, type WhereOptions } from "sequelize";
 import { type ProductAttributes, type ProductCreationAttributes } from "../../models/Product.ts";
 
 import { Product } from "../../models/index.ts";
 
-type WhereClauseType = {
-	isActive: boolean;
-	categoryId?: number;
-};
+type WhereClauseType = WhereOptions<ProductAttributes>;
 
 export const ProductService = {
 	getProduct: async (id: number) => {

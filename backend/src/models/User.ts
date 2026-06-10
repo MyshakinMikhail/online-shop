@@ -1,5 +1,4 @@
-import type { Optional } from "sequelize";
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, type Optional } from "sequelize";
 import { sequelize } from "../db/index.ts";
 
 export type UserSex = "male" | "female" | "other";

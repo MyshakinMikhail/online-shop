@@ -2,16 +2,19 @@ import type { Request, Response } from "express";
 import { User } from "../models/index.ts";
 import { validateId } from "../utils/index.ts";
 
-type RequestParamsType = {
+interface RequestParamsType {
 	userId: string | undefined;
-};
+}
 
-type ResponseBodyType = {
+interface ResponseBodyType {
 	message: string;
-};
+}
 
 export const adminController = {
-	getUser: async (req: Request<RequestParamsType, {}, {}>, res: Response<ResponseBodyType>) => {
+	getUser: async (
+		req: Request<RequestParamsType, unknown, unknown>,
+		res: Response<ResponseBodyType>
+	) => {
 		try {
 			const { userId } = req.params;
 

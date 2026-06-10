@@ -3,23 +3,23 @@ import { type CartAttributes } from "../models/Cart.ts";
 import { Cart, CartItem, Product, User } from "../models/index.ts";
 import { validateId } from "../utils/index.ts";
 
-type GetCartRequestParamsType = {
+interface GetCartRequestParamsType {
 	userId: number;
-};
+}
 
-type GetCartResponseType = {
+interface GetCartResponseType {
 	cart?: CartAttributes;
 	message: string;
-};
+}
 
-type DeleteCartRequestParamsType = {
+interface DeleteCartRequestParamsType {
 	userId: number;
-};
+}
 
-type DeleteCartResponseType = {
+interface DeleteCartResponseType {
 	message: string;
 	isDeleted: boolean;
-};
+}
 
 export const cartConteroller = {
 	getCart: async (req: Request<GetCartRequestParamsType>, res: Response<GetCartResponseType>) => {

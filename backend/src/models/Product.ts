@@ -1,8 +1,7 @@
-import type { Optional } from "sequelize";
-import { DataTypes, Model } from "sequelize";
+import { DataTypes, Model, type Optional } from "sequelize";
 import { sequelize } from "../db/index.ts";
 
-export type ProductAttributes = {
+export interface ProductAttributes {
 	id: number;
 	name: string;
 	description: string;
@@ -14,7 +13,7 @@ export type ProductAttributes = {
 	image_url?: string | null;
 	images?: string[] | null;
 	isActive: boolean;
-};
+}
 
 export type ProductCreationAttributes = Optional<ProductAttributes, "id" | "image_url" | "images">;
 

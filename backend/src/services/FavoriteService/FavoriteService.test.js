@@ -1,6 +1,10 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Favorite, Product } from "../../models/index.ts";
-import { mockFavorite, mockFavorites, mockFavoritesWithProduct } from "./../../mocks/favorites/index.ts";
+import {
+	mockFavorite,
+	mockFavorites,
+	mockFavoritesWithProduct,
+} from "./../../mocks/favorites/index.ts";
 import { FavoriteService } from "./FavoriteService.ts";
 
 vi.mock("../../models/index.ts", () => ({

@@ -4,41 +4,41 @@ import { Cart, CartItem, User } from "../models/index.ts";
 import { ProductService } from "../services/index.ts";
 import { validateId } from "../utils/index.ts";
 
-type AddProductRequestType = {
+interface AddProductRequestType {
 	userId: number;
 	productId: number;
-};
+}
 
-type AddProductResposeType = {
+interface AddProductResposeType {
 	message: string;
 	cartItem?: CartItemAttributes;
-};
+}
 
-type UpdateCartRequestBodyType = {
+interface UpdateCartRequestBodyType {
 	productId: number;
 	isIncrement: boolean;
-};
-type UpdateCartRequestParamsType = {
+}
+interface UpdateCartRequestParamsType {
 	userId: string;
-};
+}
 
-type UpdateCartResponseType = {
+interface UpdateCartResponseType {
 	message: string;
 	quantity?: number;
-};
+}
 
-type DeleteProductRequestParamsType = {
+interface DeleteProductRequestParamsType {
 	userId: number;
-};
+}
 
-type DeleteProductRequestBodyType = {
+interface DeleteProductRequestBodyType {
 	productId: number;
-};
+}
 
-type DeleteProductResponseType = {
+interface DeleteProductResponseType {
 	message: string;
 	isDeleted: boolean;
-};
+}
 
 export const cartItemsController = {
 	addProduct: async (
@@ -103,7 +103,7 @@ export const cartItemsController = {
 		}
 	},
 	updateProduct: async (
-		req: Request<UpdateCartRequestParamsType, {}, UpdateCartRequestBodyType>,
+		req: Request<UpdateCartRequestParamsType, unknown, UpdateCartRequestBodyType>,
 		res: Response<UpdateCartResponseType>
 	) => {
 		try {
@@ -185,7 +185,7 @@ export const cartItemsController = {
 		}
 	},
 	deleteProduct: async (
-		req: Request<DeleteProductRequestParamsType, {}, DeleteProductRequestBodyType>,
+		req: Request<DeleteProductRequestParamsType, unknown, DeleteProductRequestBodyType>,
 		res: Response<DeleteProductResponseType>
 	) => {
 		try {

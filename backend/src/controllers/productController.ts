@@ -51,7 +51,7 @@ export const productController = {
 		}
 	},
 	addProduct: async (
-		req: Request<{ userId: number }, {}, { product: ProductCreationAttributes }>,
+		req: Request<{ userId: number }, unknown, { product: ProductCreationAttributes }>,
 		res: Response
 	) => {
 		try {
@@ -99,7 +99,7 @@ export const productController = {
 		}
 	},
 	updateProduct: async (
-		req: Request<{ userId: number }, {}, { product: ProductAttributes }>,
+		req: Request<{ userId: number }, unknown, { product: ProductAttributes }>,
 		res: Response
 	) => {
 		try {

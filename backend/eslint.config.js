@@ -16,7 +16,7 @@ export default tseslint.config(
 			sourceType: "module",
 			parser: tseslint.parser,
 			parserOptions: {
-				project: "./tsconfig.json",
+				project: "./tsconfig.eslint.json",
 				tsconfigRootDir: import.meta.dirname,
 			},
 		},
@@ -39,6 +39,8 @@ export default tseslint.config(
 					varsIgnorePattern: "^_",
 					args: "after-used",
 					argsIgnorePattern: "^_",
+					caughtErrors: "none",
+					caughtErrorsIgnorePattern: "^_",
 				},
 			],
 
@@ -48,6 +50,7 @@ export default tseslint.config(
 				{
 					argsIgnorePattern: "^_",
 					varsIgnorePattern: "^_",
+					caughtErrors: "none",
 					caughtErrorsIgnorePattern: "^_",
 					ignoreRestSiblings: true, // Игнорировать оставшиеся элементы деструктуризации
 					destructuredArrayIgnorePattern: "^_", // Игнорировать _ в массивах

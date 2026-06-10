@@ -4,20 +4,20 @@ import { Cart, CartItem, Order, OrderItem, Product, User } from "../models/index
 import { OrderService } from "../services/OrderService/OrderService.ts";
 import { validateId } from "../utils/index.ts";
 
-type ReqParamsType = {
+interface ReqParamsType {
 	userId: number;
-};
+}
 
-type ReqBodyType = {
+interface ReqBodyType {
 	userName: string;
 	email: string;
 	phoneNumber: string;
 	promocode: string;
 	city: string;
-};
+}
 
 export const orderController = {
-	createOrder: async (req: Request<ReqParamsType, {}, ReqBodyType>, res: Response) => {
+	createOrder: async (req: Request<ReqParamsType, unknown, ReqBodyType>, res: Response) => {
 		const t = await sequelize.transaction();
 
 		try {
@@ -71,13 +71,13 @@ export const orderController = {
 				const order = await Order.create(
 					{
 						userId: user.id,
-						userName: userName,
-						email: email,
-						phoneNumber: phoneNumber,
-						promocode: promocode,
-						isPromocodeActivate: isPromocodeActivate,
-						sale: sale,
-						city: city,
+						userName,
+						email,
+						phoneNumber,
+						promocode,
+						isPromocodeActivate,
+						sale,
+						city,
 						totalPrice: finalPrice,
 						status: "processing",
 					},

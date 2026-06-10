@@ -4,20 +4,23 @@ import { AuthService, FavoriteService } from "../services/index.ts";
 import { ProductService } from "../services/ProductService/ProductService.ts";
 import { validateId } from "../utils/index.ts";
 
-type RequestParamsType = {
+interface RequestParamsType {
 	userId: number;
-};
+}
 
-type RequestQueryType = {
+interface RequestQueryType {
 	page?: number;
 	limit?: number;
 	categoryId?: number;
 	searchQuery?: string;
 	isFavorites?: boolean;
-};
+}
 
 export const productsController = {
-	getProducts: async (req: Request<RequestParamsType, {}, RequestQueryType>, res: Response) => {
+	getProducts: async (
+		req: Request<RequestParamsType, unknown, RequestQueryType>,
+		res: Response
+	) => {
 		try {
 			const { userId } = req.params;
 			const { page, limit, categoryId, searchQuery, isFavorites } = req.query;
@@ -41,11 +44,11 @@ export const productsController = {
 						? searchQuery[0]
 						: undefined;
 
-			if (normalizedSearchQuery != null) {
+			if (normalizedSearchQuery !== undefined) {
 				const products = await ProductService.searchProductsByName(normalizedSearchQuery);
 
 				return res.status(200).json({
-					products: products,
+					products,
 					message: "Продукты по search-qyery получены успешно",
 				});
 			}
@@ -95,7 +98,7 @@ export const productsController = {
 			const { count, rows } = await ProductService.getActiveProductsPage({
 				page: normalizedPage,
 				limit: normalizedLimit,
-				whereClause: whereClause,
+				whereClause,
 			});
 
 			const products = rows.map(row => {

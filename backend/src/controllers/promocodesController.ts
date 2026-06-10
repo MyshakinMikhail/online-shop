@@ -5,16 +5,16 @@ import { Promocode } from "../models/Promocode.ts";
 import { AuthService } from "../services/index.ts";
 import { validateId } from "../utils/index.ts";
 
-type RequestParamsType = {
+interface RequestParamsType {
 	userId: number;
-};
-type RequestQueryType = {
+}
+interface RequestQueryType {
 	searchQuery: string;
-};
+}
 
 export const promocodesController = {
 	getAllPromocodes: async (
-		req: Request<RequestParamsType, {}, {}, RequestQueryType>,
+		req: Request<RequestParamsType, unknown, unknown, RequestQueryType>,
 		res: Response
 	) => {
 		try {
@@ -47,9 +47,7 @@ export const promocodesController = {
 				order: [["name", "ASC"]],
 			});
 
-			return res
-				.status(200)
-				.json({ promocodes: promocodes, message: "Промокоды успешно получены" });
+			return res.status(200).json({ promocodes, message: "Промокоды успешно получены" });
 		} catch (error) {
 			res.status(500).json({ message: `Ошибка получения промокодов: ${error}` });
 		}

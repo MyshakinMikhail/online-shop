@@ -3,16 +3,16 @@ import { User } from "../models/index.ts";
 import { FavoriteService, ProductService } from "../services/index.ts";
 import { validateId } from "../utils/validation/validation.ts";
 
-type FavoriteParamsType = {
+interface FavoriteParamsType {
 	userId: string; // потому что параметры в запросе
-};
-type FavoriteBodyType = {
+}
+interface FavoriteBodyType {
 	productId: number;
-};
+}
 
 export const favoriteItemsController = {
 	addFavoriteProduct: async (
-		req: Request<FavoriteParamsType, {}, FavoriteBodyType>,
+		req: Request<FavoriteParamsType, unknown, FavoriteBodyType>,
 		res: Response
 	) => {
 		try {
@@ -54,7 +54,7 @@ export const favoriteItemsController = {
 	},
 
 	deleteFavoriteProduct: async (
-		req: Request<FavoriteParamsType, {}, FavoriteBodyType>,
+		req: Request<FavoriteParamsType, unknown, FavoriteBodyType>,
 		res: Response
 	) => {
 		try {

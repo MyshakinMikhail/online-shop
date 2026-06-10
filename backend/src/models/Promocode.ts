@@ -1,13 +1,12 @@
 import { DataTypes, Model, type Optional } from "sequelize";
 import { sequelize } from "../db/index.ts";
 
-
-export type PromocodeAttributes = {
+export interface PromocodeAttributes {
 	id: number;
 	name: string;
 	isActive: boolean;
 	discount: number;
-};
+}
 
 export type PromocodeCreationAttributes = Optional<PromocodeAttributes, "id">;
 

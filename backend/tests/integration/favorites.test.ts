@@ -23,11 +23,11 @@ beforeEach(async () => {
 	await User.create(user);
 	await Category.create(category);
 
-	for (let product of products) {
+	for (const product of products) {
 		await Product.create(product);
 	}
 
-	for (let favorite of favorites) {
+	for (const favorite of favorites) {
 		await Favorite.create(favorite);
 	}
 });

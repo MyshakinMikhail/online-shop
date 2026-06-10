@@ -1,7 +1,6 @@
 import { DataTypes, Model, type Optional } from "sequelize";
 import { sequelize } from "../db/index.ts";
 
-
 export interface OrderItemAttributes {
 	id: number;
 	orderId: number;
