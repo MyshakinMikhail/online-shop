@@ -43,7 +43,7 @@ export default function AuthPage() {
 			};
 			yandexAuth();
 		}
-	}, [searchParams]);
+	}, [navigate, searchParams]);
 
 	const handleYandexLogin = async () => {
 		setError(null);

@@ -43,7 +43,7 @@ export default function ProductPage() {
 		fetchProduct();
 		dispatch(getCartProducts());
 		dispatch(getFavoriteProducts());
-	}, [id]);
+	}, [dispatch, id]);
 
 	const handleAddInCart = async () => {
 		try {
