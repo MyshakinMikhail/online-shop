@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { favoriteItemsController } from "../controllers/index.ts";
+import { favoriteItemsController } from "../controllers/index";
 
 const router = Router();
 

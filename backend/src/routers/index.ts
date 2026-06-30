@@ -1,16 +1,16 @@
 import { Router } from "express";
-import adminRoutes from "./adminRoutes.ts";
-import authRoutes from "./authRoutes.ts";
-import cartItemsRoutes from "./cartItemsRoutes.ts";
-import cartRoutes from "./cartRoutes.ts";
-import categoriesRoutes from "./categoriesRoutes.ts";
-import favoriteItemsRoutes from "./favoriteItemsRoutes.ts";
-import favoritesRoutes from "./favoritesRoutes.ts";
-import orderRoutes from "./orderRoutes.ts";
-import productRoutes from "./productRoutes.ts";
-import productsRoutes from "./productsRoutes.ts";
-import promocodeRoutes from "./promocodeRoutes.ts";
-import promocodesRoutes from "./promocodesRoutes.ts";
+import adminRoutes from "./adminRoutes";
+import authRoutes from "./authRoutes";
+import cartItemsRoutes from "./cartItemsRoutes";
+import cartRoutes from "./cartRoutes";
+import categoriesRoutes from "./categoriesRoutes";
+import favoriteItemsRoutes from "./favoriteItemsRoutes";
+import favoritesRoutes from "./favoritesRoutes";
+import orderRoutes from "./orderRoutes";
+import productRoutes from "./productRoutes";
+import productsRoutes from "./productsRoutes";
+import promocodeRoutes from "./promocodeRoutes";
+import promocodesRoutes from "./promocodesRoutes";
 
 const router = Router();
 

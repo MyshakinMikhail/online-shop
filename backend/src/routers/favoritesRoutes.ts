@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { favoritesController } from "../controllers/index.ts";
+import { favoritesController } from "../controllers/index";
 
 const router = Router();
 

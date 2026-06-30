@@ -1,4 +1,4 @@
-import { Category } from "../../models/index.ts";
+import { Category } from "../../models/index";
 
 export const CategoryService = {
 	findBySlug: async (slug: string) => {

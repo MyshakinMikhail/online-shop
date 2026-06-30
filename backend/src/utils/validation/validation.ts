@@ -1,4 +1,4 @@
-import type { ProductAttributes, ProductCreationAttributes } from "../../models/Product.ts";
+import type { ProductAttributes, ProductCreationAttributes } from "../../models/Product";
 
 export interface IdValidationResult {
 	isValid: boolean;

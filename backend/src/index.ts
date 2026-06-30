@@ -1,9 +1,9 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { connectDB } from "./db/index.ts";
-import "./models/index.ts";
-import router from "./routers/index.ts";
+import { connectDB } from "./db/index";
+import "./models/index";
+import router from "./routers/index";
 
 dotenv.config();
 

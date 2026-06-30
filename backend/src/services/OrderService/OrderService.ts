@@ -1,4 +1,4 @@
-import { CartItem } from "../../models/index.ts";
+import { CartItem } from "../../models/index";
 
 const ActivePromocodes: Record<string, number> = {
 	SALE10: 10,

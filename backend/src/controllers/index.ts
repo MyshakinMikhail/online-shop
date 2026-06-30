@@ -1,15 +1,15 @@
-import { adminController } from "./adminController.ts";
-import { authController } from "./authController.ts";
-import { cartConteroller } from "./cartController.ts";
-import { cartItemsController } from "./cartItemsController.ts";
-import { categoriesController } from "./categoriesConroller.ts";
-import { favoriteItemsController } from "./favoriteItemsController.ts";
-import { favoritesController } from "./favoritesController.ts";
-import { orderController } from "./orderController.ts";
-import { productController } from "./productController.ts";
-import { productsController } from "./productsController.ts";
-import { promocodeController } from "./promocodeController.ts";
-import { promocodesController } from "./promocodesController.ts";
+import { adminController } from "./adminController";
+import { authController } from "./authController";
+import { cartConteroller } from "./cartController";
+import { cartItemsController } from "./cartItemsController";
+import { categoriesController } from "./categoriesConroller";
+import { favoriteItemsController } from "./favoriteItemsController";
+import { favoritesController } from "./favoritesController";
+import { orderController } from "./orderController";
+import { productController } from "./productController";
+import { productsController } from "./productsController";
+import { promocodeController } from "./promocodeController";
+import { promocodesController } from "./promocodesController";
 
 export {
 	adminController,

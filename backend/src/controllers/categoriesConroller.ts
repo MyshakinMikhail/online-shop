@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { Category } from "../models/index.ts";
-import { CategoryService } from "../services/index.ts";
-import { validateCategorySlug } from "../utils/validation/validation.ts";
+import { Category } from "../models/index";
+import { CategoryService } from "../services/index";
+import { validateCategorySlug } from "../utils/validation/validation";
 
 export const categoriesController = {
 	getAllCategories: async (req: Request, res: Response) => {

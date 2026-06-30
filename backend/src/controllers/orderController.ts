@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import { sequelize } from "../db/index.ts";
-import { Cart, CartItem, Order, OrderItem, Product, User } from "../models/index.ts";
-import { OrderService } from "../services/OrderService/OrderService.ts";
-import { validateId } from "../utils/index.ts";
+import { sequelize } from "../db/index";
+import { Cart, CartItem, Order, OrderItem, Product, User } from "../models/index";
+import { OrderService } from "../services/OrderService/OrderService";
+import { validateId } from "../utils/index";
 
 interface ReqParamsType {
 	userId: number;

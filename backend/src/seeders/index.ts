@@ -1,9 +1,9 @@
 // Убираем ненужный импорт Model
-import { sequelize } from "../db/index.ts";
-import { seedCategories } from "./categories.ts";
-import { seedProducts } from "./products.ts";
-import { seedPromocodes } from "./promocodes.ts";
-import { seedUsers } from "./users.ts";
+import { sequelize } from "../db/index";
+import { seedCategories } from "./categories";
+import { seedProducts } from "./products";
+import { seedPromocodes } from "./promocodes";
+import { seedUsers } from "./users";
 
 export const seedTesting = async (): Promise<void> => {
 	try {

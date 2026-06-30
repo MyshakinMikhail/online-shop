@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { Cart, User } from "../models/index.ts";
-import { type UserAttributes } from "../models/User.ts";
-import { validateId } from "../utils/validation/validation.ts";
+import { Cart, User } from "../models/index";
+import { type UserAttributes } from "../models/User";
+import { validateId } from "../utils/validation/validation";
 
 interface DoAuthRequestBodyType {
 	user: UserAttributes;

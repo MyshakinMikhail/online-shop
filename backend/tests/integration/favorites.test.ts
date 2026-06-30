@@ -1,13 +1,13 @@
 import request from "supertest";
 import { beforeEach, describe, expect, it } from "vitest";
-import { clearTables } from "../../src/db/index.ts";
-import { app } from "../../src/index.ts";
-import { mockFavoritesForCreate } from "../../src/mocks/favorites/index.ts";
-import { mockTestUser } from "../../src/mocks/users/mockTestUsers.ts";
-import Category from "../../src/models/Category.ts";
-import { Favorite } from "../../src/models/Favorite.ts";
-import { Product } from "../../src/models/Product.ts";
-import { User } from "../../src/models/User.ts";
+import { clearTables } from "../../src/db/index";
+import { app } from "../../src/index";
+import { mockFavoritesForCreate } from "../../src/mocks/favorites/index";
+import { mockTestUser } from "../../src/mocks/users/mockTestUsers";
+import Category from "../../src/models/Category";
+import { Favorite } from "../../src/models/Favorite";
+import { Product } from "../../src/models/Product";
+import { User } from "../../src/models/User";
 import { mockCategories } from "./../../src/mocks/categories/mockCategories";
 import { mockProducts } from "./../../src/mocks/products/mockProducts";
 

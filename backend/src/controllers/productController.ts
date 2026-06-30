@@ -1,13 +1,13 @@
 import type { Request, Response } from "express";
 import { v4 as uniqueArticle } from "uuid";
-import { User } from "../models/index.ts";
-import type { ProductAttributes, ProductCreationAttributes } from "../models/Product.ts";
-import { AuthService, FavoriteService, ProductService } from "../services/index.ts";
-import { validateId } from "../utils/index.ts";
+import { User } from "../models/index";
+import type { ProductAttributes, ProductCreationAttributes } from "../models/Product";
+import { AuthService, FavoriteService, ProductService } from "../services/index";
+import { validateId } from "../utils/index";
 import {
 	validateProductCreationAttributes,
 	validateProductUpdateAttributes,
-} from "../utils/validation/validation.ts";
+} from "../utils/validation/validation";
 
 export const productController = {
 	getProduct: async (req: Request, res: Response) => {

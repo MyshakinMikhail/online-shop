@@ -1,11 +1,11 @@
 import request from "supertest";
 import { beforeEach, describe, expect, it } from "vitest";
 import { clearTables } from "../../src/db";
-import { Category, Favorite, Product, User } from "../../src/models/index.ts";
-import { ProductAttributes } from "../../src/models/Product.ts";
-import { app } from "./../../src/index.ts";
+import { Category, Favorite, Product, User } from "../../src/models/index";
+import { ProductAttributes } from "../../src/models/Product";
+import { app } from "./../../src/index";
 import { mockCategories } from "./../../src/mocks/categories/mockCategories";
-import { mockProducts } from "./../../src/mocks/products/index.ts";
+import { mockProducts } from "./../../src/mocks/products/index";
 import { mockTestUser } from "./../../src/mocks/users/mockTestUsers";
 
 const user = mockTestUser;

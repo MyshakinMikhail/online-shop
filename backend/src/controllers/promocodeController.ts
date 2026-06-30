@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import { User } from "../models/index.ts";
-import { Promocode } from "../models/Promocode.ts";
-import { AuthService } from "../services/index.ts";
-import { validateId, validatePromocodeDiscount, validatePromocodeName } from "../utils/index.ts";
+import { User } from "../models/index";
+import { Promocode } from "../models/Promocode";
+import { AuthService } from "../services/index";
+import { validateId, validatePromocodeDiscount, validatePromocodeName } from "../utils/index";
 
 interface RequestParamsType {
 	userId: number;

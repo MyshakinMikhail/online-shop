@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { User } from "../models/index.ts";
-import { FavoriteService, ProductService } from "../services/index.ts";
-import { validateId } from "../utils/validation/validation.ts";
+import { User } from "../models/index";
+import { FavoriteService, ProductService } from "../services/index";
+import { validateId } from "../utils/validation/validation";
 
 interface FavoriteParamsType {
 	userId: string; // потому что параметры в запросе

@@ -1,10 +1,10 @@
 import { Op } from "sequelize";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Product } from "../../models/index.ts";
-import { mockProduct, mockProducts } from "./../../mocks/products/index.ts";
+import { Product } from "../../models/index";
+import { mockProduct, mockProducts } from "./../../mocks/products/index";
 import { ProductService } from "./ProductService";
 
-vi.mock("../../models/index.ts", () => ({
+vi.mock("../../models/index", () => ({
 	Product: {
 		create: vi.fn(),
 		update: vi.fn(),

@@ -1,8 +1,8 @@
 import type { Request, Response } from "express";
-import { CartItem, OrderItem, User } from "../models/index.ts";
-import { AuthService, FavoriteService } from "../services/index.ts";
-import { ProductService } from "../services/ProductService/ProductService.ts";
-import { validateId } from "../utils/index.ts";
+import { CartItem, OrderItem, User } from "../models/index";
+import { AuthService, FavoriteService } from "../services/index";
+import { ProductService } from "../services/ProductService/ProductService";
+import { validateId } from "../utils/index";
 
 interface RequestParamsType {
 	userId: number;

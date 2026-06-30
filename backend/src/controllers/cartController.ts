@@ -1,7 +1,7 @@
 import type { Request, Response } from "express";
-import { type CartAttributes } from "../models/Cart.ts";
-import { Cart, CartItem, Product, User } from "../models/index.ts";
-import { validateId } from "../utils/index.ts";
+import { type CartAttributes } from "../models/Cart";
+import { Cart, CartItem, Product, User } from "../models/index";
+import { validateId } from "../utils/index";
 
 interface GetCartRequestParamsType {
 	userId: number;

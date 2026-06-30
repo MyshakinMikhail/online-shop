@@ -1,9 +1,9 @@
 import request from "supertest";
 import { beforeEach, describe, expect, it } from "vitest";
-import { clearTables } from "../../src/db/index.ts";
-import { app } from "../../src/index.ts";
-import { mockUserForCreate } from "../../src/mocks/users/index.ts";
-import { User } from "../../src/models/index.ts";
+import { clearTables } from "../../src/db/index";
+import { app } from "../../src/index";
+import { mockUserForCreate } from "../../src/mocks/users/index";
+import { User } from "../../src/models/index";
 
 const user = mockUserForCreate;
 

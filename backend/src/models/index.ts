@@ -1,11 +1,11 @@
-import Cart from "./Cart.ts";
-import CartItem from "./CartItem.ts";
-import Category from "./Category.ts";
-import { Favorite } from "./Favorite.ts";
-import Order from "./Order.ts";
-import OrderItem from "./OrderItem.ts";
-import { Product } from "./Product.ts";
-import { User } from "./User.ts";
+import Cart from "./Cart";
+import CartItem from "./CartItem";
+import Category from "./Category";
+import { Favorite } from "./Favorite";
+import Order from "./Order";
+import OrderItem from "./OrderItem";
+import { Product } from "./Product";
+import { User } from "./User";
 
 Category.hasMany(Product, {
 	foreignKey: "categoryId",

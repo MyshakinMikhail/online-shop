@@ -1,4 +1,4 @@
-import sequelize from "./sequelize.ts";
+import sequelize from "./sequelize";
 
 export const connectDB = async () => {
 	try {

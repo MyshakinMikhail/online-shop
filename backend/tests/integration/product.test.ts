@@ -3,13 +3,13 @@
 import request from "supertest";
 import { v4 as uniqueArticle } from "uuid";
 import { beforeEach, describe, expect, it } from "vitest";
-import { clearTables } from "../../src/db/index.ts";
-import { app } from "../../src/index.ts";
-import { mockTestCategory } from "../../src/mocks/categories/index.ts";
-import { mockProductForCreate } from "../../src/mocks/products/mockProductForCreate.ts";
-import { mockTestAdmin, mockTestUser } from "../../src/mocks/users/index.ts";
-import { Category, Product, User } from "../../src/models/index.ts";
-import { ProductAttributes } from "../../src/models/Product.ts";
+import { clearTables } from "../../src/db/index";
+import { app } from "../../src/index";
+import { mockTestCategory } from "../../src/mocks/categories/index";
+import { mockProductForCreate } from "../../src/mocks/products/mockProductForCreate";
+import { mockTestAdmin, mockTestUser } from "../../src/mocks/users/index";
+import { Category, Product, User } from "../../src/models/index";
+import { ProductAttributes } from "../../src/models/Product";
 
 const user = mockTestUser;
 const admin = mockTestAdmin;

@@ -1,7 +1,7 @@
-import { ProductService } from "./ProductService/ProductService.ts";
-import { AuthService } from "./AuthService/AuthService.ts";
-import { CategoryService } from "./CategoryService/CategoryService.ts";
-import { FavoriteService } from "./FavoriteService/FavoriteService.ts";
-import { OrderService } from "./OrderService/OrderService.ts";
+import { ProductService } from "./ProductService/ProductService";
+import { AuthService } from "./AuthService/AuthService";
+import { CategoryService } from "./CategoryService/CategoryService";
+import { FavoriteService } from "./FavoriteService/FavoriteService";
+import { OrderService } from "./OrderService/OrderService";
 
 export { AuthService, CategoryService, FavoriteService, OrderService, ProductService };

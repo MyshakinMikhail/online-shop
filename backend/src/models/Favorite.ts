@@ -1,7 +1,7 @@
 import { DataTypes, Model, type Optional } from "sequelize";
-import { sequelize } from "../db/index.ts";
+import { sequelize } from "../db/index";
 
-import { Product } from "./Product.ts";
+import { Product } from "./Product";
 
 export interface FavoriteAttributes {
 	id: number;

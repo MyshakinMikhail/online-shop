@@ -1,5 +1,5 @@
 import { afterAll, beforeAll } from "vitest";
-import { clearAndCreateDB, disconnectDB } from "../../src/db/index.ts";
+import { clearAndCreateDB, disconnectDB } from "../../src/db/index";
 
 beforeAll(async () => {
 	// чистит таблицы, пересоздает бд для каждого тестового файла и подключается к ней!

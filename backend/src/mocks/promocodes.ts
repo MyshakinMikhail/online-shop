@@ -1,4 +1,4 @@
-import type { PromocodeAttributes } from "../models/Promocode.ts";
+import type { PromocodeAttributes } from "../models/Promocode";
 
 export const mockPromocodes: Omit<PromocodeAttributes, "id">[] = [
 	{

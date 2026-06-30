@@ -1,4 +1,4 @@
-import { Favorite, Product } from "../../models/index.ts";
+import { Favorite, Product } from "../../models/index";
 
 export const FavoriteService = {
 	getFavorite: async (userId: number, productId: number) => {

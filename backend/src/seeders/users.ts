@@ -1,7 +1,7 @@
 // src/seeders/002-users.ts
-import { mockUsers } from "../mocks/users/mockUsers.ts";
-import Cart from "../models/Cart.ts";
-import { User, type UserAttributes } from "../models/User.ts";
+import { mockUsers } from "../mocks/users/mockUsers";
+import Cart from "../models/Cart";
+import { User, type UserAttributes } from "../models/User";
 
 export const seedUsers = async (): Promise<void> => {
 	try {

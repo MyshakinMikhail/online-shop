@@ -1,13 +1,13 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Favorite, Product } from "../../models/index.ts";
+import { Favorite, Product } from "../../models/index";
 import {
 	mockFavorite,
 	mockFavorites,
 	mockFavoritesWithProduct,
-} from "./../../mocks/favorites/index.ts";
-import { FavoriteService } from "./FavoriteService.ts";
+} from "./../../mocks/favorites/index";
+import { FavoriteService } from "./FavoriteService";
 
-vi.mock("../../models/index.ts", () => ({
+vi.mock("../../models/index", () => ({
 	Favorite: {
 		findOne: vi.fn(),
 		findOrCreate: vi.fn(),

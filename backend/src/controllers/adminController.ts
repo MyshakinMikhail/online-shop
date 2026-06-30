@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
-import { User } from "../models/index.ts";
-import { validateId } from "../utils/index.ts";
+import { User } from "../models/index";
+import { validateId } from "../utils/index";
 
 interface RequestParamsType {
 	userId: string | undefined;

@@ -1,7 +1,7 @@
 import { Op, type WhereOptions } from "sequelize";
-import { type ProductAttributes, type ProductCreationAttributes } from "../../models/Product.ts";
+import { type ProductAttributes, type ProductCreationAttributes } from "../../models/Product";
 
-import { Product } from "../../models/index.ts";
+import { Product } from "../../models/index";
 
 type WhereClauseType = WhereOptions<ProductAttributes>;
 

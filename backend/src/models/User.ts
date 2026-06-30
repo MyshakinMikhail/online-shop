@@ -1,5 +1,5 @@
 import { DataTypes, Model, type Optional } from "sequelize";
-import { sequelize } from "../db/index.ts";
+import { sequelize } from "../db/index";
 
 export type UserSex = "male" | "female" | "other";
 export type UserRole = "super_admin" | "admin" | "user";

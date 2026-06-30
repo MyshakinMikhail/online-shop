@@ -1,5 +1,5 @@
-import { mockPromocodes } from "../mocks/promocodes.ts";
-import { Promocode } from "../models/Promocode.ts";
+import { mockPromocodes } from "../mocks/promocodes";
+import { Promocode } from "../models/Promocode";
 
 export const seedPromocodes = async (): Promise<void> => {
 	try {

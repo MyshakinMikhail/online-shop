@@ -1,4 +1,4 @@
-import { type UserAttributes } from "../../models/User.ts";
+import { type UserAttributes } from "../../models/User";
 
 export const mockUsers: UserAttributes[] = [
 	{

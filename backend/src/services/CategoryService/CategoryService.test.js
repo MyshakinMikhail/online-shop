@@ -1,8 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { Category } from "../../models/index.ts";
-import { CategoryService } from "./CategoryService.ts";
+import { Category } from "../../models/index";
+import { CategoryService } from "./CategoryService";
 
-vi.mock("../../models/index.ts", () => ({
+vi.mock("../../models/index", () => ({
 	Category: {
 		findOne: vi.fn(),
 	},
