@@ -1,19 +1,43 @@
+// import dotenv from "dotenv";
+// import { Sequelize } from "sequelize";
+
+// dotenv.config();
+
+// // const isTestingStatus = process.env.IS_TESTING_STATUS;
+
+// const sequelize = new Sequelize({
+// 	// database: isTestingStatus ? process.env.DB_NAME_TEST : process.env.DB_NAME,
+// 	database: process.env.DB_NAME,
+// 	username: process.env.DB_USER,
+// 	password: String(process.env.DB_PASSWORD || ""),
+// 	host: process.env.DB_HOST,
+// 	port: parseInt(process.env.DB_PORT || "5432"),
+// 	dialect: "postgres",
+// 	logging: false,
+// });
+
+// export default sequelize;
+
 import dotenv from "dotenv";
 import { Sequelize } from "sequelize";
 
 dotenv.config();
 
-// const isTestingStatus = process.env.IS_TESTING_STATUS;
+const databaseUrl = process.env.DATABASE_URL;
 
-const sequelize = new Sequelize({
-	// database: isTestingStatus ? process.env.DB_NAME_TEST : process.env.DB_NAME,
-	database: process.env.DB_NAME,
-	username: process.env.DB_USER,
-	password: String(process.env.DB_PASSWORD || ""),
-	host: process.env.DB_HOST,
-	port: parseInt(process.env.DB_PORT || "5432"),
+if (!databaseUrl) {
+	throw new Error("DATABASE_URL is not defined");
+}
+
+const sequelize = new Sequelize(databaseUrl, {
 	dialect: "postgres",
 	logging: false,
+	dialectOptions: {
+		ssl: {
+			require: true,
+			rejectUnauthorized: false,
+		},
+	},
 });
 
 export default sequelize;
