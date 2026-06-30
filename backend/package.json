@@ -3,7 +3,6 @@
 	"version": "1.0.0",
 	"description": "Backend for online clothes shop",
 	"main": "src/index.ts",
-	"type": "module",
 	"scripts": {
 		"start": "ts-node src/index.ts",
 		"dev": "nodemon --watch src --ext ts --exec ts-node src/index.ts",
