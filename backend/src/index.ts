@@ -4,6 +4,7 @@ import express from "express";
 import { connectDB } from "./db";
 import "./models";
 import router from "./routers";
+import seeders from "./seeders";
 
 dotenv.config();
 
@@ -34,7 +35,7 @@ const start = async () => {
 
 		// await seeders.reseed(); // - перезагрузка моковых данные
 
-		// await seeders.seedTesting(); // - создание моковых данных
+		await seeders.seedTesting(); // - создание моковых данных
 		// await seeders.clearAllData(); // - удаление моковых данных
 
 		app.listen(PORT, () => {
