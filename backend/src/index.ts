@@ -1,7 +1,7 @@
 import cors from "cors";
 import dotenv from "dotenv";
 import express from "express";
-import { connectDB } from "./db";
+import { connectDB, sequelize } from "./db";
 import "./models";
 import router from "./routers";
 import seeders from "./seeders";
@@ -33,6 +33,7 @@ const start = async () => {
 		// !!! не всю работу с моделями я вынес в сервисы, для экономии времени
 		// model -> service -> controller -> router ( архитектура слоев бэка )
 
+		await sequelize.sync({ alter: true });
 		// await seeders.reseed(); // - перезагрузка моковых данные
 
 		await seeders.seedTesting(); // - создание моковых данных
