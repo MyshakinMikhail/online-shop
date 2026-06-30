@@ -14,10 +14,7 @@ app.use(express.json());
 
 app.use(
 	cors({
-		origin: [
-			"http://localhost:5173",
-			"https://online-shop-pykznbf8h-myshakinmikhails-projects.vercel.app/",
-		],
+		origin: [process.env.CLIENT_URL!, "http://localhost:5173"],
 		methods: ["GET", "POST", "PUT", "DELETE"],
 		allowedHeaders: ["Content-Type", "Authorization"],
 	})
